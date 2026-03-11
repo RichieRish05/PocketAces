@@ -1,32 +1,33 @@
-//
-//  PocketAcesApp.swift
-//  PocketAces
-//
-//  Created by Rishi Murumkar on 3/11/26.
-//
-
 import SwiftUI
-import SwiftData
+
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
 
 @main
 struct PocketAcesApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    @State private var authService: AuthService
+    @State private var profileStore = UserProfileStore()
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    init() {
+        FirebaseApp.configure()
+        _authService = State(initialValue: AuthService())
+        profileStore.clear() // For debugging
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Group {
+                if authService.isCheckingAuth {
+                    ProgressView()
+                } else if authService.currentUserId != nil && profileStore.profile != nil {
+                    HomeView()
+                } else {
+                    OnboardingView(authService: authService)
+                }
+            }
+            .environment(authService)
+            .environment(profileStore)
         }
-        .modelContainer(sharedModelContainer)
     }
 }

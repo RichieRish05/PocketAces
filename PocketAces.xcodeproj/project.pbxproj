@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5B87ACF62F62055F00C6D979 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87ACF52F62055F00C6D979 /* FirebaseAuth */; };
+		5B87ACF82F62055F00C6D979 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87ACF72F62055F00C6D979 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5B87ACD02F61FD3200C6D979 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +34,30 @@
 		5B87ACD92F61FD3200C6D979 /* PocketAcesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketAcesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		5B87ACF22F62045900C6D979 /* Exceptions for "PocketAces" folder in "PocketAcesTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
+			);
+			target = 5B87ACCE2F61FD3200C6D979 /* PocketAcesTests */;
+		};
+		5B87ACF32F62045900C6D979 /* Exceptions for "PocketAces" folder in "PocketAcesUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
+			);
+			target = 5B87ACD82F61FD3200C6D979 /* PocketAcesUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5B87ACC22F61FD3000C6D979 /* PocketAces */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5B87ACF22F62045900C6D979 /* Exceptions for "PocketAces" folder in "PocketAcesTests" target */,
+				5B87ACF32F62045900C6D979 /* Exceptions for "PocketAces" folder in "PocketAcesUITests" target */,
+			);
 			path = PocketAces;
 			sourceTree = "<group>";
 		};
@@ -52,6 +78,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B87ACF62F62055F00C6D979 /* FirebaseAuth in Frameworks */,
+				5B87ACF82F62055F00C6D979 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +140,8 @@
 			);
 			name = PocketAces;
 			packageProductDependencies = (
+				5B87ACF52F62055F00C6D979 /* FirebaseAuth */,
+				5B87ACF72F62055F00C6D979 /* FirebaseFirestore */,
 			);
 			productName = PocketAces;
 			productReference = 5B87ACC02F61FD3000C6D979 /* PocketAces.app */;
@@ -195,6 +225,9 @@
 			);
 			mainGroup = 5B87ACB72F61FD3000C6D979;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5B87ACF42F62055F00C6D979 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5B87ACC12F61FD3000C6D979 /* Products */;
 			projectDirPath = "";
@@ -578,6 +611,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5B87ACF42F62055F00C6D979 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5B87ACF52F62055F00C6D979 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B87ACF42F62055F00C6D979 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		5B87ACF72F62055F00C6D979 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B87ACF42F62055F00C6D979 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5B87ACB82F61FD3000C6D979 /* Project object */;
 }
