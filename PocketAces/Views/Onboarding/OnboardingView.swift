@@ -1,12 +1,9 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @Environment(UserProfileStore.self) private var profileStore
-    @State private var viewModel: OnboardingViewModel
-
-    init(authService: AuthService) {
-        _viewModel = State(initialValue: OnboardingViewModel(authService: authService))
-    }
+    @Environment(AuthService.self) private var authService
+    @Environment(UserStore.self) private var userStore
+    @State private var viewModel = OnboardingViewModel()
 
     var body: some View {
         NavigationStack {
@@ -16,12 +13,14 @@ struct OnboardingView: View {
                 }
         }
         .onAppear {
-            viewModel.profileStore = profileStore
+            viewModel.authService = authService
+            viewModel.userStore = userStore
         }
     }
 }
 
 #Preview {
-    OnboardingView(authService: AuthService())
-        .environment(UserProfileStore())
+    OnboardingView()
+        .environment(AuthService())
+        .environment(UserStore())
 }

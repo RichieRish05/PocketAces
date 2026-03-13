@@ -8,12 +8,8 @@ final class OnboardingViewModel {
     var isLoading = false
     var errorMessage: String?
 
-    @ObservationIgnored var profileStore: UserProfileStore?
-    private let authService: AuthService
-
-    init(authService: AuthService) {
-        self.authService = authService
-    }
+    @ObservationIgnored var authService: AuthService?
+    @ObservationIgnored var userStore: UserStore?
 
     var canProceedToName: Bool {
         selectedAvatar != nil
@@ -34,15 +30,13 @@ final class OnboardingViewModel {
         errorMessage = nil
 
         do {
-            let profile = UserProfile(
-                displayName: displayName.trimmingCharacters(in: .whitespaces),
-                avatarName: avatar
-            )
-            profileStore?.save(profile)
-            try await authService.signInAnonymously()
-            print("Saved user profile " + profile.displayName)
+            let trimmedName = displayName.trimmingCharacters(in: .whitespaces)
+            let userData = try await authService?.signInAnonymously(trimmedName, avatar)
+            if let userData {
+                userStore?.save(userData)
+            }
         } catch {
-            profileStore?.clear()
+            userStore?.clear()
             print(error)
             errorMessage = error.localizedDescription
         }

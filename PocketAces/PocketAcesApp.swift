@@ -7,27 +7,34 @@ import FirebaseAuth
 @main
 struct PocketAcesApp: App {
     @State private var authService: AuthService
-    @State private var profileStore = UserProfileStore()
+    @State private var userStore = UserStore()
 
     init() {
         FirebaseApp.configure()
         _authService = State(initialValue: AuthService())
-        profileStore.clear() // For debugging
+        userStore.clear()
     }
 
     var body: some Scene {
         WindowGroup {
             Group {
-                if authService.isCheckingAuth {
+                if authService.isCheckingAuth || (authService.currentUserId != nil && userStore.userData == nil) {
                     ProgressView()
-                } else if authService.currentUserId != nil && profileStore.profile != nil {
-                    HomeView()
+                } else if authService.currentUserId != nil && userStore.userData != nil {
+                    MainTabView()
                 } else {
-                    OnboardingView(authService: authService)
+                    OnboardingView()
                 }
             }
             .environment(authService)
-            .environment(profileStore)
+            .environment(userStore)
+            .onChange(of: authService.currentUserId) { _, newId in
+                if let userId = newId {
+                    userStore.startListening(userId: userId)
+                } else {
+                    userStore.stopListening()
+                }
+            }
         }
     }
 }

@@ -5,24 +5,17 @@ struct NameEntryView: View {
 
     var body: some View {
         VStack(spacing: 32) {
-            Spacer()
-
-            if let avatar = viewModel.selectedAvatar {
-                Image(avatar)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
+            
+            VStack(alignment: .leading) {
+                Text("What should we call you?")
+                    .font(.title)
+                Text("You can change this in your settings later on.")
+                    .foregroundStyle(.secondary)
             }
-
-            Text("What should we call you?")
-                .font(.largeTitle.bold())
-
-            TextField("Display name", text: $viewModel.displayName)
-                .textFieldStyle(.roundedBorder)
-                .padding(.horizontal, 32)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.words)
+            .padding(.trailing, 5)
+            .padding(.top, 75)
+            
+            InputField(text: $viewModel.displayName)
 
             Spacer()
 
@@ -56,4 +49,10 @@ struct NameEntryView: View {
             Text(viewModel.errorMessage ?? "")
         }
     }
+}
+
+
+#Preview {
+    NameEntryView(viewModel: OnboardingViewModel())
+
 }
