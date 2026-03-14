@@ -7,18 +7,20 @@ import FirebaseAuth
 @main
 struct PocketAcesApp: App {
     @State private var authService: AuthService
+    @State private var gameService: GameService
     @State private var userStore = UserStore()
 
     init() {
         FirebaseApp.configure()
         _authService = State(initialValue: AuthService())
+        _gameService = State(initialValue: GameService())
         userStore.clear()
     }
 
     var body: some Scene {
         WindowGroup {
             Group {
-                if authService.isCheckingAuth || (authService.currentUserId != nil && userStore.userData == nil) {
+                if authService.isCheckingAuth || (authService.currentUserId != nil && userStore.userData == nil) || gameService.isLoadingGames {
                     ProgressView()
                 } else if authService.currentUserId != nil && userStore.userData != nil {
                     MainTabView()
@@ -28,9 +30,17 @@ struct PocketAcesApp: App {
             }
             .environment(authService)
             .environment(userStore)
+            .environment(gameService)
+            .task {
+                if let userId = authService.currentUserId {
+                    userStore.startListening(userId: userId)
+                    try? await gameService.fetchGames(userId: userId)
+                }
+            }
             .onChange(of: authService.currentUserId) { _, newId in
                 if let userId = newId {
                     userStore.startListening(userId: userId)
+                    Task { try? await gameService.fetchGames(userId: userId) }
                 } else {
                     userStore.stopListening()
                 }
