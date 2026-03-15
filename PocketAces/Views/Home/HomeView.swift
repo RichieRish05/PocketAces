@@ -17,16 +17,7 @@ struct HomeView: View {
                 }
                 .padding(.vertical, 16)
             }
-            .refreshable {
-                guard let userId = userStore.userData?.id else { return }
-                try? await gameService.fetchGames(userId: userId)
-            }
             .navigationTitle("Home")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    profileButton
-                }
-            }
             .sheet(isPresented: $showCreateGame) {
                 CreateGameView()
             }
@@ -43,10 +34,6 @@ struct HomeView: View {
             Text("Welcome back, \(userStore.userData?.displayName ?? "Player")")
                 .font(.title2)
                 .fontWeight(.bold)
-
-            Text(Date.now.formatted(date: .long, time: .omitted))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
         }
         .padding(.horizontal, 16)
     }
@@ -72,17 +59,10 @@ struct HomeView: View {
     private var gameCarousel: some View {
         let games = gameService.activeGames
 
-        if gameService.isLoadingGames {
-            ProgressView()
-                .frame(maxWidth: .infinity, minHeight: 120)
-        } else if games.isEmpty {
+        if games.isEmpty {
             emptyState
         } else {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Your Games")
-                    .font(.headline)
-                    .padding(.horizontal, 16)
-
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         ForEach(games) { game in
@@ -111,7 +91,10 @@ struct HomeView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
-        .frame(maxWidth: .infinity, minHeight: 160)
+        .frame(width: 280, height: 200)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 16)
     }
 
     // MARK: - Action Buttons
@@ -121,20 +104,34 @@ struct HomeView: View {
             Button {
                 showCreateGame = true
             } label: {
-                Label("Create Game", systemImage: "plus.circle.fill")
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
+                VStack(spacing: 12) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 32))
+                        .foregroundStyle(.green)
+                    Text("Create Game")
+                        .font(.headline)
+                }
+                .frame(maxWidth: .infinity, minHeight: 120)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.plain)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
             Button {
                 showJoinGame = true
             } label: {
-                Label("Join Game", systemImage: "arrow.right.circle")
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
+                VStack(spacing: 12) {
+                    Image(systemName: "arrow.right.circle.fill")
+                        .font(.system(size: 32))
+                        .foregroundStyle(.blue)
+                    Text("Join Game")
+                        .font(.headline)
+                }
+                .frame(maxWidth: .infinity, minHeight: 120)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.plain)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
         .padding(.horizontal, 16)
     }

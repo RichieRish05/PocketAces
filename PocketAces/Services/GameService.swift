@@ -40,16 +40,15 @@ final class GameService {
             .whereField("playerIds", arrayContains: userId)
             .whereField("isActive", isEqualTo: true)
             .getDocuments()
-
-
+    
         let activeSnapshot = try await activeQuery
-        
         activeGames = activeSnapshot.documents.compactMap { try? $0.data(as: Game.self) }
+        
     }
 
     /// Creates a new game document in Firestore with the host as the first player.
     /// Returns the created `Game` with its Firestore document ID set.
-    func createGame(hostId: String, hostDisplayName: String, buyIn: Double, chipDenominations: [ChipDenomination]) async throws -> Game {
+    func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double, chipDenominations: [ChipDenomination]) async throws -> Game {
         let joinCode = try await generateJoinCode()
 
         let host = Player(
@@ -60,6 +59,7 @@ final class GameService {
         )
 
         let game = Game(
+            name: name,
             chipDenominations: chipDenominations,
             hostDisplayName: hostDisplayName,
             hostId: hostId,
@@ -131,10 +131,11 @@ final class GameService {
     }
 
     /// Sets a player's cash-out amount and marks them inactive via a Firestore transaction.
-    func cashOut(gameId: String, userId: String, cashOut: Double) async throws {
+    /// Returns the player's total buy-in so the caller can compute profit for stats updates.
+    func cashOut(gameId: String, userId: String, cashOut: Double) async throws -> Double {
         let gameRef = db.collection("games").document(gameId)
-        
-        try await db.runTransaction { transaction, errorPointer in
+
+        return try await db.runTransaction { transaction, errorPointer in
             let snapshot: DocumentSnapshot
             do {
                 snapshot = try transaction.getDocument(gameRef)
@@ -155,6 +156,8 @@ final class GameService {
                 return nil
             }
 
+            let playerBuyIn = game.players[playerIndex].buyIn
+
             game.players[playerIndex].cashOut = cashOut
             game.players[playerIndex].isActive = false
 
@@ -165,8 +168,8 @@ final class GameService {
                 return nil
             }
 
-            return nil
-        }
+            return playerBuyIn as NSNumber
+        } as! Double
     }
 
     /// Adds a re-buy for the player, incrementing their buy-in and the game's total pot.

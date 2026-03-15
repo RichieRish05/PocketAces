@@ -136,6 +136,7 @@ Stored on-device for offline history and stats. Synced from Firestore when a gam
 - **Default actor isolation:** `MainActor` (set in build settings)
 - **Xcode groups:** Filesystem-synced (not virtual references)
 - **Minimum Xcode:** 26.2+
+- **Build command:** `xcodebuild -scheme PocketAces -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build`
 
 ## Conventions
 

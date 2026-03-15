@@ -33,16 +33,16 @@ struct PocketAcesApp: App {
             .environment(gameService)
             .task {
                 if let userId = authService.currentUserId {
-                    userStore.startListening(userId: userId)
+                    try? await userStore.fetchUser(userId: userId)
                     try? await gameService.fetchGames(userId: userId)
                 }
             }
             .onChange(of: authService.currentUserId) { _, newId in
                 if let userId = newId {
-                    userStore.startListening(userId: userId)
-                    Task { try? await gameService.fetchGames(userId: userId) }
-                } else {
-                    userStore.stopListening()
+                    Task {
+                        try? await userStore.fetchUser(userId: userId)
+                        try? await gameService.fetchGames(userId: userId)
+                    }
                 }
             }
         }

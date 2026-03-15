@@ -6,15 +6,10 @@ final class UserStore {
     private(set) var userData: UserData?
 
     private let key = "userData"
-    private var listener: ListenerRegistration?
 
     init() {
         guard let data = UserDefaults.standard.data(forKey: key) else { return }
         userData = try? JSONDecoder().decode(UserData.self, from: data)
-    }
-
-    deinit {
-        stopListening()
     }
 
     func save(_ userData: UserData) {
@@ -24,24 +19,34 @@ final class UserStore {
     }
 
     func clear() {
-        stopListening()
         UserDefaults.standard.removeObject(forKey: key)
         userData = nil
     }
 
-    func startListening(userId: String) {
-        stopListening()
-        let docRef = Firestore.firestore().collection("users").document(userId)
-        listener = docRef.addSnapshotListener { [weak self] snapshot, error in
-            guard let self, let snapshot, snapshot.exists else { return }
-            if let decoded = try? snapshot.data(as: UserData.self) {
-                self.save(decoded)
-            }
-        }
+    /// One-time fetch of user data from Firestore. Used on app launch to hydrate
+    /// local state. Replaces the snapshot listener — stats updates now flow through
+    /// the optimistic `applyCashOut` path instead of real-time sync.
+    func fetchUser(userId: String) async throws {
+        let snapshot = try await Firestore.firestore()
+            .collection("users").document(userId).getDocument()
+        guard snapshot.exists, let decoded = try? snapshot.data(as: UserData.self) else { return }
+        save(decoded)
     }
 
-    func stopListening() {
-        listener?.remove()
-        listener = nil
+    /* Optimistic stats update on cash-out.
+    1. Computes new stats locally (instant UI update via `save`)
+   2. Writes to Firestore (best-effort — local update stands even if this fails)
+
+  The stats write is intentionally separate from the game transaction in GameService
+because they target different documents (`users/` vs `games/`), and coupling them
+would widen the transaction's contention window. */
+    func applyCashOut(buyIn: Double, cashOut: Double) async throws {
+        guard var updated = userData else { return }
+        updated.applyCashOut(buyIn: buyIn, cashOut: cashOut)
+        save(updated)
+
+        try await Firestore.firestore()
+            .collection("users").document(updated.id)
+            .setData(from: updated)
     }
 }

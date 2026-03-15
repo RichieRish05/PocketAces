@@ -17,12 +17,13 @@ struct Game: Codable, Identifiable, Hashable {
     static func == (lhs: Game, rhs: Game) -> Bool {
         lhs.id == rhs.id
     }
-
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-
+    
     @DocumentID var id: String?
+    var name: String
     var chipDenominations: [ChipDenomination]
     var hostDisplayName: String
     var hostId: String
@@ -34,4 +35,5 @@ struct Game: Codable, Identifiable, Hashable {
     var isActive: Bool
     var startedAt: Date
     var totalPot: Double
+
 }
