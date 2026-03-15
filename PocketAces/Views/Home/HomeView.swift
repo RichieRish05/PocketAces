@@ -54,7 +54,6 @@ struct HomeView: View {
     }
 
     // MARK: - Game Carousel
-
     @ViewBuilder
     private var gameCarousel: some View {
         let games = gameService.activeGames
@@ -72,8 +71,10 @@ struct HomeView: View {
                             .buttonStyle(.plain)
                         }
                     }
+                    .scrollTargetLayout()
                     .padding(.horizontal, 16)
                 }
+                .scrollTargetBehavior(.viewAligned)
             }
         }
     }

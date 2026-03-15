@@ -120,7 +120,10 @@ struct GameCardView: View {
                 .foregroundStyle(.secondary)
         }
         .padding(20)
-        .frame(width: 280, height: 200)
+        .frame(minHeight: 220)
+        .containerRelativeFrame(.horizontal) { length, _ in
+            length - 32
+        }
         .background(
             LinearGradient(
                 colors: cardGradient.colors,
