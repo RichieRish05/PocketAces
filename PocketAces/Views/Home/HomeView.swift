@@ -12,6 +12,7 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     headerSection
+                    profitLossSection
                     gameCarousel
                     actionButtons
                 }
@@ -34,6 +35,25 @@ struct HomeView: View {
             Text("Welcome back, \(userStore.userData?.displayName ?? "Player")")
                 .font(.title2)
                 .fontWeight(.bold)
+        }
+        .padding(.horizontal, 16)
+    }
+
+    // MARK: - Profit/Loss
+    @ViewBuilder
+    private var profitLossSection: some View {
+        let netProfit = userStore.userData?.netProfit ?? 0
+
+        HStack(spacing: 6) {
+            if netProfit >= 0 {
+                Text("+\(netProfit, format: .currency(code: "USD").precision(.fractionLength(0)))")
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.green)
+            } else {
+                Text("-\(netProfit, format: .currency(code: "USD").precision(.fractionLength(0)))")
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.red)
+            }
         }
         .padding(.horizontal, 16)
     }
@@ -105,34 +125,26 @@ struct HomeView: View {
             Button {
                 showCreateGame = true
             } label: {
-                VStack(spacing: 12) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 32))
-                        .foregroundStyle(.green)
-                    Text("Create Game")
-                        .font(.headline)
-                }
-                .frame(maxWidth: .infinity, minHeight: 120)
+                HomeActionCard(
+                    title: "Create Game",
+                    subtitle: "Start a new poker session",
+                    icon: "plus.circle.fill",
+                    color: .green
+                )
             }
             .buttonStyle(.plain)
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
             Button {
                 showJoinGame = true
             } label: {
-                VStack(spacing: 12) {
-                    Image(systemName: "arrow.right.circle.fill")
-                        .font(.system(size: 32))
-                        .foregroundStyle(.blue)
-                    Text("Join Game")
-                        .font(.headline)
-                }
-                .frame(maxWidth: .infinity, minHeight: 120)
+                HomeActionCard(
+                    title: "Join Game",
+                    subtitle: "Enter a game with a code",
+                    icon: "arrow.right.circle.fill",
+                    color: .blue
+                )
             }
             .buttonStyle(.plain)
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
         .padding(.horizontal, 16)
     }

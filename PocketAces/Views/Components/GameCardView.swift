@@ -24,47 +24,59 @@ enum CardGradient: CaseIterable {
     
     var colors: [Color] {
         switch self {
-            
+
         case .ocean:
             return [
-                Color.cyan.opacity(0.35),
-                Color.blue.opacity(0.30),
-                Color.indigo.opacity(0.25)
+                Color.cyan.opacity(0.8),
+                Color(red: 0, green: 0.7, blue: 0.9).opacity(0.75),
+                Color.blue.opacity(0.7),
+                Color(red: 0.2, green: 0.2, blue: 0.85).opacity(0.65),
+                Color.indigo.opacity(0.6)
             ]
-            
+
         case .emerald:
             return [
-                Color.green.opacity(0.35),
-                Color.mint.opacity(0.30),
-                Color.teal.opacity(0.25)
+                Color.green.opacity(0.8),
+                Color(red: 0.2, green: 0.85, blue: 0.6).opacity(0.75),
+                Color.mint.opacity(0.7),
+                Color(red: 0.1, green: 0.75, blue: 0.7).opacity(0.65),
+                Color.teal.opacity(0.6)
             ]
-            
+
         case .sunset:
             return [
-                Color.orange.opacity(0.35),
-                Color.pink.opacity(0.30),
-                Color.red.opacity(0.25)
+                Color.orange.opacity(0.8),
+                Color(red: 1.0, green: 0.5, blue: 0.3).opacity(0.75),
+                Color.pink.opacity(0.7),
+                Color(red: 0.95, green: 0.3, blue: 0.35).opacity(0.65),
+                Color.red.opacity(0.6)
             ]
-            
+
         case .lavender:
             return [
-                Color.purple.opacity(0.35),
-                Color.indigo.opacity(0.30),
-                Color.blue.opacity(0.25)
+                Color.purple.opacity(0.8),
+                Color(red: 0.45, green: 0.2, blue: 0.8).opacity(0.75),
+                Color.indigo.opacity(0.7),
+                Color(red: 0.25, green: 0.2, blue: 0.75).opacity(0.65),
+                Color.blue.opacity(0.6)
             ]
-            
+
         case .fire:
             return [
-                Color.red.opacity(0.35),
-                Color.orange.opacity(0.30),
-                Color.yellow.opacity(0.25)
+                Color.red.opacity(0.8),
+                Color(red: 1.0, green: 0.35, blue: 0.1).opacity(0.75),
+                Color.orange.opacity(0.7),
+                Color(red: 1.0, green: 0.75, blue: 0.2).opacity(0.65),
+                Color.yellow.opacity(0.6)
             ]
-            
+
         case .midnight:
             return [
-                Color.indigo.opacity(0.35),
-                Color.black.opacity(0.30),
-                Color.blue.opacity(0.25)
+                Color.indigo.opacity(0.8),
+                Color(red: 0.2, green: 0.1, blue: 0.4).opacity(0.75),
+                Color.black.opacity(0.7),
+                Color(red: 0.1, green: 0.1, blue: 0.5).opacity(0.65),
+                Color.blue.opacity(0.6)
             ]
         }
     }
@@ -131,7 +143,7 @@ struct GameCardView: View {
                 endPoint: .bottomTrailing
             )
         )
-        .background(.ultraThinMaterial)
+        .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 
