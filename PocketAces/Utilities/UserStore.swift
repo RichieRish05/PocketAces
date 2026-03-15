@@ -24,8 +24,7 @@ final class UserStore {
     }
 
     /// One-time fetch of user data from Firestore. Used on app launch to hydrate
-    /// local state. Replaces the snapshot listener — stats updates now flow through
-    /// the optimistic `applyCashOut` path instead of real-time sync.
+    /// local state.
     func fetchUser(userId: String) async throws {
         let snapshot = try await Firestore.firestore()
             .collection("users").document(userId).getDocument()
@@ -33,13 +32,9 @@ final class UserStore {
         save(decoded)
     }
 
-    /* Optimistic stats update on cash-out.
-    1. Computes new stats locally (instant UI update via `save`)
-   2. Writes to Firestore (best-effort — local update stands even if this fails)
-
-  The stats write is intentionally separate from the game transaction in GameService
-because they target different documents (`users/` vs `games/`), and coupling them
-would widen the transaction's contention window. */
+    ///Optimistic stats update on cash-out.
+    ///Computes new stats locally (instant UI update via `save`)
+    ///2. Writes to Firestore (best-effort — local update stands even if this fails)
     func applyCashOut(buyIn: Double, cashOut: Double) async throws {
         guard var updated = userData else { return }
         updated.applyCashOut(buyIn: buyIn, cashOut: cashOut)

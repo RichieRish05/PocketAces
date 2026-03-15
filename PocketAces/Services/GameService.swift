@@ -161,6 +161,11 @@ final class GameService {
             game.players[playerIndex].cashOut = cashOut
             game.players[playerIndex].isActive = false
 
+            // If no active players remain, deactivate the game
+            if !game.players.contains(where: { $0.isActive }) {
+                game.isActive = false
+            }
+
             do {
                 try transaction.setData(from: game, forDocument: gameRef)
             } catch let error as NSError {
