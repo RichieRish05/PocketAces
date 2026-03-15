@@ -125,7 +125,11 @@ final class GameService {
                 errorPointer?.pointee = error
                 return nil
             }
-
+            
+            
+            // Mutate active game array state
+            self.activeGames.append(game)
+            
             return game
         } as! Game
     }
