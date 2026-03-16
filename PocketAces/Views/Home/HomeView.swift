@@ -3,10 +3,10 @@ import SwiftUI
 struct HomeView: View {
     @Environment(UserStore.self) private var userStore
     @Environment(GameService.self) private var gameService
-
+    
     @State private var showCreateGame = false
     @State private var showJoinGame = false
-
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -18,10 +18,6 @@ struct HomeView: View {
                 }
                 .padding(.vertical, 16)
             }
-            .refreshable {
-                guard let userId = userStore.userData?.id else { return }
-                try? await gameService.fetchGames(userId: userId)
-            }
             .navigationTitle("Home")
             .sheet(isPresented: $showCreateGame) {
                 CreateGameView()
@@ -31,9 +27,9 @@ struct HomeView: View {
             }
         }
     }
-
+    
     // MARK: - Header
-
+    
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Welcome back, \(userStore.userData?.displayName ?? "Player")")
@@ -42,15 +38,15 @@ struct HomeView: View {
         }
         .padding(.horizontal, 16)
     }
-
+    
     // MARK: - Quick Stats
-
+    
     private var quickStatsRow: some View {
         let gamesPlayed = userStore.userData?.gamesPlayed ?? 0
         let wins = userStore.userData?.wins ?? 0
         let netProfit = userStore.userData?.netProfit ?? 0
         let winRate = gamesPlayed > 0 ? Double(wins) / Double(gamesPlayed) * 100 : 0
-
+        
         return HStack(spacing: 8) {
             StatCardView(
                 icon: "dollarsign.circle.fill",
@@ -76,9 +72,9 @@ struct HomeView: View {
         }
         .padding(.horizontal, 16)
     }
-
+    
     // MARK: - Profile Button
-
+    
     private var profileButton: some View {
         NavigationLink {
             ProfileView()
@@ -91,12 +87,12 @@ struct HomeView: View {
                 .clipShape(Circle())
         }
     }
-
+    
     // MARK: - Game Carousel
     @ViewBuilder
     private var gameCarousel: some View {
         let games = gameService.activeGames
-
+        
         if games.isEmpty {
             emptyState
         } else {
@@ -122,17 +118,54 @@ struct HomeView: View {
         VStack(spacing: 12) {
             Image(systemName: "suit.spade.fill")
                 .font(.system(size: 48))
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 1.0, green: 0.84, blue: 0.0),
+                            Color(red: 0.85, green: 0.65, blue: 0.13)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
 
             Text("No games yet")
                 .font(.headline)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 1.0, green: 0.88, blue: 0.4),
+                            Color(red: 0.85, green: 0.65, blue: 0.13)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
 
             Text("Create or join a game to get started!")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
-        .frame(width: 280, height: 200)
-        .background(.ultraThinMaterial)
+        .frame(minHeight: 200)
+        .frame(maxWidth: .infinity)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color(red: 0.18, green: 0.14, blue: 0.02), // dark gold base
+                    Color(red: 0.35, green: 0.26, blue: 0.05),
+                    Color(red: 0.55, green: 0.42, blue: 0.08)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(
+                    Color(red: 0.35, green: 0.26, blue: 0.05),
+                    lineWidth: 1.5
+                )
+        )
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .padding(.horizontal, 16)
     }
