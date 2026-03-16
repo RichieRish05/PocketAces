@@ -12,11 +12,15 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     headerSection
-                    profitLossSection
+                    quickStatsRow
                     gameCarousel
                     actionButtons
                 }
                 .padding(.vertical, 16)
+            }
+            .refreshable {
+                guard let userId = userStore.userData?.id else { return }
+                try? await gameService.fetchGames(userId: userId)
             }
             .navigationTitle("Home")
             .sheet(isPresented: $showCreateGame) {
@@ -39,21 +43,36 @@ struct HomeView: View {
         .padding(.horizontal, 16)
     }
 
-    // MARK: - Profit/Loss
-    @ViewBuilder
-    private var profitLossSection: some View {
-        let netProfit = userStore.userData?.netProfit ?? 0
+    // MARK: - Quick Stats
 
-        HStack(spacing: 6) {
-            if netProfit >= 0 {
-                Text("+\(netProfit, format: .currency(code: "USD").precision(.fractionLength(0)))")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.green)
-            } else {
-                Text("-\(netProfit, format: .currency(code: "USD").precision(.fractionLength(0)))")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.red)
-            }
+    private var quickStatsRow: some View {
+        let gamesPlayed = userStore.userData?.gamesPlayed ?? 0
+        let wins = userStore.userData?.wins ?? 0
+        let netProfit = userStore.userData?.netProfit ?? 0
+        let winRate = gamesPlayed > 0 ? Double(wins) / Double(gamesPlayed) * 100 : 0
+
+        return HStack(spacing: 8) {
+            StatCardView(
+                icon: "dollarsign.circle.fill",
+                label: "Net Profit",
+                numericValue: netProfit,
+                format: .currency,
+                valueColor: netProfit >= 0 ? .green : .red
+            )
+            StatCardView(
+                icon: "trophy.fill",
+                label: "Win Rate",
+                numericValue: winRate,
+                format: .percentage,
+                valueColor: .primary
+            )
+            StatCardView(
+                icon: "suit.spade.fill",
+                label: "Games",
+                numericValue: Double(gamesPlayed),
+                format: .integer,
+                valueColor: .primary
+            )
         }
         .padding(.horizontal, 16)
     }

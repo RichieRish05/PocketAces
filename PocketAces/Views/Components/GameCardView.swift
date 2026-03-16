@@ -20,7 +20,6 @@ enum CardGradient: CaseIterable {
     case sunset
     case lavender
     case fire
-    case midnight
     
     var colors: [Color] {
         switch self {
@@ -68,15 +67,6 @@ enum CardGradient: CaseIterable {
                 Color.orange.opacity(0.7),
                 Color(red: 1.0, green: 0.75, blue: 0.2).opacity(0.65),
                 Color.yellow.opacity(0.6)
-            ]
-
-        case .midnight:
-            return [
-                Color.indigo.opacity(0.8),
-                Color(red: 0.2, green: 0.1, blue: 0.4).opacity(0.75),
-                Color.black.opacity(0.7),
-                Color(red: 0.1, green: 0.1, blue: 0.5).opacity(0.65),
-                Color.blue.opacity(0.6)
             ]
         }
     }
@@ -132,9 +122,9 @@ struct GameCardView: View {
                 .foregroundStyle(.secondary)
         }
         .padding(20)
-        .frame(minHeight: 220)
+        .frame(minHeight: 200)
         .containerRelativeFrame(.horizontal) { length, _ in
-            length - 32
+            max(length - 32, 0)
         }
         .background(
             LinearGradient(
