@@ -1,11 +1,6 @@
 import Foundation
 import FirebaseFirestore
 
-struct ChipDenomination: Codable, Hashable {
-    var label: String
-    var amount: Double
-}
-
 struct Player: Codable, Hashable {
     var playerId: String
     var name: String?
@@ -25,7 +20,6 @@ struct Game: Codable, Identifiable, Hashable {
     
     @DocumentID var id: String?
     var name: String
-    var chipDenominations: [ChipDenomination]
     var hostDisplayName: String
     var hostId: String
     var joinCode: String

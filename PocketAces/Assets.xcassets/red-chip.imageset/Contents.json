@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "red-chip.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

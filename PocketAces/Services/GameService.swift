@@ -55,7 +55,7 @@ final class GameService {
 
     /// Creates a new game document in Firestore with the host as the first player.
     /// Returns the created `Game` with its Firestore document ID set.
-    func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double, chipDenominations: [ChipDenomination]) async throws -> Game {
+    func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double) async throws -> Game {
         let joinCode = try await generateJoinCode()
 
         let host = Player(
@@ -68,7 +68,6 @@ final class GameService {
 
         let game = Game(
             name: name,
-            chipDenominations: chipDenominations,
             hostDisplayName: hostDisplayName,
             hostId: hostId,
             joinCode: joinCode,
@@ -84,6 +83,7 @@ final class GameService {
         let docRef = try db.collection("games").addDocument(from: game)
         var createdGame = game
         createdGame.id = docRef.documentID
+        activeGames.append(createdGame)
         return createdGame
     }
 
@@ -190,6 +190,7 @@ final class GameService {
                 game.isActive = false
                 game.endedAt = Date()
                 gameEnded = true
+                game.joinCodeEnabled = false
             }
 
             do {

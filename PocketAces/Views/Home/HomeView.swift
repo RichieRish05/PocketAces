@@ -7,6 +7,7 @@ struct HomeView: View {
     @State private var showCreateGame = false
     @State private var showJoinGame = false
     
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -62,20 +63,6 @@ struct HomeView: View {
         .padding(.horizontal, 16)
     }
     
-    // MARK: - Profile Button
-    
-    private var profileButton: some View {
-        NavigationLink {
-            ProfileView()
-        } label: {
-            let avatarName = userStore.userData?.avatarName ?? "avatar_01"
-            Image(avatarName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 32, height: 32)
-                .clipShape(Circle())
-        }
-    }
     
     // MARK: - Game Carousel
     @ViewBuilder
