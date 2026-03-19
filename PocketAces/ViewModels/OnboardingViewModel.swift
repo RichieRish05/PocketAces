@@ -37,7 +37,6 @@ final class OnboardingViewModel {
             }
         } catch {
             userStore?.clear()
-            print(error)
             errorMessage = error.localizedDescription
         }
 

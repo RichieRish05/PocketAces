@@ -8,6 +8,7 @@ struct ChipDenomination: Codable, Hashable {
 
 struct Player: Codable, Hashable {
     var playerId: String
+    var name: String?
     var buyIn: Double
     var cashOut: Double
     var isActive: Bool
@@ -34,6 +35,7 @@ struct Game: Codable, Identifiable, Hashable {
     var playerIds: [String]
     var isActive: Bool
     var startedAt: Date
+    var endedAt: Date?
     var totalPot: Double
 
 }

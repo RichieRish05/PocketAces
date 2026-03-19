@@ -56,6 +56,7 @@ final class HomeViewModel {
         }
         let player = Player(
             playerId: userId,
+            name: displayName,
             buyIn: 0,
             cashOut: 0,
             isActive: true

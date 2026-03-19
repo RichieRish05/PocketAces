@@ -79,6 +79,7 @@ struct JoinGameView: View {
 
         let player = Player(
             playerId: userId,
+            name: userStore.userData?.displayName ?? "Player",
             buyIn: 0,
             cashOut: 0,
             isActive: true

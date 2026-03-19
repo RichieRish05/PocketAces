@@ -24,6 +24,12 @@ final class GameService {
     private(set) var activeGames: [Game] = []
     private(set) var isLoadingGames = false
 
+    private(set) var pastGames: [Game] = [] // Past games user was involved in
+    private(set) var isLoadingPastGames = false // Used to indicate document fetching in progress
+    private(set) var hasMorePastGames = true // Used for pagination logic
+    private var lastPastGameDocument: DocumentSnapshot? // DB result
+    private let pastGamesPageSize = 15 // Size of page for pagination
+
     private let db = Firestore.firestore()
 
     private static let joinCodeCharset = Array("ABCDEFGHJKLMNPQRSTUVWXYZ23456789")
@@ -44,6 +50,7 @@ final class GameService {
         let activeSnapshot = try await activeQuery
         activeGames = activeSnapshot.documents.compactMap { try? $0.data(as: Game.self) }
         
+        
     }
 
     /// Creates a new game document in Firestore with the host as the first player.
@@ -53,6 +60,7 @@ final class GameService {
 
         let host = Player(
             playerId: hostId,
+            name: hostDisplayName,
             buyIn: buyIn,
             cashOut: 0,
             isActive: true
@@ -101,24 +109,33 @@ final class GameService {
                 errorPointer?.pointee = error
                 return nil
             }
-
+            
+            // Fetch game
             guard var game = try? freshSnapshot.data(as: Game.self) else {
                 let error = GameServiceError.gameNotFound
                 errorPointer?.pointee = error as NSError
                 return nil
             }
 
-            if game.playerIds.contains(player.playerId) {
-                let error = GameServiceError.playerAlreadyInGame
-                errorPointer?.pointee = error as NSError
-                return nil
+            // Reactivate inactive player or reject active duplicate
+            if let existingIndex = game.players.firstIndex(where: { $0.playerId == player.playerId }) {
+                if game.players[existingIndex].isActive {
+                    let error = GameServiceError.playerAlreadyInGame
+                    errorPointer?.pointee = error as NSError
+                    return nil
+                }
+                // Reactivate: reset cashOut, mark active
+                game.players[existingIndex].isActive = true
+                game.players[existingIndex].cashOut = 0
+            } else {
+            // Add new player
+                game.players.append(player)
+                game.playerIds.append(player.playerId)
+                game.playerCount += 1
             }
-
-            game.players.append(player)
-            game.playerIds.append(player.playerId)
-            game.playerCount += 1
             game.totalPot += buyIn
 
+            // Push data to firebase
             do {
                 try transaction.setData(from: game, forDocument: gameRef)
             } catch let error as NSError {
@@ -139,7 +156,7 @@ final class GameService {
     func cashOut(gameId: String, userId: String, cashOut: Double) async throws -> Double {
         let gameRef = db.collection("games").document(gameId)
 
-        return try await db.runTransaction { transaction, errorPointer in
+        let result = try await db.runTransaction { transaction, errorPointer in
             let snapshot: DocumentSnapshot
             do {
                 snapshot = try transaction.getDocument(gameRef)
@@ -148,12 +165,14 @@ final class GameService {
                 return nil
             }
 
+            // Fetch game
             guard var game = try? snapshot.data(as: Game.self) else {
                 let error = GameServiceError.gameNotFound
                 errorPointer?.pointee = error as NSError
                 return nil
             }
 
+            // Find player in game
             guard let playerIndex = game.players.firstIndex(where: { $0.playerId == userId }) else {
                 let error = GameServiceError.playerNotInGame
                 errorPointer?.pointee = error as NSError
@@ -166,8 +185,11 @@ final class GameService {
             game.players[playerIndex].isActive = false
 
             // If no active players remain, deactivate the game
+            var gameEnded = false
             if !game.players.contains(where: { $0.isActive }) {
                 game.isActive = false
+                game.endedAt = Date()
+                gameEnded = true
             }
 
             do {
@@ -177,8 +199,24 @@ final class GameService {
                 return nil
             }
 
-            return playerBuyIn as NSNumber
-        } as! Double
+            return [playerBuyIn, gameEnded ? 1.0 : 0.0] as NSArray
+        }
+
+        let resultArray = result as! NSArray
+        let playerBuyIn = resultArray[0] as! Double
+        let gameEnded = (resultArray[1] as! Double) == 1.0
+
+        // Optimistic UI: move ended game from active to past
+        if gameEnded {
+            if let index = activeGames.firstIndex(where: { $0.id == gameId }) {
+                var endedGame = activeGames.remove(at: index)
+                endedGame.isActive = false
+                endedGame.endedAt = Date()
+                pastGames.insert(endedGame, at: 0)
+            }
+        }
+
+        return playerBuyIn
     }
 
     /// Adds a re-buy for the player, incrementing their buy-in and the game's total pot.
@@ -220,6 +258,42 @@ final class GameService {
         }
     }
 
+
+    // MARK: - Past Games Pagination
+    /// Resets state and fetches the first page of past games.
+    func fetchPastGames(userId: String) async throws {
+        pastGames = []
+        lastPastGameDocument = nil
+        hasMorePastGames = true
+        try await fetchNextPastGamesPage(userId: userId)
+    }
+
+    /// Fetches the next page of ended games using cursor-based pagination.
+    func fetchNextPastGamesPage(userId: String) async throws {
+        guard !isLoadingPastGames, hasMorePastGames else { return }
+        isLoadingPastGames = true
+        defer { isLoadingPastGames = false }
+
+        var query = db.collection("games")
+            .whereField("playerIds", arrayContains: userId)
+            .whereField("isActive", isEqualTo: false)
+            .order(by: "startedAt", descending: true)
+            .limit(to: pastGamesPageSize)
+
+        if let lastDoc = lastPastGameDocument {
+            query = query.start(afterDocument: lastDoc)
+        }
+
+        let snapshot = try await query.getDocuments()
+        let newGames = snapshot.documents.compactMap { try? $0.data(as: Game.self) }
+
+        pastGames.append(contentsOf: newGames)
+        lastPastGameDocument = snapshot.documents.last
+        if snapshot.documents.count < pastGamesPageSize {
+            hasMorePastGames = false
+        }
+        
+    }
 
     // MARK: - Private
 

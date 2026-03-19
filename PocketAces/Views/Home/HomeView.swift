@@ -11,7 +11,6 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    headerSection
                     quickStatsRow
                     gameCarousel
                     actionButtons
@@ -28,16 +27,6 @@ struct HomeView: View {
         }
     }
     
-    // MARK: - Header
-    
-    private var headerSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Welcome back, \(userStore.userData?.displayName ?? "Player")")
-                .font(.title2)
-                .fontWeight(.bold)
-        }
-        .padding(.horizontal, 16)
-    }
     
     // MARK: - Quick Stats
     
@@ -194,6 +183,18 @@ struct HomeView: View {
                     subtitle: "Enter a game with a code",
                     icon: "arrow.right.circle.fill",
                     color: .blue
+                )
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink {
+                PastGamesView()
+            } label: {
+                HomeActionCard(
+                    title: "Past Games",
+                    subtitle: "View your game history",
+                    icon: "clock.arrow.circlepath",
+                    color: .orange
                 )
             }
             .buttonStyle(.plain)

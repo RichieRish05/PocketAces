@@ -35,6 +35,7 @@ struct PocketAcesApp: App {
                 if let userId = authService.currentUserId {
                     try? await userStore.fetchUser(userId: userId)
                     try? await gameService.fetchGames(userId: userId)
+                    try? await gameService.fetchPastGames(userId: userId)
                 }
             }
             .onChange(of: authService.currentUserId) { _, newId in
@@ -42,6 +43,7 @@ struct PocketAcesApp: App {
                     Task {
                         try? await userStore.fetchUser(userId: userId)
                         try? await gameService.fetchGames(userId: userId)
+                        try? await gameService.fetchPastGames(userId: userId)
                     }
                 }
             }

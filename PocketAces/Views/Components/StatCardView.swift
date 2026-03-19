@@ -77,9 +77,14 @@ struct StatCardView: View {
             }
         }
         .padding(16)
-        .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .frame(maxWidth: .infinity)
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(
+                    .ultraThinMaterial,
+                    lineWidth: 2
+                )
+        )
         .onAppear {
             withAnimation(.easeOut(duration: 1)) {
                 isAnimating = true
