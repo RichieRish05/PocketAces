@@ -6,6 +6,7 @@ enum GameServiceError: LocalizedError {
     case playerAlreadyInGame
     case playerNotInGame
     case joinCodeGenerationFailed
+    case networkError
 
     var errorDescription: String? {
         switch self {
@@ -13,6 +14,7 @@ enum GameServiceError: LocalizedError {
         case .playerAlreadyInGame: "You're already in this game."
         case .playerNotInGame: "Player not found in this game."
         case .joinCodeGenerationFailed: "Failed to generate a unique join code. Please try again."
+        case .networkError: "An unexpected network error occurred."
         }
     }
 }
@@ -45,6 +47,7 @@ final class GameService {
         async let activeQuery = db.collection("games")
             .whereField("playerIds", arrayContains: userId)
             .whereField("isActive", isEqualTo: true)
+            .order(by: "startedAt", descending: true)
             .getDocuments()
     
         let activeSnapshot = try await activeQuery
@@ -56,6 +59,7 @@ final class GameService {
     /// Creates a new game document in Firestore with the host as the first player.
     /// Returns the created `Game` with its Firestore document ID set.
     func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double) async throws -> Game {
+        
         let joinCode = try await generateJoinCode()
 
         let host = Player(
@@ -83,17 +87,22 @@ final class GameService {
         let docRef = try db.collection("games").addDocument(from: game)
         var createdGame = game
         createdGame.id = docRef.documentID
-        activeGames.append(createdGame)
+        activeGames.insert(createdGame, at: 0)
         return createdGame
     }
 
     /// Looks up an active game by join code and adds the player via a Firestore transaction.
     /// Throws `gameNotFound` if no active game matches or `playerAlreadyInGame` on duplicates.
     func joinGame(joinCode: String, player: Player, buyIn: Double) async throws -> Game {
-        let snapshot = try await db.collection("games")
-            .whereField("joinCode", isEqualTo: joinCode.uppercased())
-            .whereField("isActive", isEqualTo: true)
-            .getDocuments()
+        let snapshot: QuerySnapshot
+        do {
+            snapshot = try await db.collection("games")
+                .whereField("joinCode", isEqualTo: joinCode.uppercased())
+                .whereField("isActive", isEqualTo: true)
+                .getDocuments()
+        } catch {
+            throw GameServiceError.networkError
+        }
 
         guard let document = snapshot.documents.first else {
             throw GameServiceError.gameNotFound
@@ -101,11 +110,14 @@ final class GameService {
 
         let gameRef = document.reference
 
-        return try await db.runTransaction { transaction, errorPointer in
+        let joinedGame: Game
+        do {
+            joinedGame = try await db.runTransaction { transaction, errorPointer in
             let freshSnapshot: DocumentSnapshot
             do {
                 freshSnapshot = try transaction.getDocument(gameRef)
             } catch let error as NSError {
+                
                 errorPointer?.pointee = error
                 return nil
             }
@@ -144,11 +156,16 @@ final class GameService {
             }
             
             
-            // Mutate active game array state
-            self.activeGames.append(game)
-            
             return game
-        } as! Game
+            } as! Game
+        } catch let error as GameServiceError {
+            throw error
+        } catch {
+            throw GameServiceError.networkError
+        }
+
+        activeGames.insert(joinedGame, at: 0)
+        return joinedGame
     }
 
     /// Sets a player's cash-out amount and marks them inactive via a Firestore transaction.
