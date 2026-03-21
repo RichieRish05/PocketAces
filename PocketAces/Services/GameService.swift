@@ -36,7 +36,7 @@ final class GameService {
     private(set) var isLoadingPastGames = false // Used to indicate document fetching in progress
     private(set) var hasMorePastGames = true // Used for pagination logic
     private var lastPastGameDocument: DocumentSnapshot? // DB result
-    private let pastGamesPageSize = 15 // Size of page for pagination
+    private let pastGamesPageSize = 10 // Size of page for pagination
 
     private let db = Firestore.firestore()
 
@@ -44,23 +44,6 @@ final class GameService {
     private static let joinCodeLength = 6
 
     // MARK: - Public
-
-    /// Fetches all active games the user is part of and replaces `activeGames`.
-    func fetchGames(userId: String) async throws {
-        isLoadingGames = true
-        defer { isLoadingGames = false }
-
-        async let activeQuery = db.collection("games")
-            .whereField("playerIds", arrayContains: userId)
-            .whereField("isActive", isEqualTo: true)
-            .order(by: "startedAt", descending: true)
-            .getDocuments()
-    
-        let activeSnapshot = try await activeQuery
-        activeGames = activeSnapshot.documents.compactMap { try? $0.data(as: Game.self) }
-        
-        
-    }
 
     /// Attaches a persistent snapshot listener on active games for the given user.
     /// Replaces `activeGames` on every snapshot, keeping HomeView in sync in real time.
@@ -76,6 +59,10 @@ final class GameService {
                 guard let self else { return }
                 self.isLoadingGames = false
                 guard let snapshot else { return }
+                // Detect games that just ended — re-fetch past games with correct data
+                if snapshot.documentChanges.contains(where: { $0.type == .removed }) {
+                    Task { try? await self.fetchPastGames(userId: userId) }
+                }
                 self.activeGames = snapshot.documents.compactMap { try? $0.data(as: Game.self) }
             }
     }
@@ -263,17 +250,6 @@ final class GameService {
 
         let resultArray = result as! NSArray
         let playerBuyIn = resultArray[0] as! Double
-        let gameEnded = (resultArray[1] as! Double) == 1.0
-
-        // Insert into pastGames when the game ends (pastGames has no listener)
-        if gameEnded {
-            if let index = activeGames.firstIndex(where: { $0.id == gameId }) {
-                var endedGame = activeGames[index]
-                endedGame.isActive = false
-                endedGame.endedAt = Date()
-                pastGames.insert(endedGame, at: 0)
-            }
-        }
 
         return playerBuyIn
     }
