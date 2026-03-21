@@ -117,7 +117,7 @@ struct GameCardView: View {
                 .foregroundStyle(.primary)
                 .lineLimit(1)
 
-            Text("\(game.playerCount) players •  \(formattedPot) pot")
+            Text("\(game.activePlayerCount) players •  \(formattedPot) pot")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }

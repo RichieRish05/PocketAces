@@ -6,6 +6,7 @@ struct JoinGameView: View {
     @Environment(UserStore.self) private var userStore
 
     @State private var joinCode = ""
+    @State private var buyIn = 0.0
     @State private var isJoining = false
     @State private var errorMessage: String?
 
@@ -35,6 +36,22 @@ struct JoinGameView: View {
                         joinCode = String(newValue.prefix(6)).uppercased()
                     }
 
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Buy-In")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 16)
+
+                    CurrencyInputField(value: $buyIn)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(.secondary, lineWidth: 1)
+                        )
+                        .padding(.horizontal, 16)
+                }
+
                 if let errorMessage {
                     Text(errorMessage)
                         .font(.subheadline)
@@ -55,7 +72,7 @@ struct JoinGameView: View {
                     .padding(.vertical, 14)
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(joinCode.count < 6 || isJoining)
+                .disabled(joinCode.count < 6 || buyIn <= 0 || isJoining)
                 .padding(.horizontal, 16)
 
                 Spacer()
@@ -80,13 +97,14 @@ struct JoinGameView: View {
         let player = Player(
             playerId: userId,
             name: userStore.userData?.displayName ?? "Player",
-            buyIn: 0,
+            avatarName: userStore.userData?.avatarName ?? "avatar_01",
+            buyIn: buyIn,
             cashOut: 0,
             isActive: true
         )
 
         do {
-            _ = try await gameService.joinGame(joinCode: joinCode, player: player, buyIn: 0)
+            _ = try await gameService.joinGame(joinCode: joinCode, player: player, buyIn: buyIn)
             dismiss()
         } catch {
             errorMessage = error.localizedDescription

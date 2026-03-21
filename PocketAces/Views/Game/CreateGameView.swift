@@ -88,7 +88,8 @@ struct CreateGameView: View {
                 name: gameName,
                 hostId: userId,
                 hostDisplayName: userStore.userData?.displayName ?? "Host",
-                buyIn: buyIn
+                buyIn: buyIn,
+                avatarName: userStore.userData?.avatarName ?? "avatar_01"
             )
             dismiss()
         } catch {

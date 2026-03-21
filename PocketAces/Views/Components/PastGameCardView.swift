@@ -29,6 +29,7 @@ struct PastGameCardView: View {
     private var sortedPlayers: [Player] {
         game.players.sorted { ($0.cashOut - $0.buyIn) > ($1.cashOut - $1.buyIn) }
     }
+    
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {

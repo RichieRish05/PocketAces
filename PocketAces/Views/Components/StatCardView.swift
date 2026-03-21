@@ -86,7 +86,7 @@ struct StatCardView: View {
                 )
         )
         .onAppear {
-            withAnimation(.easeOut(duration: 1)) {
+            withAnimation(.easeOut(duration: 0.8)) {
                 isAnimating = true
             }
         }

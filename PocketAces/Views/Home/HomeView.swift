@@ -25,6 +25,9 @@ struct HomeView: View {
             .sheet(isPresented: $showJoinGame) {
                 JoinGameView()
             }
+            .navigationDestination(for: Game.self) { game in
+                GameDetailView(game: game)
+            }
         }
     }
     

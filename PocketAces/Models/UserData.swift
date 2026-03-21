@@ -12,6 +12,7 @@ struct UserData: Codable {
     var sumProfitSquared: Double
     var wins: Int
     var itm: Int
+//    var activeGames: Int TO DO : do not let user have more than 5 active games
     var biggestWin: Double
     var biggestLoss: Double
     var currentWinStreak: Int
