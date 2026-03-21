@@ -34,7 +34,7 @@ struct PocketAcesApp: App {
             .task {
                 if let userId = authService.currentUserId {
                     try? await userStore.fetchUser(userId: userId)
-                    try? await gameService.fetchGames(userId: userId)
+                    gameService.listenToActiveGames(userId: userId)
                     try? await gameService.fetchPastGames(userId: userId)
                 }
             }
@@ -42,9 +42,11 @@ struct PocketAcesApp: App {
                 if let userId = newId {
                     Task {
                         try? await userStore.fetchUser(userId: userId)
-                        try? await gameService.fetchGames(userId: userId)
+                        gameService.listenToActiveGames(userId: userId)
                         try? await gameService.fetchPastGames(userId: userId)
                     }
+                } else {
+                    gameService.stopListeningToActiveGames()
                 }
             }
         }

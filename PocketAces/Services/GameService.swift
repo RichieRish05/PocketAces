@@ -21,8 +21,8 @@ enum GameServiceError: LocalizedError {
     }
 }
 
-/// Stateless service that manages game CRUD operations against Firestore.
-/// `activeGames` is updated optimistically by ViewModels on join/create/cash-out.
+/// Service that manages game CRUD operations against Firestore.
+/// `activeGames` is kept in sync via a persistent query snapshot listener.
 @Observable
 final class GameService {
     private(set) var activeGames: [Game] = []
@@ -30,6 +30,7 @@ final class GameService {
 
     private(set) var listenedGame: Game?
     private var gameListener: ListenerRegistration?
+    private var activeGamesListener: ListenerRegistration?
 
     private(set) var pastGames: [Game] = [] // Past games user was involved in
     private(set) var isLoadingPastGames = false // Used to indicate document fetching in progress
@@ -59,6 +60,30 @@ final class GameService {
         activeGames = activeSnapshot.documents.compactMap { try? $0.data(as: Game.self) }
         
         
+    }
+
+    /// Attaches a persistent snapshot listener on active games for the given user.
+    /// Replaces `activeGames` on every snapshot, keeping HomeView in sync in real time.
+    func listenToActiveGames(userId: String) {
+        stopListeningToActiveGames()
+        isLoadingGames = true
+
+        activeGamesListener = db.collection("games")
+            .whereField("playerIds", arrayContains: userId)
+            .whereField("isActive", isEqualTo: true)
+            .order(by: "startedAt", descending: true)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self else { return }
+                self.isLoadingGames = false
+                guard let snapshot else { return }
+                self.activeGames = snapshot.documents.compactMap { try? $0.data(as: Game.self) }
+            }
+    }
+
+    /// Removes the active-games query listener.
+    func stopListeningToActiveGames() {
+        activeGamesListener?.remove()
+        activeGamesListener = nil
     }
 
     /// Creates a new game document in Firestore with the host as the first player.
@@ -94,7 +119,6 @@ final class GameService {
         let docRef = try db.collection("games").addDocument(from: game)
         var createdGame = game
         createdGame.id = docRef.documentID
-        activeGames.insert(createdGame, at: 0)
         return createdGame
     }
 
@@ -172,8 +196,7 @@ final class GameService {
         } catch {
             throw GameServiceError.networkError
         }
-
-        activeGames.insert(joinedGame, at: 0)
+        
         return joinedGame
     }
 
@@ -242,10 +265,10 @@ final class GameService {
         let playerBuyIn = resultArray[0] as! Double
         let gameEnded = (resultArray[1] as! Double) == 1.0
 
-        // Optimistic UI: move ended game from active to past
+        // Insert into pastGames when the game ends (pastGames has no listener)
         if gameEnded {
             if let index = activeGames.firstIndex(where: { $0.id == gameId }) {
-                var endedGame = activeGames.remove(at: index)
+                var endedGame = activeGames[index]
                 endedGame.isActive = false
                 endedGame.endedAt = Date()
                 pastGames.insert(endedGame, at: 0)
@@ -298,7 +321,7 @@ final class GameService {
     // MARK: - Snapshot Listener
 
     /// Attaches a real-time snapshot listener on a single game document.
-    /// Only one listener is active at a time — calling this stops any previous listener.
+    /// Only one listener is active at a time, calling this stops any previous listener.
     func listenToGame(gameId: String) {
         stopListening()
         let docRef = db.collection("games").document(gameId)
