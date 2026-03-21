@@ -7,6 +7,7 @@ enum GameServiceError: LocalizedError {
     case playerNotInGame
     case joinCodeGenerationFailed
     case networkError
+    case cashOutExceedsPot
 
     var errorDescription: String? {
         switch self {
@@ -15,6 +16,7 @@ enum GameServiceError: LocalizedError {
         case .playerNotInGame: "Player not found in this game."
         case .joinCodeGenerationFailed: "Failed to generate a unique join code. Please try again."
         case .networkError: "An unexpected network error occurred."
+        case .cashOutExceedsPot: "Cash-out amount exceeds the remaining pot."
         }
     }
 }
@@ -25,6 +27,9 @@ enum GameServiceError: LocalizedError {
 final class GameService {
     private(set) var activeGames: [Game] = []
     private(set) var isLoadingGames = false
+
+    private(set) var listenedGame: Game?
+    private var gameListener: ListenerRegistration?
 
     private(set) var pastGames: [Game] = [] // Past games user was involved in
     private(set) var isLoadingPastGames = false // Used to indicate document fetching in progress
@@ -58,13 +63,14 @@ final class GameService {
 
     /// Creates a new game document in Firestore with the host as the first player.
     /// Returns the created `Game` with its Firestore document ID set.
-    func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double) async throws -> Game {
-        
+    func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double, avatarName: String = "avatar_01") async throws -> Game {
+
         let joinCode = try await generateJoinCode()
 
         let host = Player(
             playerId: hostId,
             name: hostDisplayName,
+            avatarName: avatarName,
             buyIn: buyIn,
             cashOut: 0,
             isActive: true
@@ -77,6 +83,7 @@ final class GameService {
             joinCode: joinCode,
             joinCodeEnabled: true,
             playerCount: 1,
+            activePlayerCount: 1,
             players: [host],
             playerIds: [hostId],
             isActive: true,
@@ -139,11 +146,13 @@ final class GameService {
                 // Reactivate: reset cashOut, mark active
                 game.players[existingIndex].isActive = true
                 game.players[existingIndex].cashOut = 0
+                game.activePlayerCount += 1
             } else {
             // Add new player
                 game.players.append(player)
                 game.playerIds.append(player.playerId)
                 game.playerCount += 1
+                game.activePlayerCount += 1
             }
             game.totalPot += buyIn
 
@@ -198,8 +207,17 @@ final class GameService {
 
             let playerBuyIn = game.players[playerIndex].buyIn
 
+            // Validate cash-out doesn't exceed remaining pot
+            if cashOut > game.totalPot {
+                let error = GameServiceError.cashOutExceedsPot
+                errorPointer?.pointee = error as NSError
+                return nil
+            }
+
             game.players[playerIndex].cashOut = cashOut
             game.players[playerIndex].isActive = false
+            game.totalPot -= cashOut
+            game.activePlayerCount -= 1
 
             // If no active players remain, deactivate the game
             var gameEnded = false
@@ -276,6 +294,30 @@ final class GameService {
         }
     }
 
+
+    // MARK: - Snapshot Listener
+
+    /// Attaches a real-time snapshot listener on a single game document.
+    /// Only one listener is active at a time — calling this stops any previous listener.
+    func listenToGame(gameId: String) {
+        stopListening()
+        let docRef = db.collection("games").document(gameId)
+        gameListener = docRef.addSnapshotListener { [weak self] snapshot, error in
+            guard let self, let snapshot, snapshot.exists else { return }
+            do {
+                    self.listenedGame = try snapshot.data(as: Game.self)
+                } catch {
+                    print("Failed to decode game: \(error)")
+                }
+        }
+    }
+
+    /// Removes the active snapshot listener and clears the listened game.
+    func stopListening() {
+        gameListener?.remove()
+        gameListener = nil
+        listenedGame = nil
+    }
 
     // MARK: - Past Games Pagination
     /// Resets state and fetches the first page of past games.
