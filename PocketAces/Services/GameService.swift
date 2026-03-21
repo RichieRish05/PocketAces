@@ -8,6 +8,8 @@ enum GameServiceError: LocalizedError {
     case joinCodeGenerationFailed
     case networkError
     case cashOutExceedsPot
+    case gameNotActive
+    case playerNotActive
 
     var errorDescription: String? {
         switch self {
@@ -17,6 +19,8 @@ enum GameServiceError: LocalizedError {
         case .joinCodeGenerationFailed: "Failed to generate a unique join code. Please try again."
         case .networkError: "An unexpected network error occurred."
         case .cashOutExceedsPot: "Cash-out amount exceeds the remaining pot."
+        case .gameNotActive: "This game is no longer active."
+        case .playerNotActive: "You have already cashed out."
         }
     }
 }
@@ -28,8 +32,6 @@ final class GameService {
     private(set) var activeGames: [Game] = []
     private(set) var isLoadingGames = false
 
-    private(set) var listenedGame: Game?
-    private var gameListener: ListenerRegistration?
     private var activeGamesListener: ListenerRegistration?
 
     private(set) var pastGames: [Game] = [] // Past games user was involved in
@@ -273,8 +275,20 @@ final class GameService {
                 return nil
             }
 
+            guard game.isActive else {
+                let error = GameServiceError.gameNotActive
+                errorPointer?.pointee = error as NSError
+                return nil
+            }
+
             guard let playerIndex = game.players.firstIndex(where: { $0.playerId == userId }) else {
                 let error = GameServiceError.playerNotInGame
+                errorPointer?.pointee = error as NSError
+                return nil
+            }
+
+            guard game.players[playerIndex].isActive else {
+                let error = GameServiceError.playerNotActive
                 errorPointer?.pointee = error as NSError
                 return nil
             }
@@ -293,30 +307,6 @@ final class GameService {
         }
     }
 
-
-    // MARK: - Snapshot Listener
-
-    /// Attaches a real-time snapshot listener on a single game document.
-    /// Only one listener is active at a time, calling this stops any previous listener.
-    func listenToGame(gameId: String) {
-        stopListening()
-        let docRef = db.collection("games").document(gameId)
-        gameListener = docRef.addSnapshotListener { [weak self] snapshot, error in
-            guard let self, let snapshot, snapshot.exists else { return }
-            do {
-                    self.listenedGame = try snapshot.data(as: Game.self)
-                } catch {
-                    print("Failed to decode game: \(error)")
-                }
-        }
-    }
-
-    /// Removes the active snapshot listener and clears the listened game.
-    func stopListening() {
-        gameListener?.remove()
-        gameListener = nil
-        listenedGame = nil
-    }
 
     // MARK: - Past Games Pagination
     /// Resets state and fetches the first page of past games.

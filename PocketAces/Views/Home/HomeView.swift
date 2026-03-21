@@ -25,8 +25,8 @@ struct HomeView: View {
             .sheet(isPresented: $showJoinGame) {
                 JoinGameView()
             }
-            .navigationDestination(for: Game.self) { game in
-                GameDetailView(game: game)
+            .navigationDestination(for: String.self) { gameId in
+                GameDetailView(gameId: gameId)
             }
         }
     }
@@ -79,7 +79,7 @@ struct HomeView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         ForEach(games) { game in
-                            NavigationLink(value: game) {
+                            NavigationLink(value: game.id ?? "") {
                                 GameCardView(game: game)
                             }
                             .buttonStyle(.plain)
