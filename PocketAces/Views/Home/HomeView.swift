@@ -3,22 +3,23 @@ import SwiftUI
 struct HomeView: View {
     @Environment(UserStore.self) private var userStore
     @Environment(GameService.self) private var gameService
-    
+    @Environment(AuthService.self) private var authService
+
     @State private var showCreateGame = false
     @State private var showJoinGame = false
-    
-    
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    quickStatsRow
-                    gameCarousel
-                    actionButtons
+                VStack(alignment: .leading, spacing: 28) {
+                    headerSection
+                    activeGamesSection
+                    actionRow
+                    recentGamesSection
                 }
-                .padding(.vertical, 16)
+                .padding(.bottom, 32)
             }
-            .navigationTitle("Home")
+            .scrollIndicators(.hidden)
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showCreateGame) {
                 CreateGameView()
             }
@@ -30,54 +31,58 @@ struct HomeView: View {
             }
         }
     }
-    
-    
-    // MARK: - Quick Stats
-    
-    private var quickStatsRow: some View {
+
+
+    // MARK: - Header
+
+    private var headerSection: some View {
+        netProfitCard
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+    }
+
+    private var netProfitCard: some View {
+        let netProfit = userStore.userData?.netProfit ?? 0
         let gamesPlayed = userStore.userData?.gamesPlayed ?? 0
         let wins = userStore.userData?.wins ?? 0
-        let netProfit = userStore.userData?.netProfit ?? 0
         let winRate = gamesPlayed > 0 ? Double(wins) / Double(gamesPlayed) * 100 : 0
-        
-        return HStack(spacing: 8) {
-            StatCardView(
-                icon: "dollarsign.circle.fill",
-                label: "Net Profit",
-                numericValue: netProfit,
-                format: .currency,
-                valueColor: netProfit >= 0 ? .green : .red
-            )
-            StatCardView(
-                icon: "trophy.fill",
-                label: "Win Rate",
-                numericValue: winRate,
-                format: .percentage,
-                valueColor: .primary
-            )
-            StatCardView(
-                icon: "suit.spade.fill",
-                label: "Games",
-                numericValue: Double(gamesPlayed),
-                format: .integer,
-                valueColor: .primary
-            )
+        let isPositive = netProfit >= 0
+        let accentGreen = Color(red: 0.3, green: 0.85, blue: 0.45)
+        let accentRed = Color(red: 0.95, green: 0.35, blue: 0.35)
+
+        return VStack(alignment: .leading, spacing: 6) {
+            Text("Net Profit")
+                .font(.headline)
+                .foregroundStyle(Color(red: 0.72, green: 0.65, blue: 0.42))
+
+            Text(netProfit.formatted(.currency(code: "USD").precision(.fractionLength(2))))
+                .font(.system(size: 36, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+
+            HStack(spacing: 6) {
+                Image(systemName: isPositive ? "arrow.up.right" : "arrow.down.right")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(isPositive ? accentGreen : accentRed)
+
+                Text("\(gamesPlayed) games · \(Int(winRate))% win rate")
+                    .font(.caption)
+                    .foregroundStyle(isPositive ? accentGreen : accentRed)
+            }
         }
-        .padding(.horizontal, 16)
     }
-    
-    
-    // MARK: - Game Carousel
+
+    // MARK: - Active Games
+
     @ViewBuilder
-    private var gameCarousel: some View {
+    private var activeGamesSection: some View {
         let games = gameService.activeGames
-        
-        if games.isEmpty {
-            emptyState
-        } else {
-            VStack(alignment: .leading, spacing: 12) {
+
+        VStack(alignment: .leading, spacing: 14) {
+            if games.isEmpty {
+                emptyActiveState
+            } else {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: 14) {
                         ForEach(games) { game in
                             NavigationLink(value: game.id ?? "") {
                                 GameCardView(game: game)
@@ -86,109 +91,225 @@ struct HomeView: View {
                         }
                     }
                     .scrollTargetLayout()
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 20)
                 }
                 .scrollTargetBehavior(.viewAligned)
             }
         }
     }
 
-    private var emptyState: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "suit.spade.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(red: 1.0, green: 0.84, blue: 0.0),
-                            Color(red: 0.85, green: 0.65, blue: 0.13)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
+    private var emptyActiveState: some View {
+        EmptyTableCard()
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 20)
+    }
 
-            Text("No games yet")
-                .font(.headline)
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(red: 1.0, green: 0.88, blue: 0.4),
-                            Color(red: 0.85, green: 0.65, blue: 0.13)
-                        ],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
+    // MARK: - Action Row
 
-            Text("Create or join a game to get started!")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+    private var actionRow: some View {
+        HStack(spacing: 12) {
+            Button { showCreateGame = true } label: {
+                Text("Host Game")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color(red: 0.85, green: 0.75, blue: 0.45))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+
+            Button { showJoinGame = true } label: {
+                Text("Join Game")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.85, green: 0.75, blue: 0.45))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
         }
-        .frame(minHeight: 200)
-        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 20)
+    }
+
+    // MARK: - Recent Games
+
+    @ViewBuilder
+    private var recentGamesSection: some View {
+        let pastGames = Array(gameService.pastGames.prefix(3))
+
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: Color(red: 0.72, green: 0.65, blue: 0.42))
+
+                Spacer()
+
+                if !gameService.pastGames.isEmpty {
+                    NavigationLink {
+                        PastGamesView()
+                    } label: {
+                        Text("View All")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(Color(red: 0.72, green: 0.65, blue: 0.42))
+                    }
+                    .padding(.trailing, 20)
+                }
+            }
+
+            if pastGames.isEmpty && gameService.isLoadingPastGames {
+                VStack(spacing: 8) {
+                    ForEach(0..<3, id: \.self) { _ in
+                        recentGameSkeleton
+                    }
+                }
+                .padding(.horizontal, 20)
+            } else if pastGames.isEmpty {
+                emptyRecentState
+            } else {
+                VStack(spacing: 2) {
+                    ForEach(pastGames) { game in
+                        recentGameRow(game: game)
+                    }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Color.white.opacity(0.03))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
+                )
+                .padding(.horizontal, 20)
+            }
+        }
+    }
+
+    private func recentGameRow(game: Game) -> some View {
+        let suit = SuitIcon.from(gameId: game.id ?? game.joinCode)
+        let gradient = CardGradient.from(gameId: game.id ?? game.joinCode)
+        let net = playerNet(for: game)
+
+        return NavigationLink(value: game.id ?? "") {
+            HStack(spacing: 14) {
+                // Suit icon with gradient dot
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: gradient.colors.prefix(2).map { $0 },
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 36, height: 36)
+
+                    Image(systemName: suit.rawValue)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(game.name)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+
+                    Text("\(game.startedAt.timeAgoDisplay()) · \(game.playerCount) players")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.4))
+                }
+
+                Spacer()
+
+                if let net {
+                    Text(formatNet(net))
+                        .font(.subheadline.weight(.bold).monospacedDigit())
+                        .foregroundStyle(net >= 0 ? Color(red: 0.3, green: 0.85, blue: 0.45) : Color(red: 0.95, green: 0.35, blue: 0.35))
+                }
+
+                Image(systemName: "chevron.right")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.2))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var recentGameSkeleton: some View {
+        HStack(spacing: 14) {
+            Circle()
+                .fill(Color.white.opacity(0.06))
+                .frame(width: 36, height: 36)
+
+            VStack(alignment: .leading, spacing: 4) {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.white.opacity(0.06))
+                    .frame(width: 100, height: 12)
+
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.white.opacity(0.04))
+                    .frame(width: 70, height: 10)
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .redacted(reason: .placeholder)
+    }
+
+    private var emptyRecentState: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "clock.arrow.circlepath")
+                .font(.title3)
+                .foregroundStyle(.white.opacity(0.2))
+
+            Text("Completed games will appear here")
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.3))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(20)
         .background(
-            LinearGradient(
-                colors: [
-                    Color(red: 0.18, green: 0.14, blue: 0.02), // dark gold base
-                    Color(red: 0.35, green: 0.26, blue: 0.05),
-                    Color(red: 0.55, green: 0.42, blue: 0.08)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.white.opacity(0.03))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(
-                    Color(red: 0.35, green: 0.26, blue: 0.05),
-                    lineWidth: 1.5
-                )
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
         )
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
     }
 
-    // MARK: - Action Buttons
+    // MARK: - Helpers
 
-    private var actionButtons: some View {
-        VStack(spacing: 12) {
-            Button {
-                showCreateGame = true
-            } label: {
-                HomeActionCard(
-                    title: "Create Game",
-                    subtitle: "Start a new poker session",
-                    icon: "plus.circle.fill",
-                    color: .green
-                )
-            }
-            .buttonStyle(.plain)
+    private func sectionHeader(title: String, icon: String, iconColor: Color) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 12))
+                .foregroundStyle(iconColor)
 
-            Button {
-                showJoinGame = true
-            } label: {
-                HomeActionCard(
-                    title: "Join Game",
-                    subtitle: "Enter a game with a code",
-                    icon: "arrow.right.circle.fill",
-                    color: .blue
-                )
-            }
-            .buttonStyle(.plain)
-
-            NavigationLink {
-                PastGamesView()
-            } label: {
-                HomeActionCard(
-                    title: "Past Games",
-                    subtitle: "View your game history",
-                    icon: "clock.arrow.circlepath",
-                    color: .orange
-                )
-            }
-            .buttonStyle(.plain)
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.5))
+                .tracking(0.5)
+                .textCase(.uppercase)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
+    }
+
+    private func playerNet(for game: Game) -> Double? {
+        guard let userId = authService.currentUserId,
+              let player = game.players.first(where: { $0.playerId == userId }) else { return nil }
+        return player.cashOut - player.buyIn
+    }
+
+    private func formatNet(_ value: Double) -> String {
+        let prefix = value >= 0 ? "+" : ""
+        return prefix + value.formatted(.currency(code: "USD").precision(.fractionLength(0)))
     }
 }
+

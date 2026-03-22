@@ -20,7 +20,7 @@ struct PocketAcesApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if authService.isCheckingAuth || (authService.currentUserId != nil && userStore.userData == nil) || gameService.isLoadingGames {
+                if authService.isCheckingAuth || (authService.currentUserId != nil && (userStore.userData == nil)) {
                     ProgressView()
                 } else if authService.currentUserId != nil && userStore.userData != nil {
                     MainTabView()
