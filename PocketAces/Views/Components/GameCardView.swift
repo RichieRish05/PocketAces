@@ -13,80 +13,14 @@ enum SuitIcon: String, CaseIterable {
     }
 }
 
-enum CardGradient: CaseIterable {
-    
-    case ocean
-    case emerald
-    case sunset
-    case lavender
-    case fire
-    
-    var colors: [Color] {
-        switch self {
-
-        case .ocean:
-            return [
-                Color.cyan.opacity(0.8),
-                Color(red: 0, green: 0.7, blue: 0.9).opacity(0.75),
-                Color.blue.opacity(0.7),
-                Color(red: 0.2, green: 0.2, blue: 0.85).opacity(0.65),
-                Color.indigo.opacity(0.6)
-            ]
-
-        case .emerald:
-            return [
-                Color.green.opacity(0.8),
-                Color(red: 0.2, green: 0.85, blue: 0.6).opacity(0.75),
-                Color.mint.opacity(0.7),
-                Color(red: 0.1, green: 0.75, blue: 0.7).opacity(0.65),
-                Color.teal.opacity(0.6)
-            ]
-
-        case .sunset:
-            return [
-                Color.orange.opacity(0.8),
-                Color(red: 1.0, green: 0.5, blue: 0.3).opacity(0.75),
-                Color.pink.opacity(0.7),
-                Color(red: 0.95, green: 0.3, blue: 0.35).opacity(0.65),
-                Color.red.opacity(0.6)
-            ]
-
-        case .lavender:
-            return [
-                Color.purple.opacity(0.8),
-                Color(red: 0.45, green: 0.2, blue: 0.8).opacity(0.75),
-                Color.indigo.opacity(0.7),
-                Color(red: 0.25, green: 0.2, blue: 0.75).opacity(0.65),
-                Color.blue.opacity(0.6)
-            ]
-
-        case .fire:
-            return [
-                Color.red.opacity(0.8),
-                Color(red: 1.0, green: 0.35, blue: 0.1).opacity(0.75),
-                Color.orange.opacity(0.7),
-                Color(red: 1.0, green: 0.75, blue: 0.2).opacity(0.65),
-                Color.yellow.opacity(0.6)
-            ]
-        }
-    }
-    
-    static func from(gameId: String?) -> CardGradient {
-        guard let gameId, !gameId.isEmpty else { return .sunset }
-        let index = abs(gameId.hashValue) % allCases.count
-        return allCases[index]
-    }
-}
-
-
 struct GameCardView: View {
     let game: Game
 
+    private let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
+    private let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
+    private let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
+
     private var suit: SuitIcon {
-        .from(gameId: game.id ?? game.joinCode)
-    }
-    
-    private var cardGradient: CardGradient {
         .from(gameId: game.id ?? game.joinCode)
     }
 
@@ -98,28 +32,30 @@ struct GameCardView: View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 Image(systemName: suit.rawValue)
-                    .font(.system(size: 64))
-                    .foregroundStyle(.white.opacity(0.85))
-                    .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+                    .font(.system(size: 48, weight: .bold))
+                    .foregroundStyle(gold.opacity(0.7))
 
                 Spacer()
 
                 Text(game.joinCode)
-                    .foregroundStyle(.secondary)
-
-
+                    .font(.caption.weight(.semibold).monospaced())
+                    .foregroundStyle(.white.opacity(0.5))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.white.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             }
 
             Spacer()
 
             Text(game.name)
                 .font(.title2.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(.white.opacity(0.9))
                 .lineLimit(1)
 
-            Text("\(game.activePlayerCount) players •  \(formattedPot) pot")
+            Text("\(game.activePlayerCount) players · \(formattedPot) pot")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.55))
         }
         .padding(20)
         .frame(minHeight: 200)
@@ -127,13 +63,52 @@ struct GameCardView: View {
             max(length - 32, 0)
         }
         .background(
-            LinearGradient(
-                colors: cardGradient.colors,
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            ZStack {
+                LinearGradient(
+                    colors: [
+                        feltGreen.opacity(0.6),
+                        feltDark.opacity(0.8),
+                        Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+                RadialGradient(
+                    colors: [
+                        Color.mint.opacity(0.08),
+                        Color.clear,
+                    ],
+                    center: .topLeading,
+                    startRadius: 20,
+                    endRadius: 200
+                )
+
+                RadialGradient(
+                    colors: [
+                        Color.cyan.opacity(0.06),
+                        Color.clear,
+                    ],
+                    center: .bottomTrailing,
+                    startRadius: 10,
+                    endRadius: 180
+                )
+
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .strokeBorder(
+                        LinearGradient(
+                            colors: [
+                                gold.opacity(0.35),
+                                Color.mint.opacity(0.15),
+                                gold.opacity(0.25),
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1
+                    )
+            }
         )
-        .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 

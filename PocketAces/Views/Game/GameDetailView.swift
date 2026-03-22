@@ -17,6 +17,15 @@ struct GameDetailView: View {
     @State private var rebuyAmount = 0.0
     @State private var isRebuying = false
 
+    // MARK: - Colors
+
+    private let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
+    private let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
+    private let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
+    private let textGold = Color(red: 0.72, green: 0.65, blue: 0.42)
+    private let accentGreen = Color(red: 0.3, green: 0.85, blue: 0.45)
+    private let accentRed = Color(red: 0.95, green: 0.35, blue: 0.35)
+
     // MARK: - Computed Properties
 
     private var listenedGame: Game? {
@@ -37,7 +46,7 @@ struct GameDetailView: View {
         return activePlayers.count == 1 && activePlayers.first?.playerId == currentUserId
     }
 
-    private var cardGradient: CardGradient {
+    private var suit: SuitIcon {
         guard let game = listenedGame else { return .from(gameId: gameId) }
         return .from(gameId: game.id ?? game.joinCode)
     }
@@ -47,7 +56,6 @@ struct GameDetailView: View {
             if let game = listenedGame {
                 ScrollView {
                     VStack(spacing: 20) {
-                        headerCard
                         potCard
                         playerList
                     }
@@ -56,31 +64,7 @@ struct GameDetailView: View {
                 .navigationTitle(game.name)
                 .safeAreaInset(edge: .bottom) {
                     if canCashOut {
-                        HStack(spacing: 12) {
-                            Button {
-                                rebuyAmount = 0
-                                showRebuySheet = true
-                            } label: {
-                                Text("Re-buy")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
-                            }
-                            .buttonStyle(.bordered)
-
-                            Button {
-                                cashOutAmount = 0
-                                showCashOutSheet = true
-                            } label: {
-                                Text("Cash Out")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
-                            }
-                            .buttonStyle(.borderedProminent)
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 8)
+                        actionBar
                     }
                 }
             } else {
@@ -88,6 +72,11 @@ struct GameDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                joinCodeBadge
+            }
+        }
         .sheet(isPresented: $showCashOutSheet) {
             cashOutSheet
         }
@@ -112,54 +101,40 @@ struct GameDetailView: View {
         }
     }
 
-    // MARK: - Header
+    // MARK: - Join Code Badge (toolbar)
 
-    private var headerCard: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(listenedGame?.name ?? "")
-                    .font(.title2.bold())
-
-                Text("\(listenedGame?.activePlayerCount ?? 0) players")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-
-            Text(listenedGame?.joinCode ?? "")
-                .font(.subheadline.monospaced())
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
-        }
-        .padding(.horizontal, 16)
+    private var joinCodeBadge: some View {
+        Text(listenedGame?.joinCode ?? "")
+            .font(.caption.weight(.semibold).monospaced())
+            .foregroundStyle(.white.opacity(0.5))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
     }
 
-    // MARK: - Pot
+    // MARK: - Pot Card
 
     private var potCard: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 8) {
             Text("Total Pot")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(textGold)
 
             Text(totalPot, format: .currency(code: "USD"))
                 .font(.system(size: 40, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
                 .contentTransition(.numericText())
+
+            HStack(spacing: 6) {
+                Image(systemName: "person.2.fill")
+                    .font(.caption2)
+                Text("\(listenedGame?.activePlayerCount ?? 0) active")
+                    .font(.caption.weight(.medium))
+            }
+            .foregroundStyle(.white.opacity(0.45))
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
-        .background(
-            LinearGradient(
-                colors: cardGradient.colors,
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .padding(.vertical, 28)
+        .background(feltGreenBackground(cornerRadius: 20))
         .padding(.horizontal, 16)
     }
 
@@ -167,78 +142,151 @@ struct GameDetailView: View {
 
     private var playerList: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Players")
-                .font(.headline)
-                .padding(.horizontal, 16)
+            sectionHeader(title: "Players", icon: "person.3.fill")
 
             VStack(spacing: 0) {
                 ForEach(Array(players.enumerated()), id: \.offset) { index, player in
                     playerRow(player)
-
-                    if index < players.count - 1 {
-                        Divider()
-                            .padding(.leading, 64)
-                    }
                 }
             }
-            .padding(.vertical, 8)
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .padding(.vertical, 4)
+            .background(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Color.white.opacity(0.03))
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
+                }
+            )
             .padding(.horizontal, 16)
         }
     }
 
     private func playerRow(_ player: Player) -> some View {
-        HStack(spacing: 12) {
-            Image(player.avatarName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
+        let isCurrentUser = player.playerId == currentUserId
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(player.name ?? "Player")
-                    .font(.body.weight(.medium))
+        return HStack(spacing: 12) {
+            // Avatar with active indicator
+            ZStack(alignment: .bottomTrailing) {
+                Image(player.avatarName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
 
-                Text("Buy-in: \(player.buyIn, format: .currency(code: "USD"))")
+                if player.isActive {
+                    Circle()
+                        .fill(accentGreen)
+                        .frame(width: 10, height: 10)
+                        .overlay(
+                            Circle().stroke(Color.black, lineWidth: 1.5)
+                        )
+                        .offset(x: 2, y: 2)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 6) {
+                    Text(player.name ?? "Player")
+                        .font(.body.weight(.medium))
+                        .foregroundStyle(.white)
+
+                    if isCurrentUser {
+                        Text("You")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(feltDark)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 1)
+                            .background(gold.opacity(0.85))
+                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                    }
+                }
+
+                Text("\(player.buyIn, format: .currency(code: "USD")) invested")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.4))
             }
 
             Spacer()
 
             if !player.isActive {
                 let profit = player.cashOut - player.buyIn
-                VStack(alignment: .trailing, spacing: 2) {
+                VStack(alignment: .trailing, spacing: 3) {
                     Text(player.cashOut, format: .currency(code: "USD"))
-                        .font(.subheadline.weight(.semibold))
-                    Text(profit >= 0 ? "+\(profit, specifier: "%.2f")" : "\(profit, specifier: "%.2f")")
-                        .font(.caption)
-                        .foregroundStyle(profit >= 0 ? .green : .red)
+                        .font(.subheadline.weight(.semibold).monospacedDigit())
+                        .foregroundStyle(.white.opacity(0.8))
+
+                    Text(formatNet(profit))
+                        .font(.caption.weight(.bold).monospacedDigit())
+                        .foregroundStyle(profit >= 0 ? accentGreen : accentRed)
                 }
+            } else {
+                Text("Playing")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(accentGreen.opacity(0.8))
             }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .opacity(player.isActive ? 1 : 0.5)
     }
 
-    // MARK: - Cash Out
+    // MARK: - Action Bar
+
+    private var actionBar: some View {
+        HStack(spacing: 12) {
+            Button {
+                rebuyAmount = 0
+                showRebuySheet = true
+            } label: {
+                Text("Re-buy")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(gold)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color.white.opacity(0.06))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .strokeBorder(gold.opacity(0.3), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                cashOutAmount = 0
+                showCashOutSheet = true
+            } label: {
+                Text("Cash Out")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(gold)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(.ultraThinMaterial)
+    }
+
+    // MARK: - Cash Out Sheet
 
     private var cashOutSheet: some View {
         NavigationStack {
             VStack(spacing: 24) {
                 Text("Enter your chip total")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.5))
                     .padding(.top, 8)
 
                 CurrencyInputField(value: $cashOutAmount)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(.secondary, lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .strokeBorder(gold.opacity(0.3), lineWidth: 1)
                     )
                     .padding(.horizontal, 16)
 
@@ -248,20 +296,25 @@ struct GameDetailView: View {
                     Group {
                         if isCashingOut {
                             ProgressView()
+                                .tint(Color(red: 0.12, green: 0.10, blue: 0.06))
                         } else {
                             Text("Confirm Cash Out")
                         }
                     }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
+                    .background(isCashingOut || cashOutAmount <= 0 || cashOutAmount > totalPot ? gold.opacity(0.4) : gold)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.plain)
                 .disabled(isCashingOut || cashOutAmount <= 0 || cashOutAmount > totalPot)
                 .padding(.horizontal, 16)
 
                 Text("Remaining pot: \(totalPot, format: .currency(code: "USD"))")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.35))
 
                 Spacer()
             }
@@ -272,28 +325,29 @@ struct GameDetailView: View {
                     Button("Cancel") {
                         showCashOutSheet = false
                     }
+                    .foregroundStyle(textGold)
                 }
             }
         }
         .presentationDetents([.medium])
     }
 
-    // MARK: - Re-buy
+    // MARK: - Re-buy Sheet
 
     private var rebuySheet: some View {
         NavigationStack {
             VStack(spacing: 24) {
                 Text("Enter re-buy amount")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.5))
                     .padding(.top, 8)
 
                 CurrencyInputField(value: $rebuyAmount)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(.secondary, lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .strokeBorder(gold.opacity(0.3), lineWidth: 1)
                     )
                     .padding(.horizontal, 16)
 
@@ -303,14 +357,19 @@ struct GameDetailView: View {
                     Group {
                         if isRebuying {
                             ProgressView()
+                                .tint(Color(red: 0.12, green: 0.10, blue: 0.06))
                         } else {
                             Text("Confirm Re-buy")
                         }
                     }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
+                    .background(isRebuying || rebuyAmount <= 0 ? gold.opacity(0.4) : gold)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.plain)
                 .disabled(isRebuying || rebuyAmount <= 0)
                 .padding(.horizontal, 16)
 
@@ -323,10 +382,76 @@ struct GameDetailView: View {
                     Button("Cancel") {
                         showRebuySheet = false
                     }
+                    .foregroundStyle(textGold)
                 }
             }
         }
         .presentationDetents([.medium])
+    }
+
+    // MARK: - Helpers
+
+    private func sectionHeader(title: String, icon: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 12))
+                .foregroundStyle(textGold)
+
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.5))
+                .tracking(0.5)
+                .textCase(.uppercase)
+        }
+        .padding(.horizontal, 16)
+    }
+
+    private func feltGreenBackground(cornerRadius: CGFloat) -> some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    feltGreen.opacity(0.6),
+                    feltDark.opacity(0.8),
+                    Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            RadialGradient(
+                colors: [Color.mint.opacity(0.08), Color.clear],
+                center: .topLeading,
+                startRadius: 20,
+                endRadius: 200
+            )
+
+            RadialGradient(
+                colors: [Color.cyan.opacity(0.06), Color.clear],
+                center: .bottomTrailing,
+                startRadius: 10,
+                endRadius: 180
+            )
+
+            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [
+                            gold.opacity(0.35),
+                            Color.mint.opacity(0.15),
+                            gold.opacity(0.25),
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+    }
+
+    private func formatNet(_ value: Double) -> String {
+        let prefix = value >= 0 ? "+" : ""
+        return prefix + value.formatted(.currency(code: "USD").precision(.fractionLength(2)))
     }
 
     // MARK: - Actions
