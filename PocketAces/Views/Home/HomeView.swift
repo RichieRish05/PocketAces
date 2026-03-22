@@ -187,17 +187,19 @@ struct HomeView: View {
 
     private func recentGameRow(game: Game) -> some View {
         let suit = SuitIcon.from(gameId: game.id ?? game.joinCode)
-        let gradient = CardGradient.from(gameId: game.id ?? game.joinCode)
         let net = playerNet(for: game)
+        let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
+        let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
+        let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
 
         return NavigationLink(value: game.id ?? "") {
             HStack(spacing: 14) {
-                // Suit icon with gradient dot
+                // Suit icon with felt-green dot
                 ZStack {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: gradient.colors.prefix(2).map { $0 },
+                                colors: [feltGreen, feltDark],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -206,7 +208,7 @@ struct HomeView: View {
 
                     Image(systemName: suit.rawValue)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(gold)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -234,6 +236,7 @@ struct HomeView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
