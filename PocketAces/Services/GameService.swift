@@ -149,24 +149,18 @@ final class GameService {
                 return nil
             }
 
-            // Reactivate inactive player or reject active duplicate
-            if let existingIndex = game.players.firstIndex(where: { $0.playerId == player.playerId }) {
-                if game.players[existingIndex].isActive {
-                    let error = GameServiceError.playerAlreadyInGame
-                    errorPointer?.pointee = error as NSError
-                    return nil
-                }
-                // Reactivate: reset cashOut, mark active
-                game.players[existingIndex].isActive = true
-                game.players[existingIndex].cashOut = 0
-                game.activePlayerCount += 1
-            } else {
-            // Add new player
-                game.players.append(player)
-                game.playerIds.append(player.playerId)
-                game.playerCount += 1
-                game.activePlayerCount += 1
+            // Reject if player has already been in this game
+            if game.players.contains(where: { $0.playerId == player.playerId }) {
+                let error = GameServiceError.playerAlreadyInGame
+                errorPointer?.pointee = error as NSError
+                return nil
             }
+
+            // Add new player
+            game.players.append(player)
+            game.playerIds.append(player.playerId)
+            game.playerCount += 1
+            game.activePlayerCount += 1
             game.totalPot += buyIn
 
             // Push data to firebase
