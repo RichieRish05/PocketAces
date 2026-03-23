@@ -69,7 +69,7 @@ struct GameSummaryView: View {
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(textGold)
 
-                    Text(formatNet(net))
+                    Text(net.formattedCurrency(showSign: true))
                         .font(.system(size: 36, weight: .bold, design: .rounded))
                         .foregroundStyle(net >= 0 ? accentGreen : accentRed)
                 }
@@ -100,14 +100,13 @@ struct GameSummaryView: View {
     private var statsRow: some View {
         HStack(spacing: 0) {
             statCell(label: "Players", value: "\(game.playerCount)")
-
             statDivider
-
             statCell(label: "Host", value: game.hostDisplayName)
 
-            statDivider
-
-            statCell(label: "Pot Leftovers", value: formatAmount(game.totalPot))
+            if (game.totalPot > 0.0){
+                statDivider
+                statCell(label: "Pot Leftovers", value: game.totalPot.formattedCurrency())
+            }
         }
         .padding(.vertical, 14)
         .background(
@@ -124,7 +123,7 @@ struct GameSummaryView: View {
     private func statCell(label: String, value: String) -> some View {
         VStack(spacing: 4) {
             Text(label)
-                .font(.caption2.weight(.medium))
+                .font(.system(size: 12, weight: .bold))
                 .foregroundStyle(.white.opacity(0.3))
                 .textCase(.uppercase)
                 .tracking(0.3)
@@ -219,7 +218,7 @@ struct GameSummaryView: View {
             Spacer()
 
             // Net result only
-            Text(formatNet(net))
+            Text(net.formattedCurrency(showSign: true))
                 .font(.subheadline.weight(.bold).monospacedDigit())
                 .foregroundStyle(isWinner ? accentGreen : isLoser ? accentRed : .white.opacity(0.5))
         }
@@ -241,13 +240,12 @@ struct GameSummaryView: View {
         var lines: [String] = []
         lines.append("\(game.name) — Game Summary")
         lines.append(formattedDate)
-        lines.append("Pot: \(game.totalPot.formatted(.currency(code: "USD")))")
+        lines.append("Pot: \(game.totalPot.formattedCurrency())")
         lines.append("")
 
         for player in sortedPlayers {
             let net = player.cashOut - player.buyIn
-            let prefix = net >= 0 ? "+" : ""
-            let netStr = prefix + net.formatted(.currency(code: "USD").precision(.fractionLength(2)))
+            let netStr = net.formattedCurrency(decimals: 2, showSign: true)
             lines.append("\(player.name ?? "Player"): \(netStr)")
         }
 
@@ -314,15 +312,6 @@ struct GameSummaryView: View {
                 )
         }
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-    }
-
-    private func formatAmount(_ value: Double) -> String {
-        value.formatted(.currency(code: "USD").precision(.fractionLength(0)))
-    }
-
-    private func formatNet(_ value: Double) -> String {
-        let prefix = value >= 0 ? "+" : ""
-        return prefix + value.formatted(.currency(code: "USD").precision(.fractionLength(0)))
     }
 
     private func rankColor(rank: Int, net: Double) -> Color {

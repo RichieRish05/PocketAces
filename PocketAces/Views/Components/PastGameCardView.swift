@@ -17,7 +17,7 @@ struct PastGameCardView: View {
     }
 
     private var formattedPot: String {
-        game.totalPot.formatted(.currency(code: "USD").precision(.fractionLength(0)))
+        game.totalPot.formattedCurrency()
     }
 
     private var playerNet: Double? {
@@ -87,10 +87,4 @@ struct PastGameCardView: View {
     }
 
 
-    private func netFormatted(_ net: Double) -> String {
-        let prefix = net >= 0 ? "+" : ""
-        return prefix + net.formatted(.currency(code: "USD").precision(.fractionLength(0)))
-    }
-    
-    
 }

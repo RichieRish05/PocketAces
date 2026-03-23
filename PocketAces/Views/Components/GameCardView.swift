@@ -25,7 +25,7 @@ struct GameCardView: View {
     }
 
     private var formattedPot: String {
-        formatCompact(game.totalPot)
+        game.totalPot.formattedCompact()
     }
 
     var body: some View {
@@ -112,15 +112,4 @@ struct GameCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 
-    private func formatCompact(_ value: Double) -> String {
-        if value >= 1000 {
-            let k = value / 1000
-            return k.truncatingRemainder(dividingBy: 1) == 0
-                ? "\(Int(k))k"
-                : String(format: "%.1fk", k)
-        }
-        return value.truncatingRemainder(dividingBy: 1) == 0
-            ? "$\(Int(value))"
-            : String(format: "$%.0f", value)
-    }
 }

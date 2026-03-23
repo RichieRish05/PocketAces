@@ -119,7 +119,7 @@ struct GameDetailView: View {
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(textGold)
 
-            Text(totalPot, format: .currency(code: "USD"))
+            Text(totalPot.formattedCurrency())
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .contentTransition(.numericText())
@@ -202,7 +202,7 @@ struct GameDetailView: View {
                     }
                 }
 
-                Text("\(player.buyIn, format: .currency(code: "USD")) invested")
+                Text("\(player.buyIn.formattedCurrency()) invested")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.4))
             }
@@ -212,11 +212,11 @@ struct GameDetailView: View {
             if !player.isActive {
                 let profit = player.cashOut - player.buyIn
                 VStack(alignment: .trailing, spacing: 3) {
-                    Text(player.cashOut, format: .currency(code: "USD"))
+                    Text(player.cashOut.formattedCurrency())
                         .font(.subheadline.weight(.semibold).monospacedDigit())
                         .foregroundStyle(.white.opacity(0.8))
 
-                    Text(formatNet(profit))
+                    Text(profit.formattedCurrency(decimals: 2, showSign: true))
                         .font(.caption.weight(.bold).monospacedDigit())
                         .foregroundStyle(profit >= 0 ? accentGreen : accentRed)
                 }
@@ -311,7 +311,7 @@ struct GameDetailView: View {
                 .disabled(isCashingOut || cashOutAmount <= 0 || cashOutAmount > totalPot)
                 .padding(.horizontal, 16)
 
-                Text("Remaining pot: \(totalPot, format: .currency(code: "USD"))")
+                Text("Remaining pot: \(totalPot.formattedCurrency())")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.35))
 
@@ -446,11 +446,6 @@ struct GameDetailView: View {
                 )
         }
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-    }
-
-    private func formatNet(_ value: Double) -> String {
-        let prefix = value >= 0 ? "+" : ""
-        return prefix + value.formatted(.currency(code: "USD").precision(.fractionLength(2)))
     }
 
     // MARK: - Actions

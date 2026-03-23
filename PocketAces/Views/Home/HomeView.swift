@@ -62,7 +62,7 @@ struct HomeView: View {
                 .font(.headline)
                 .foregroundStyle(Color(red: 0.72, green: 0.65, blue: 0.42))
 
-            Text(netProfit.formatted(.currency(code: "USD").precision(.fractionLength(2))))
+            Text(netProfit.formattedCurrency(decimals: 2))
                 .font(.system(size: 36, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
 
@@ -230,7 +230,7 @@ struct HomeView: View {
                 Spacer()
 
                 if let net {
-                    Text(formatNet(net))
+                    Text(net.formattedCurrency(showSign: true))
                         .font(.subheadline.weight(.bold).monospacedDigit())
                         .foregroundStyle(net >= 0 ? Color(red: 0.3, green: 0.85, blue: 0.45) : Color(red: 0.95, green: 0.35, blue: 0.35))
                 }
@@ -315,9 +315,5 @@ struct HomeView: View {
         return player.cashOut - player.buyIn
     }
 
-    private func formatNet(_ value: Double) -> String {
-        let prefix = value >= 0 ? "+" : ""
-        return prefix + value.formatted(.currency(code: "USD").precision(.fractionLength(0)))
-    }
 }
 
