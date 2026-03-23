@@ -11,21 +11,12 @@ struct InputField: View {
     }
 
     var body: some View {
-        HStack {
+        VStack (alignment: .leading){
             TextField(placeholder, text: $text)
                 .font(.title2)
                 .textFieldStyle(.plain)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.words)
-
-            Spacer()
-
-            Button {
-                // help action
-            } label: {
-                Image(systemName: "questionmark.circle")
-                    .foregroundStyle(.gray)
-            }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
@@ -34,6 +25,7 @@ struct InputField: View {
                 .stroke(.secondary, lineWidth: 1)
         )
         .padding(.horizontal, 16)
+        .contentShape(Rectangle())
     }
     
 }
@@ -44,29 +36,40 @@ struct CurrencyInputField: View {
 
     @State private var centString: String = ""
     @FocusState private var isFocused: Bool
-
     private let maxDigits = 7
 
-    private var displayString: String {
+    /// Formats cents integer into display parts: (dollars, cents)
+    /// e.g. centString "12345" → ("123", "45") → "$123.45"
+    private var formattedParts: (dollar: String, cents: String) {
         if centString.isEmpty {
-            return "$-.--"
+            return ("0", "00")
         }
         let padded = centString.count < 3
             ? String(repeating: "0", count: 3 - centString.count) + centString
             : centString
         let decimalIndex = padded.index(padded.endIndex, offsetBy: -2)
-        let dollars = String(padded[padded.startIndex..<decimalIndex])
+        let dollarRaw = String(padded[padded.startIndex..<decimalIndex])
         let cents = String(padded[decimalIndex...])
-        let dollarsDisplay = dollars.allSatisfy({ $0 == "0" }) ? "-" : dollars
-        return "$\(dollarsDisplay).\(cents)"
+
+        // Add comma grouping to dollar portion
+        if let dollarInt = Int(dollarRaw) {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.groupingSeparator = ","
+            let dollarFormatted = formatter.string(from: NSNumber(value: dollarInt)) ?? dollarRaw
+            return (dollarFormatted, cents)
+        }
+        return (dollarRaw, cents)
     }
 
     var body: some View {
         ZStack {
+            // Hidden text field that captures keyboard input
             TextField("", text: $centString)
                 .keyboardType(.numberPad)
                 .focused($isFocused)
                 .opacity(0)
+                .frame(width: 0, height: 0)
                 .allowsHitTesting(false)
                 .onChange(of: centString) { _, newValue in
                     let filtered = String(newValue.filter { $0.isWholeNumber }.prefix(maxDigits))
@@ -77,18 +80,46 @@ struct CurrencyInputField: View {
                     value = Double(filtered).map { $0 / 100.0 } ?? 0
                 }
 
-            Text(displayString)
-                .font(.title2)
-                .monospaced()
-                .contentTransition(.numericText())
-                .onTapGesture {
-                    isFocused = true
+            // Visible currency display
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                let parts = formattedParts
+                Text("$\(parts.dollar).\(parts.cents)")
+                    .font(.system(.title, design: .monospaced, weight: .medium))
+                    .foregroundStyle(centString.isEmpty ? .secondary : .primary)
+
+                if isFocused {
+                    CursorView()
+                        .padding(.leading, 1)
                 }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            isFocused = true
         }
         .onAppear {
             if value > 0 {
                 centString = String(Int(round(value * 100)))
             }
         }
+    }
+
+}
+
+private struct CursorView: View {
+    @State private var visible = true
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 1)
+            .fill(.tint)
+            .frame(width: 2, height: 22)
+            .opacity(visible ? 1 : 0)
+            .task {
+                while !Task.isCancelled {
+                    try? await Task.sleep(for: .milliseconds(530))
+                    visible.toggle()
+                }
+            }
     }
 }

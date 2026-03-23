@@ -33,7 +33,7 @@ struct UserData: Codable {
         netProfit += profit
         sumProfitSquared += profit * profit
 
-        if profit > 0 {
+        if profit >= 0 {
             wins += 1
             biggestWin = max(biggestWin, profit)
             // Win resets loss streak, extends win streak

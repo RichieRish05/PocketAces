@@ -92,7 +92,7 @@ struct HomeView: View {
                     HStack(spacing: 14) {
                         ForEach(games) { game in
                             NavigationLink(value: Route.gameDetail(gameId: game.id ?? "")) {
-                                GameCardView(game: game)
+                                GameCardView(game: game, peekNext: games.count > 1)
                             }
                             .buttonStyle(.plain)
                         }

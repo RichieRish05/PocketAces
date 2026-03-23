@@ -15,6 +15,7 @@ enum SuitIcon: String, CaseIterable {
 
 struct GameCardView: View {
     let game: Game
+    var peekNext: Bool = false
 
     private let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
     private let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
@@ -60,7 +61,7 @@ struct GameCardView: View {
         .padding(20)
         .frame(minHeight: 200)
         .containerRelativeFrame(.horizontal) { length, _ in
-            max(length - 32, 0)
+            max(length - (peekNext ? 56 : 32), 0)
         }
         .background(
             ZStack {
