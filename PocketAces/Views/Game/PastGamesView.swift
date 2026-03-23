@@ -15,8 +15,10 @@ struct PastGamesView: View {
                     emptyState
                 } else {
                     ForEach(gameService.pastGames) { game in
-                        
-                        PastGameCardView(game: game)
+                        NavigationLink(value: Route.gameSummary(game: game)) {
+                            PastGameCardView(game: game)
+                        }
+                        .buttonStyle(.plain)
                         .onAppear {
                             if game.id == gameService.pastGames.last?.id {
                                 loadMore()

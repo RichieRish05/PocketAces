@@ -26,8 +26,15 @@ struct HomeView: View {
             .sheet(isPresented: $showJoinGame) {
                 JoinGameView()
             }
-            .navigationDestination(for: String.self) { gameId in
-                GameDetailView(gameId: gameId)
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .gameDetail(let gameId):
+                    GameDetailView(gameId: gameId)
+                case .gameSummary(let game):
+                    GameSummaryView(game: game)
+                case .pastGames:
+                    PastGamesView()
+                }
             }
         }
     }
@@ -84,7 +91,7 @@ struct HomeView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 14) {
                         ForEach(games) { game in
-                            NavigationLink(value: game.id ?? "") {
+                            NavigationLink(value: Route.gameDetail(gameId: game.id ?? "")) {
                                 GameCardView(game: game)
                             }
                             .buttonStyle(.plain)
@@ -146,9 +153,7 @@ struct HomeView: View {
                 Spacer()
 
                 if !gameService.pastGames.isEmpty {
-                    NavigationLink {
-                        PastGamesView()
-                    } label: {
+                    NavigationLink(value: Route.pastGames) {
                         Text("View All")
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(Color(red: 0.72, green: 0.65, blue: 0.42))
@@ -192,7 +197,7 @@ struct HomeView: View {
         let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
         let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
 
-        return NavigationLink(value: game.id ?? "") {
+        return NavigationLink(value: Route.gameSummary(game: game)) {
             HStack(spacing: 14) {
                 // Suit icon with felt-green dot
                 ZStack {
@@ -265,10 +270,10 @@ struct HomeView: View {
     }
 
     private var emptyRecentState: some View {
-        HStack(spacing: 12) {
+        return HStack(spacing: 12) {
             Image(systemName: "clock.arrow.circlepath")
                 .font(.title3)
-                .foregroundStyle(.white.opacity(0.2))
+                .foregroundStyle(.white.opacity(0.3))
 
             Text("Completed games will appear here")
                 .font(.subheadline)

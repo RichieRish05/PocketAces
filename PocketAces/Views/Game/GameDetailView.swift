@@ -268,7 +268,6 @@ struct GameDetailView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .background(.ultraThinMaterial)
     }
 
     // MARK: - Cash Out Sheet

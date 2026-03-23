@@ -53,11 +53,6 @@ struct PastGameCardView: View {
 
             }
             
-            Divider()
-
-            ForEach(sortedPlayers, id: \.playerId) { player in
-                playerRow(player: player)
-            }
         }
         .padding(16)
         .background(
@@ -95,22 +90,6 @@ struct PastGameCardView: View {
     private func netFormatted(_ net: Double) -> String {
         let prefix = net >= 0 ? "+" : ""
         return prefix + net.formatted(.currency(code: "USD").precision(.fractionLength(0)))
-    }
-    
-    private func playerRow(player: Player) -> some View {
-        let net = player.cashOut - player.buyIn
-
-        return HStack {
-            Text(player.name ?? "Player")
-                .font(.subheadline)
-                .lineLimit(1)
-            
-            Spacer()
-            
-            Text(netFormatted(net))
-                .font(.subheadline.bold())
-                .foregroundStyle(net >= 0 ? .green : .red)
-        }
     }
     
     
