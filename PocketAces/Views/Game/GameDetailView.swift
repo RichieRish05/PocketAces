@@ -304,11 +304,11 @@ struct GameDetailView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(isCashingOut || cashOutAmount <= 0 || cashOutAmount > totalPot ? gold.opacity(0.4) : gold)
+                    .background(isCashingOut || cashOutAmount > totalPot ? gold.opacity(0.4) : gold)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
-                .disabled(isCashingOut || cashOutAmount <= 0 || cashOutAmount > totalPot)
+                .disabled(isCashingOut || cashOutAmount > totalPot)
                 .padding(.horizontal, 16)
 
                 Text("Remaining pot: \(totalPot.formattedCurrency())")

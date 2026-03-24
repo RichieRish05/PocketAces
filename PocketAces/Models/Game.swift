@@ -8,25 +8,6 @@ struct Player: Codable, Hashable {
     var buyIn: Double
     var cashOut: Double
     var isActive: Bool
-
-    init(playerId: String, name: String?, avatarName: String = "avatar_01", buyIn: Double, cashOut: Double, isActive: Bool) {
-        self.playerId = playerId
-        self.name = name
-        self.avatarName = avatarName
-        self.buyIn = buyIn
-        self.cashOut = cashOut
-        self.isActive = isActive
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        playerId = try container.decode(String.self, forKey: .playerId)
-        name = try container.decodeIfPresent(String.self, forKey: .name)
-        avatarName = try container.decodeIfPresent(String.self, forKey: .avatarName) ?? "avatar_01"
-        buyIn = try container.decode(Double.self, forKey: .buyIn)
-        cashOut = try container.decode(Double.self, forKey: .cashOut)
-        isActive = try container.decode(Bool.self, forKey: .isActive)
-    }
 }
 
 struct Game: Codable, Identifiable, Hashable {

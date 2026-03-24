@@ -72,11 +72,19 @@ struct CurrencyInputField: View {
                 .frame(width: 0, height: 0)
                 .allowsHitTesting(false)
                 .onChange(of: centString) { _, newValue in
-                    let filtered = String(newValue.filter { $0.isWholeNumber }.prefix(maxDigits))
+                    var filtered = String(newValue.filter { $0.isWholeNumber }.prefix(maxDigits))
+            
+                    // Strip leading zeros (keep at least one "0" if all zeros)
+                    while filtered.count > 1 && filtered.first == "0" {
+                        filtered.removeFirst()
+                    }
+                    
                     if filtered != newValue {
                         centString = filtered
                         return
                     }
+                    
+                    
                     value = Double(filtered).map { $0 / 100.0 } ?? 0
                 }
 
