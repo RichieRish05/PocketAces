@@ -5,13 +5,6 @@ struct AdvancedMetrics: View {
     let averageProfit: Double
     let roi: Double
 
-    // MARK: - Palette
-
-    private let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
-    private let dimGold = Color(red: 0.72, green: 0.65, blue: 0.42)
-    private let accentGreen = Color(red: 0.3, green: 0.85, blue: 0.45)
-    private let accentRed = Color(red: 0.95, green: 0.35, blue: 0.35)
-
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             sectionHeader(title: "Advanced", icon: "function")
@@ -20,13 +13,13 @@ struct AdvancedMetrics: View {
                 metricRow(
                     label: "Avg Profit / Session",
                     value: averageProfit.formattedCurrency(decimals: 2, showSign: true),
-                    valueColor: averageProfit >= 0 ? accentGreen : accentRed
+                    valueColor: averageProfit >= 0 ? Theme.accentGreen : Theme.accentRed
                 )
 
                 metricRow(
                     label: "ROI",
                     value: String(format: "%+.1f%%", roi),
-                    valueColor: roi >= 0 ? accentGreen : accentRed
+                    valueColor: roi >= 0 ? Theme.accentGreen : Theme.accentRed
                 )
             }
         }
@@ -73,7 +66,7 @@ struct AdvancedMetrics: View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 12))
-                .foregroundStyle(dimGold)
+                .foregroundStyle(Theme.dimGold)
 
             Text(title)
                 .font(.system(size: 18, weight: .semibold))

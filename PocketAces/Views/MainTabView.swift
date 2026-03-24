@@ -3,9 +3,6 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selectedTab: AppTab = .home
 
-    private let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
-    private let dimGold = Color(red: 0.72, green: 0.65, blue: 0.42)
-
     var body: some View {
         VStack(spacing: 0) {
             // Content area
@@ -33,10 +30,10 @@ struct MainTabView: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            gold.opacity(0.0),
-                            gold.opacity(0.25),
-                            gold.opacity(0.25),
-                            gold.opacity(0.0)
+                            Theme.gold.opacity(0.0),
+                            Theme.gold.opacity(0.25),
+                            Theme.gold.opacity(0.25),
+                            Theme.gold.opacity(0.0)
                         ],
                         startPoint: .leading,
                         endPoint: .trailing
@@ -68,13 +65,13 @@ struct MainTabView: View {
                 ZStack {
                     Image(systemName: isSelected ? tab.selectedIcon : tab.icon)
                         .font(.system(size: 18, weight: isSelected ? .semibold : .regular))
-                        .foregroundStyle(isSelected ? gold : Color.white.opacity(0.3))
+                        .foregroundStyle(isSelected ? Theme.gold : Color.white.opacity(0.3))
                 }
                 .frame(height: 24)
 
                 Text(tab.title)
                     .font(.system(size: 10, weight: isSelected ? .semibold : .regular))
-                    .foregroundStyle(isSelected ? gold : Color.white.opacity(0.3))
+                    .foregroundStyle(isSelected ? Theme.gold : Color.white.opacity(0.3))
                     .tracking(isSelected ? 0.4 : 0)
             }
             .frame(maxWidth: .infinity)

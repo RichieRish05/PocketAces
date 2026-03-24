@@ -17,10 +17,6 @@ struct GameCardView: View {
     let game: Game
     var peekNext: Bool = false
 
-    private let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
-    private let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
-    private let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
-
     private var suit: SuitIcon {
         .from(gameId: game.id ?? game.joinCode)
     }
@@ -34,7 +30,7 @@ struct GameCardView: View {
             HStack(alignment: .top) {
                 Image(systemName: suit.rawValue)
                     .font(.system(size: 48, weight: .bold))
-                    .foregroundStyle(gold.opacity(0.7))
+                    .foregroundStyle(Theme.gold.opacity(0.7))
 
                 Spacer()
 
@@ -67,8 +63,8 @@ struct GameCardView: View {
             ZStack {
                 LinearGradient(
                     colors: [
-                        feltGreen.opacity(0.6),
-                        feltDark.opacity(0.8),
+                        Theme.feltGreen.opacity(0.6),
+                        Theme.feltDark.opacity(0.8),
                         Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
                     ],
                     startPoint: .topLeading,
@@ -99,9 +95,9 @@ struct GameCardView: View {
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                gold.opacity(0.35),
+                                Theme.gold.opacity(0.35),
                                 Color.mint.opacity(0.15),
-                                gold.opacity(0.25),
+                                Theme.gold.opacity(0.25),
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

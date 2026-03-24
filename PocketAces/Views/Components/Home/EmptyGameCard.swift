@@ -3,10 +3,6 @@ import SwiftUI
 struct EmptyTableCard: View {
     @State private var animate = false
 
-    private let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
-    private let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
-    private let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
-
     private let suits: [(icon: String, color: Color, x: CGFloat, y: CGFloat, size: CGFloat, rotation: Double, delay: Double)] = [
         ("suit.spade.fill",   .cyan,    0.10, 0.22, 28, -15,  0.0),
         ("suit.heart.fill",   .pink,    0.88, 0.18, 24,  20,  0.3),
@@ -22,12 +18,12 @@ struct EmptyTableCard: View {
         ZStack {
             // Center content
             VStack(spacing: 16) {
-          
+
                 // Ace of spades
                 Image(systemName: "suit.spade.fill")
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(gold)
-     
+                    .foregroundStyle(Theme.gold)
+
 
                 VStack(spacing: 5) {
                     Text("The table's empty")
@@ -47,8 +43,8 @@ struct EmptyTableCard: View {
                 // Rich felt-green gradient
                 LinearGradient(
                     colors: [
-                        feltGreen.opacity(0.6),
-                        feltDark.opacity(0.8),
+                        Theme.feltGreen.opacity(0.6),
+                        Theme.feltDark.opacity(0.8),
                         Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
                     ],
                     startPoint: .topLeading,
@@ -81,9 +77,9 @@ struct EmptyTableCard: View {
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                gold.opacity(0.35),
+                                Theme.gold.opacity(0.35),
                                 Color.mint.opacity(0.15),
-                                gold.opacity(0.25),
+                                Theme.gold.opacity(0.25),
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -98,4 +94,3 @@ struct EmptyTableCard: View {
         }
     }
 }
-

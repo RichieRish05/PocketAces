@@ -7,13 +7,6 @@ struct StreakSection: View {
     let longestWinStreak: Int
     let longestLossStreak: Int
 
-    // MARK: - Palette
-
-    private let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
-    private let accentGreen = Color(red: 0.3, green: 0.85, blue: 0.45)
-    private let coldBlue = Color(red: 0.35, green: 0.7, blue: 1.0)
-    private let orange = Color(red: 1.0, green: 0.55, blue: 0.0)
-
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             sectionHeader(title: "Streaks", icon: "flame.fill")
@@ -26,28 +19,28 @@ struct StreakSection: View {
                     label: "Current Win",
                     value: currentWinStreak,
                     icon: "flame.fill",
-                    color: accentGreen
+                    color: Theme.accentGreen
                 )
 
                 streakCard(
                     label: "Current Loss",
                     value: currentLossStreak,
                     icon: "snowflake",
-                    color: coldBlue
+                    color: Theme.coldBlue
                 )
 
                 streakCard(
                     label: "Longest Win",
                     value: longestWinStreak,
                     icon: "crown.fill",
-                    color: gold
+                    color: Theme.gold
                 )
 
                 streakCard(
                     label: "Longest Loss",
                     value: longestLossStreak,
                     icon: "exclamationmark.triangle.fill",
-                    color: orange
+                    color: Theme.streakOrange
                 )
             }
         }

@@ -54,13 +54,10 @@ struct HomeView: View {
         let wins = userStore.userData?.wins ?? 0
         let winRate = gamesPlayed > 0 ? Double(wins) / Double(gamesPlayed) * 100 : 0
         let isPositive = netProfit >= 0
-        let accentGreen = Color(red: 0.3, green: 0.85, blue: 0.45)
-        let accentRed = Color(red: 0.95, green: 0.35, blue: 0.35)
-
         return VStack(alignment: .leading, spacing: 6) {
             Text("Net Profit")
                 .font(.headline)
-                .foregroundStyle(Color(red: 0.72, green: 0.65, blue: 0.42))
+                .foregroundStyle(Theme.dimGold)
 
             Text(netProfit.formattedCurrency(decimals: 2))
                 .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -69,11 +66,11 @@ struct HomeView: View {
             HStack(spacing: 6) {
                 Image(systemName: isPositive ? "arrow.up.right" : "arrow.down.right")
                     .font(.caption.weight(.bold))
-                    .foregroundStyle(isPositive ? accentGreen : accentRed)
+                    .foregroundStyle(isPositive ? Theme.accentGreen : Theme.accentRed)
 
                 Text("\(gamesPlayed) games · \(Int(winRate))% win rate")
                     .font(.caption)
-                    .foregroundStyle(isPositive ? accentGreen : accentRed)
+                    .foregroundStyle(isPositive ? Theme.accentGreen : Theme.accentRed)
             }
         }
     }
@@ -121,7 +118,7 @@ struct HomeView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Color(red: 0.85, green: 0.75, blue: 0.45))
+                    .background(Theme.gold)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
             .buttonStyle(.plain)
@@ -129,7 +126,7 @@ struct HomeView: View {
             Button { showJoinGame = true } label: {
                 Text("Join Game")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color(red: 0.85, green: 0.75, blue: 0.45))
+                    .foregroundStyle(Theme.gold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(.ultraThinMaterial)
@@ -148,7 +145,7 @@ struct HomeView: View {
 
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: Color(red: 0.72, green: 0.65, blue: 0.42))
+                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: Theme.dimGold)
 
                 Spacer()
 
@@ -156,7 +153,7 @@ struct HomeView: View {
                     NavigationLink(value: Route.pastGames) {
                         Text("View All")
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(Color(red: 0.72, green: 0.65, blue: 0.42))
+                            .foregroundStyle(Theme.dimGold)
                     }
                     .padding(.trailing, 20)
                 }
@@ -193,9 +190,6 @@ struct HomeView: View {
     private func recentGameRow(game: Game) -> some View {
         let suit = SuitIcon.from(gameId: game.id ?? game.joinCode)
         let net = playerNet(for: game)
-        let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
-        let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
-        let gold = Color(red: 0.85, green: 0.75, blue: 0.45)
 
         return NavigationLink(value: Route.gameSummary(game: game)) {
             HStack(spacing: 14) {
@@ -204,7 +198,7 @@ struct HomeView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [feltGreen, feltDark],
+                                colors: [Theme.feltGreen, Theme.feltDark],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -213,7 +207,7 @@ struct HomeView: View {
 
                     Image(systemName: suit.rawValue)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(gold)
+                        .foregroundStyle(Theme.gold)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -232,7 +226,7 @@ struct HomeView: View {
                 if let net {
                     Text(net.formattedCurrency(showSign: true))
                         .font(.subheadline.weight(.bold).monospacedDigit())
-                        .foregroundStyle(net >= 0 ? Color(red: 0.3, green: 0.85, blue: 0.45) : Color(red: 0.95, green: 0.35, blue: 0.35))
+                        .foregroundStyle(net >= 0 ? Theme.accentGreen : Theme.accentRed)
                 }
 
                 Image(systemName: "chevron.right")
