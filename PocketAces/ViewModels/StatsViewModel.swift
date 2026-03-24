@@ -19,15 +19,11 @@ final class StatsViewModel {
     var totalBuyIn: Double { userData?.totalBuyIn ?? 0 }
     var totalCashOut: Double { userData?.totalCashOut ?? 0 }
     var sumProfitSquared: Double { userData?.sumProfitSquared ?? 0 }
+    var recentResults: [Double] { userData?.recentResults ?? [] }
 
     var winRate: Double {
         guard gamesPlayed > 0 else { return 0 }
         return Double(wins) / Double(gamesPlayed) * 100
-    }
-
-    var itmRate: Double {
-        guard gamesPlayed > 0 else { return 0 }
-        return Double(itm) / Double(gamesPlayed) * 100
     }
 
     var averageProfit: Double {
@@ -39,61 +35,6 @@ final class StatsViewModel {
         guard totalBuyIn > 0 else { return 0 }
         return (netProfit / totalBuyIn) * 100
     }
-
-    // MARK: - Bell Curve Stats
-
-    var mean: Double {
-        guard gamesPlayed > 0 else { return 0 }
-        return netProfit / Double(gamesPlayed)
-    }
-
-    var variance: Double {
-        guard gamesPlayed > 0 else { return 0 }
-        let sumProfitSquared = userData?.sumProfitSquared ?? 0
-        return (sumProfitSquared / Double(gamesPlayed)) - (mean * mean)
-    }
-
-    var standardDeviation: Double {
-        let v = variance
-        guard v > 0 else { return 0 }
-        return sqrt(v)
-    }
-
-    var hasValidDistribution: Bool {
-        gamesPlayed >= 3
-    }
-
-    // MARK: - Bell Curve Points
-
-    struct CurvePoint: Identifiable {
-        let id = UUID()
-        let x: Double
-        let y: Double
-    }
-
-    func bellCurvePoints(count: Int = 200) -> [CurvePoint] {
-        guard hasValidDistribution else { return [] }
-
-        let mu = mean
-        let sigma = standardDeviation
-        let minX = mu - 3.5 * sigma
-        let maxX = mu + 3.5 * sigma
-        let step = (maxX - minX) / Double(count - 1)
-
-        return (0..<count).map { i in
-            let x = minX + Double(i) * step
-            let exponent = -0.5 * pow((x - mu) / sigma, 2)
-            let y = (1.0 / (sigma * sqrt(2 * .pi))) * exp(exponent)
-            return CurvePoint(x: x, y: y)
-        }
-    }
-
-    // MARK: - Streak State
-
-    var isOnWinStreak: Bool { currentWinStreak > 0 }
-    var isOnLossStreak: Bool { currentLossStreak > 0 }
-    var isAtLongestWinStreak: Bool { currentWinStreak > 0 && currentWinStreak == longestWinStreak }
-    var isAtLongestLossStreak: Bool { currentLossStreak > 0 && currentLossStreak == longestLossStreak }
 
     // MARK: - Load
 

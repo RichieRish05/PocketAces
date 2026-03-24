@@ -19,6 +19,7 @@ struct UserData: Codable {
     var currentLossStreak: Int
     var longestWinStreak: Int
     var longestLossStreak: Int
+    var recentResults: [Double]
     var createdAt: Date
 
     /// Updates all career stats from a single cash-out result.
@@ -51,6 +52,12 @@ struct UserData: Codable {
         // In the money: broke even or profited
         if profit >= 0 {
             itm += 1
+        }
+
+        // Rolling window of last 10 results for heat index
+        recentResults.append(profit)
+        if recentResults.count > 10 {
+            recentResults.removeFirst(recentResults.count - 10)
         }
     }
 }

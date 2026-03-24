@@ -3,24 +3,28 @@ import SwiftUI
 
 struct HeatIndex: View {
 
-    let gamesPlayed: Int
-    let netProfit: Double
-    let sumProfitSquared: Double
+    let recentResults: [Double]
 
     private let pillCount = 6
 
     private var heatScore: Int {
-        guard gamesPlayed > 0 else { return 0 }
+        guard !recentResults.isEmpty else { return 0 }
 
-        let n = Double(gamesPlayed)
-        let mean = netProfit / n
-        let meanSq = sumProfitSquared / n
-        let variance = meanSq - (mean * mean)
+        let n = Double(recentResults.count)
+        let sum = recentResults.reduce(0, +)
+        let mean = sum / n
+        let sumSq = recentResults.reduce(0) { $0 + ($1 * $1) }
+        let variance = (sumSq / n) - (mean * mean)
         let std = sqrt(max(variance, 0))
 
-        guard std > 0 else { return 0 }
+        guard std > 0 else {
+            // All results identical — sign determines direction
+            if mean > 0 { return 3 }
+            if mean < 0 { return -3 }
+            return 0
+        }
 
-        let z = netProfit / (std * sqrt(n))
+        let z = sum / (std * sqrt(n))
         let clamped = min(max(z, -3), 3)
         return Int(clamped.rounded())
     }

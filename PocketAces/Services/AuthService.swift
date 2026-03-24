@@ -57,6 +57,7 @@ final class AuthService {
             currentLossStreak: 0,
             longestWinStreak: 0,
             longestLossStreak: 0,
+            recentResults: [],
             createdAt: Date()
         )
 
