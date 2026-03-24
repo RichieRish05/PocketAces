@@ -18,6 +18,7 @@ final class StatsViewModel {
     var longestLossStreak: Int { userData?.longestLossStreak ?? 0 }
     var totalBuyIn: Double { userData?.totalBuyIn ?? 0 }
     var totalCashOut: Double { userData?.totalCashOut ?? 0 }
+    var sumProfitSquared: Double { userData?.sumProfitSquared ?? 0 }
 
     var winRate: Double {
         guard gamesPlayed > 0 else { return 0 }
@@ -58,12 +59,8 @@ final class StatsViewModel {
         return sqrt(v)
     }
 
-    var hasSufficientData: Bool {
-        gamesPlayed >= 3
-    }
-
     var hasValidDistribution: Bool {
-        hasSufficientData && standardDeviation > 0
+        gamesPlayed >= 3
     }
 
     // MARK: - Bell Curve Points

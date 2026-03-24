@@ -14,16 +14,10 @@ struct StatsView: View {
     private let feltDark = Color(red: 0.06, green: 0.22, blue: 0.14)
     private let accentGreen = Color(red: 0.3, green: 0.85, blue: 0.45)
     private let accentRed = Color(red: 0.95, green: 0.35, blue: 0.35)
-    private let cardBg = Color.white.opacity(0.03)
-    private let cardBorder = Color.white.opacity(0.06)
 
     var body: some View {
         NavigationStack {
-            if vm.gamesPlayed == 0 {
-                emptyState
-            } else {
-                scrollContent
-            }
+            scrollContent
         }
         .onAppear {
             vm.load(from: userStore)
@@ -36,31 +30,17 @@ struct StatsView: View {
         }
     }
 
-    // MARK: - Empty State
-
-    private var emptyState: some View {
-        ContentUnavailableView(
-            "No Stats Yet",
-            systemImage: "chart.bar.fill",
-            description: Text("Play some games to see your stats here.")
-        )
-        .navigationTitle("Stats")
-    }
-
     // MARK: - Main Content
 
     private var scrollContent: some View {
         ScrollView {
             VStack(spacing: 20) {
-                headerCard
-                    .cardEntrance(index: 0, appeared: appeared)
-
-                summaryGrid
+                GamesWidgetCard(played: vm.gamesPlayed, won: vm.wins)
                     .cardEntrance(index: 1, appeared: appeared)
 
-                bellCurveSection
+                HeatIndex(gamesPlayed: vm.gamesPlayed, netProfit: vm.netProfit, sumProfitSquared: vm.sumProfitSquared)
                     .cardEntrance(index: 2, appeared: appeared)
-
+                
                 extremesRow
                     .cardEntrance(index: 3, appeared: appeared)
 
@@ -78,135 +58,27 @@ struct StatsView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    // MARK: - Header
 
-    private var headerCard: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Lifetime Stats")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(dimGold)
-                .tracking(0.5)
-                .textCase(.uppercase)
 
-            Text(vm.netProfit.formattedCurrency(decimals: 2, showSign: true))
-                .font(.system(size: 40, weight: .bold, design: .rounded))
+    private func legendRow(color: Color, label: String, count: Int) -> some View {
+        HStack(spacing: 8) {
+            Circle()
+                .fill(color)
+                .frame(width: 8, height: 8)
+
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(Color.white.opacity(0.5))
+
+            Spacer()
+
+            Text("\(count)")
+                .font(.subheadline.weight(.bold).monospacedDigit())
                 .foregroundStyle(.white)
-                .contentTransition(.numericText())
-
-            HStack(spacing: 8) {
-                Image(systemName: vm.netProfit >= 0 ? "arrow.up.right" : "arrow.down.right")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(vm.netProfit >= 0 ? accentGreen : accentRed)
-
-                Text("\(vm.gamesPlayed) games played")
-                    .font(.caption)
-                    .foregroundStyle(Color.white.opacity(0.45))
-            }
-
-            // Gold divider
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [gold.opacity(0), gold.opacity(0.35), gold.opacity(0)],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .frame(height: 0.5)
-                .padding(.top, 8)
         }
+        .frame(minWidth: 120)
     }
 
-    // MARK: - Summary KPI Grid
-
-    private var summaryGrid: some View {
-        LazyVGrid(columns: [
-            GridItem(.flexible(), spacing: 12),
-            GridItem(.flexible(), spacing: 12)
-        ], spacing: 12) {
-            kpiCard(
-                label: "Games Played",
-                value: "\(vm.gamesPlayed)",
-                icon: "suit.spade.fill"
-            )
-
-            kpiCard(
-                label: "Net Profit",
-                value: vm.netProfit.formattedCurrency(decimals: 0, showSign: true),
-                icon: "dollarsign.circle.fill",
-                valueColor: vm.netProfit >= 0 ? accentGreen : accentRed
-            )
-
-            kpiCard(
-                label: "Win Rate",
-                value: String(format: "%.0f%%", vm.winRate),
-                icon: "trophy.fill",
-                valueColor: vm.winRate >= 50 ? accentGreen : accentRed
-            )
-
-            kpiCard(
-                label: "ITM Rate",
-                value: String(format: "%.0f%%", vm.itmRate),
-                icon: "checkmark.seal.fill",
-                valueColor: vm.itmRate >= 50 ? accentGreen : accentRed
-            )
-        }
-    }
-
-    private func kpiCard(
-        label: String,
-        value: String,
-        icon: String,
-        valueColor: Color = .white
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 10))
-                    .foregroundStyle(dimGold)
-
-                Text(label)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Color.white.opacity(0.4))
-                    .tracking(0.3)
-                    .textCase(.uppercase)
-            }
-
-            Text(value)
-                .font(.system(size: 28, weight: .bold, design: .rounded))
-                .foregroundStyle(valueColor)
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(cardBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(cardBorder, lineWidth: 1)
-                )
-        )
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(label): \(value)")
-    }
-
-    // MARK: - Bell Curve
-
-    @ViewBuilder
-    private var bellCurveSection: some View {
-        if vm.hasValidDistribution {
-            BellCurveChart(
-                points: vm.bellCurvePoints(),
-                mean: vm.mean,
-                sigma: vm.standardDeviation
-            )
-        } else {
-            BellCurvePlaceholder()
-        }
-    }
 
     // MARK: - Extremes
 
@@ -261,10 +133,10 @@ struct StatsView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(cardBg)
+                .fill(.clear)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(cardBorder, lineWidth: 1)
+                        .strokeBorder(gold, lineWidth: 1)
                 )
         )
         .accessibilityElement(children: .combine)
@@ -321,10 +193,10 @@ struct StatsView: View {
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(cardBg)
+                .fill(.clear)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .strokeBorder(cardBorder, lineWidth: 1)
+                        .strokeBorder(gold, lineWidth: 1)
                 )
         )
     }
@@ -390,44 +262,23 @@ struct StatsView: View {
                     label: "Avg Profit / Session",
                     value: vm.averageProfit.formattedCurrency(decimals: 2, showSign: true),
                     valueColor: vm.averageProfit >= 0 ? accentGreen : accentRed,
-                    showDivider: true
                 )
 
                 metricRow(
                     label: "ROI",
                     value: String(format: "%+.1f%%", vm.roi),
                     valueColor: vm.roi >= 0 ? accentGreen : accentRed,
-                    showDivider: true
                 )
-
-                metricRow(
-                    label: "Total Buy-In",
-                    value: vm.totalBuyIn.formattedCurrency(decimals: 0),
-                    showDivider: true
-                )
-
-                metricRow(
-                    label: "Total Cash-Out",
-                    value: vm.totalCashOut.formattedCurrency(decimals: 0),
-                    showDivider: true
-                )
-
-                if vm.hasValidDistribution {
-                    metricRow(
-                        label: "Std Deviation (σ)",
-                        value: vm.standardDeviation.formattedCurrency(decimals: 0),
-                        showDivider: false
-                    )
-                }
             }
         }
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(cardBg)
+                .fill(.clear)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .strokeBorder(cardBorder, lineWidth: 1)
+                        .fill(.clear)
+                        .strokeBorder(gold, lineWidth: 1)
                 )
         )
     }
@@ -436,7 +287,6 @@ struct StatsView: View {
         label: String,
         value: String,
         valueColor: Color = .white,
-        showDivider: Bool
     ) -> some View {
         VStack(spacing: 0) {
             HStack {
@@ -451,12 +301,6 @@ struct StatsView: View {
                     .foregroundStyle(valueColor)
             }
             .padding(.vertical, 12)
-
-            if showDivider {
-                Rectangle()
-                    .fill(Color.white.opacity(0.04))
-                    .frame(height: 0.5)
-            }
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(label): \(value)")
