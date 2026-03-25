@@ -8,17 +8,17 @@ struct ExtremesRow: View {
     var body: some View {
         HStack(spacing: 12) {
             StatsCard(
-                label: "Biggest Win",
+                label: "Best Win",
                 value: biggestWin.formattedCurrency(decimals: 0, showSign: true),
-                icon: "arrow.up.circle.fill",
+                icon: "rosette",
                 iconColor: Theme.accentGreen,
                 valueColor: Theme.accentGreen
             )
 
             StatsCard(
-                label: "Biggest Loss",
+                label: "Worst Loss",
                 value: biggestLoss.formattedCurrency(decimals: 0, showSign: true),
-                icon: "arrow.down.circle.fill",
+                icon: "chart.line.downtrend.xyaxis",
                 iconColor: Theme.accentRed,
                 valueColor: Theme.accentRed
             )

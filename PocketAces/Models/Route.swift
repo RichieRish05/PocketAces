@@ -5,3 +5,8 @@ enum Route: Hashable {
     case gameSummary(game: Game)
     case pastGames
 }
+
+
+enum ProfileDestination: Hashable {
+    case avatarPicker
+}

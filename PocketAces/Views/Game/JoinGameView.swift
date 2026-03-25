@@ -13,10 +13,9 @@ struct JoinGameView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                Text("Enter the 6-character room code to join a game.")
+                Text("Enter the 6-character room code")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.white.opacity(0.5))
                     .padding(.top, 8)
 
                 TextField("Room Code", text: $joinCode)
@@ -26,10 +25,11 @@ struct JoinGameView: View {
                     .multilineTextAlignment(.center)
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()
-                    .padding(16)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(.secondary, lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
                     )
                     .padding(.horizontal, 16)
                     .onChange(of: joinCode) { _, newValue in
@@ -38,17 +38,11 @@ struct JoinGameView: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Buy-In")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.35))
                         .padding(.horizontal, 16)
 
                     CurrencyInputField(value: $buyIn)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(.secondary, lineWidth: 1)
-                        )
                         .padding(.horizontal, 16)
                 }
 
@@ -64,25 +58,30 @@ struct JoinGameView: View {
                     Group {
                         if isJoining {
                             ProgressView()
+                                .tint(Color(red: 0.12, green: 0.10, blue: 0.06))
                         } else {
                             Text("Join Game")
                         }
                     }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
+                    .background(joinCode.count < 6 || buyIn <= 0 || isJoining ? Theme.gold.opacity(0.4) : Theme.gold)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.plain)
                 .disabled(joinCode.count < 6 || buyIn <= 0 || isJoining)
                 .padding(.horizontal, 16)
 
                 Spacer()
             }
-            .padding(.top, 16)
             .navigationTitle("Join Game")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
+                        .foregroundStyle(Theme.dimGold)
                 }
             }
         }

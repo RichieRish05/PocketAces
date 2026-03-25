@@ -21,8 +21,8 @@ struct InputField: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(.secondary, lineWidth: 1)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
         )
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
@@ -102,6 +102,12 @@ struct CurrencyInputField: View {
             }
         }
         .frame(maxWidth: .infinity)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
+        )
         .contentShape(Rectangle())
         .onTapGesture {
             isFocused = true

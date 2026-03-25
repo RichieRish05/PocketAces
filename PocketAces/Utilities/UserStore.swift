@@ -32,6 +32,28 @@ final class UserStore {
         save(decoded)
     }
 
+    /// Update display name locally and in Firestore.
+    func updateDisplayName(_ newName: String) async throws {
+        guard var updated = userData else { return }
+        updated.displayName = newName
+        save(updated)
+
+        try await Firestore.firestore()
+            .collection("users").document(updated.id)
+            .updateData(["displayName": newName])
+    }
+
+    /// Update avatar locally and in Firestore.
+    func updateAvatar(_ newAvatar: String) async throws {
+        guard var updated = userData else { return }
+        updated.avatarName = newAvatar
+        save(updated)
+
+        try await Firestore.firestore()
+            .collection("users").document(updated.id)
+            .updateData(["avatarName": newAvatar])
+    }
+
     ///Optimistic stats update on cash-out.
     ///Computes new stats locally (instant UI update via `save`)
     ///2. Writes to Firestore (best-effort — local update stands even if this fails)

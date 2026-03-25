@@ -12,29 +12,39 @@ struct CreateGameView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(spacing: 24) {
+                Text("Set up your poker game")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.5))
+                    .padding(.top, 8)
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Game Name")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.35))
                         .padding(.horizontal, 16)
 
-                    InputField(text: $gameName, placeholder: "Game name")
+                    TextField("Game name", text: $gameName)
+                        .font(.title2)
+                        .textFieldStyle(.plain)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.words)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
+                        )
+                        .padding(.horizontal, 16)
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Buy-In")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.35))
                         .padding(.horizontal, 16)
 
                     CurrencyInputField(value: $buyIn)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(.secondary, lineWidth: 1)
-                        )
                         .padding(.horizontal, 16)
                 }
 
@@ -42,7 +52,6 @@ struct CreateGameView: View {
                     Text(errorMessage)
                         .font(.subheadline)
                         .foregroundStyle(.red)
-                        .padding(.horizontal, 16)
                 }
 
                 Button {
@@ -51,20 +60,24 @@ struct CreateGameView: View {
                     Group {
                         if isCreating {
                             ProgressView()
+                                .tint(Color(red: 0.12, green: 0.10, blue: 0.06))
                         } else {
                             Text("Create Game")
                         }
                     }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
+                    .background(gameName.isEmpty || buyIn <= 0 || isCreating ? Theme.gold.opacity(0.4) : Theme.gold)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.plain)
                 .disabled(gameName.isEmpty || buyIn <= 0 || isCreating)
                 .padding(.horizontal, 16)
 
                 Spacer()
             }
-            .padding(.top, 16)
             .navigationTitle("Create Game")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -72,6 +85,7 @@ struct CreateGameView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .foregroundStyle(Theme.dimGold)
                 }
             }
         }

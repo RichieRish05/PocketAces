@@ -97,7 +97,6 @@ struct CardHeader: View {
         VStack(alignment: .leading) {
             HStack {
                 Image(systemName: "square.stack.3d.up.fill")
-                    .foregroundColor(Color(white: 0.6))
                 Text("Games")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)

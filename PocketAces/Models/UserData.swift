@@ -11,7 +11,6 @@ struct UserData: Codable {
     var netProfit: Double
     var sumProfitSquared: Double
     var wins: Int
-    var itm: Int
 //    var activeGames: Int TO DO : do not let user have more than 5 active games
     var biggestWin: Double
     var biggestLoss: Double
@@ -49,10 +48,6 @@ struct UserData: Codable {
             longestLossStreak = max(longestLossStreak, currentLossStreak)
         }
 
-        // In the money: broke even or profited
-        if profit >= 0 {
-            itm += 1
-        }
 
         // Rolling window of last 10 results for heat index
         recentResults.append(profit)

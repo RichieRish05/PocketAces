@@ -17,10 +17,8 @@ struct StatsCard: View {
                     .foregroundStyle(iconColor)
 
                 Text(label)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Color.white.opacity(0.4))
-                    .tracking(0.3)
-                    .textCase(.uppercase)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white)
             }
 
             Text(value)

@@ -50,7 +50,6 @@ final class AuthService {
             netProfit: 0,
             sumProfitSquared: 0,
             wins: 0,
-            itm: 0,
             biggestWin: 0,
             biggestLoss: 0,
             currentWinStreak: 0,

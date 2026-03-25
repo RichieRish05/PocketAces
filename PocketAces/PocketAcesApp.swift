@@ -21,7 +21,7 @@ struct PocketAcesApp: App {
         WindowGroup {
             Group {
                 if authService.isCheckingAuth || (authService.currentUserId != nil && (userStore.userData == nil)) {
-                    ProgressView()
+                    SplashScreen()
                 } else if authService.currentUserId != nil && userStore.userData != nil {
                     MainTabView()
                 } else {

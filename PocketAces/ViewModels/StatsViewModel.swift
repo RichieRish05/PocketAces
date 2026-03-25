@@ -9,7 +9,6 @@ final class StatsViewModel {
     var gamesPlayed: Int { userData?.gamesPlayed ?? 0 }
     var netProfit: Double { userData?.netProfit ?? 0 }
     var wins: Int { userData?.wins ?? 0 }
-    var itm: Int { userData?.itm ?? 0 }
     var biggestWin: Double { userData?.biggestWin ?? 0 }
     var biggestLoss: Double { userData?.biggestLoss ?? 0 }
     var currentWinStreak: Int { userData?.currentWinStreak ?? 0 }

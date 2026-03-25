@@ -9,7 +9,7 @@ struct StreakSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            sectionHeader(title: "Streaks", icon: "flame.fill")
+            sectionHeader(title: "Streaks", icon: "hare.fill")
 
             LazyVGrid(columns: [
                 GridItem(.flexible(), spacing: 12),

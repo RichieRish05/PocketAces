@@ -21,6 +21,7 @@ enum GameServiceError: LocalizedError {
         case .cashOutExceedsPot: "Cash-out amount exceeds the remaining pot."
         case .gameNotActive: "This game is no longer active."
         case .playerNotActive: "You have already cashed out."
+        
         }
     }
 }

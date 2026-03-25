@@ -65,7 +65,7 @@ struct MainTabView: View {
                 ZStack {
                     Image(systemName: isSelected ? tab.selectedIcon : tab.icon)
                         .font(.system(size: 18, weight: isSelected ? .semibold : .regular))
-                        .foregroundStyle(isSelected ? Theme.gold : Color.white.opacity(0.3))
+                        .foregroundStyle(isSelected ? Theme.gold : Color.white.opacity(0.75))
                 }
                 .frame(height: 24)
 

@@ -272,12 +272,6 @@ struct GameDetailView: View {
                     .padding(.top, 8)
 
                 CurrencyInputField(value: $cashOutAmount)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
-                    )
                     .padding(.horizontal, 16)
 
                 Button {
@@ -333,12 +327,6 @@ struct GameDetailView: View {
                     .padding(.top, 8)
 
                 CurrencyInputField(value: $rebuyAmount)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
-                    )
                     .padding(.horizontal, 16)
 
                 Button {
