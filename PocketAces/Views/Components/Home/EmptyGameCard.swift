@@ -27,11 +27,11 @@ struct EmptyTableCard: View {
 
                 VStack(spacing: 5) {
                     Text("The table's empty")
-                        .font(.headline)
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.9))
 
                     Text("Deal yourself in, host or join a game")
-                        .font(.subheadline)
+                        .font(.system(size: 15))
                         .foregroundStyle(.white.opacity(0.75))
                 }
             }

@@ -13,7 +13,7 @@ struct InputField: View {
     var body: some View {
         VStack (alignment: .leading){
             TextField(placeholder, text: $text)
-                .font(.title2)
+                .font(.system(size: 22))
                 .textFieldStyle(.plain)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.words)
@@ -92,7 +92,7 @@ struct CurrencyInputField: View {
             HStack(alignment: .firstTextBaseline, spacing: 0) {
                 let parts = formattedParts
                 Text("$\(parts.dollar).\(parts.cents)")
-                    .font(.system(.title, design: .monospaced, weight: .medium))
+                    .font(.system(size: 28, weight: .medium, design: .monospaced))
                     .foregroundStyle(centString.isEmpty ? .secondary : .primary)
 
                 if isFocused {

@@ -31,17 +31,17 @@ struct PastGameCardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: suit.rawValue)
-                    .font(.title2)
+                    .font(.system(size: 22))
                     .foregroundStyle(Theme.gold.opacity(0.85))
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(game.name)
-                        .font(.headline)
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
 
                     Text("\(formattedDate) · \(game.playerCount) players · \(formattedPot) pot")
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundStyle(.secondary)
                 }
 

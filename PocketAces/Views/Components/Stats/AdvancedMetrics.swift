@@ -7,7 +7,7 @@ struct AdvancedMetrics: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            sectionHeader(title: "Advanced", icon: "function")
+            sectionHeader(title: "Advanced", icon: "bird.fill")
 
             VStack(spacing: 0) {
                 metricRow(
@@ -45,13 +45,13 @@ struct AdvancedMetrics: View {
         VStack(spacing: 0) {
             HStack {
                 Text(label)
-                    .font(.subheadline)
+                    .font(.system(size: 15))
                     .foregroundStyle(Color.white.opacity(0.5))
 
                 Spacer()
 
                 Text(value)
-                    .font(.subheadline.weight(.bold).monospacedDigit())
+                    .font(.system(size: 15, weight: .bold).monospacedDigit())
                     .foregroundStyle(valueColor)
             }
             .padding(.vertical, 12)
@@ -66,7 +66,6 @@ struct AdvancedMetrics: View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 12))
-                .foregroundStyle(Theme.dimGold)
 
             Text(title)
                 .font(.system(size: 18, weight: .semibold))

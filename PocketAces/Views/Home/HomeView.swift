@@ -56,7 +56,7 @@ struct HomeView: View {
         let isPositive = netProfit >= 0
         return VStack(alignment: .leading, spacing: 6) {
             Text("Net Profit")
-                .font(.headline)
+                .font(.system(size: 18, weight: .bold))
                 .foregroundStyle(Theme.dimGold)
 
             Text(netProfit.formattedCurrency(decimals: 2))
@@ -65,11 +65,11 @@ struct HomeView: View {
 
             HStack(spacing: 6) {
                 Image(systemName: isPositive ? "arrow.up.right" : "arrow.down.right")
-                    .font(.caption.weight(.bold))
+                    .font(.system(size: 12, weight: .bold))
                     .foregroundStyle(isPositive ? Theme.accentGreen : Theme.accentRed)
 
                 Text("\(gamesPlayed) games · \(Int(winRate))% win rate")
-                    .font(.caption)
+                    .font(.system(size: 12))
                     .foregroundStyle(isPositive ? Theme.accentGreen : Theme.accentRed)
             }
         }
@@ -114,7 +114,7 @@ struct HomeView: View {
         HStack(spacing: 12) {
             Button { showCreateGame = true } label: {
                 Text("Host Game")
-                    .font(.subheadline.weight(.semibold))
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
@@ -125,7 +125,7 @@ struct HomeView: View {
 
             Button { showJoinGame = true } label: {
                 Text("Join Game")
-                    .font(.subheadline.weight(.semibold))
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Theme.gold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
@@ -152,7 +152,7 @@ struct HomeView: View {
                 if !gameService.pastGames.isEmpty {
                     NavigationLink(value: Route.pastGames) {
                         Text("View All")
-                            .font(.subheadline.weight(.medium))
+                            .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(Theme.dimGold)
                     }
                     .padding(.trailing, 20)
@@ -212,12 +212,12 @@ struct HomeView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(game.name)
-                        .font(.subheadline.weight(.semibold))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(.white)
                         .lineLimit(1)
 
                     Text("\(game.startedAt.timeAgoDisplay()) · \(game.playerCount) players")
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundStyle(.white.opacity(0.4))
                 }
 
@@ -225,12 +225,12 @@ struct HomeView: View {
 
                 if let net {
                     Text(net.formattedCurrency(showSign: true))
-                        .font(.subheadline.weight(.bold).monospacedDigit())
+                        .font(.system(size: 15, weight: .bold).monospacedDigit())
                         .foregroundStyle(net >= 0 ? Theme.accentGreen : Theme.accentRed)
                 }
 
                 Image(systemName: "chevron.right")
-                    .font(.caption2.weight(.semibold))
+                    .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.2))
             }
             .padding(.horizontal, 16)
@@ -266,11 +266,11 @@ struct HomeView: View {
     private var emptyRecentState: some View {
         return HStack(spacing: 12) {
             Image(systemName: "clock.arrow.circlepath")
-                .font(.title3)
+                .font(.system(size: 20))
                 .foregroundStyle(.white.opacity(0.3))
 
             Text("Completed games will appear here")
-                .font(.subheadline)
+                .font(.system(size: 15))
                 .foregroundStyle(.white.opacity(0.3))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -295,7 +295,7 @@ struct HomeView: View {
                 .foregroundStyle(iconColor)
 
             Text(title)
-                .font(.subheadline.weight(.semibold))
+                .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.5))
                 .tracking(0.5)
                 .textCase(.uppercase)

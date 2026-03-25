@@ -35,7 +35,7 @@ struct GameCardView: View {
                 Spacer()
 
                 Text(game.joinCode)
-                    .font(.caption.weight(.semibold).monospaced())
+                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
                     .foregroundStyle(.white.opacity(0.5))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
@@ -46,12 +46,12 @@ struct GameCardView: View {
             Spacer()
 
             Text(game.name)
-                .font(.title2.bold())
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(.white.opacity(0.9))
                 .lineLimit(1)
 
             Text("\(game.activePlayerCount) players · \(formattedPot) pot")
-                .font(.subheadline)
+                .font(.system(size: 15))
                 .foregroundStyle(.white.opacity(0.55))
         }
         .padding(20)
