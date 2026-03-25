@@ -11,7 +11,6 @@ struct UserData: Codable {
     var netProfit: Double
     var sumProfitSquared: Double
     var wins: Int
-//    var activeGames: Int TO DO : do not let user have more than 5 active games
     var biggestWin: Double
     var biggestLoss: Double
     var currentWinStreak: Int
@@ -20,6 +19,7 @@ struct UserData: Codable {
     var longestLossStreak: Int
     var recentResults: [Double]
     var createdAt: Date
+    var gems: Int
 
     /// Updates all career stats from a single cash-out result.
     /// This is a pure computation with no side effects — safe to call optimistically

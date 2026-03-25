@@ -57,7 +57,8 @@ final class AuthService {
             longestWinStreak: 0,
             longestLossStreak: 0,
             recentResults: [],
-            createdAt: Date()
+            createdAt: Date(),
+            gems: 0
         )
 
         // Insert new user

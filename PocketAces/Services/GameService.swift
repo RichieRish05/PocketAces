@@ -62,7 +62,7 @@ final class GameService {
                 guard let self else { return }
                 self.isLoadingGames = false
                 guard let snapshot else { return }
-                // Detect games that just ended - re-fetch past games with correct data
+                // Detect games that just ended, re-fetch past games with correct data
                 if snapshot.documentChanges.contains(where: { $0.type == .removed }) {
                     Task { try? await self.fetchPastGames(userId: userId) }
                 }
