@@ -85,9 +85,9 @@ enum HeatLevel: Int, CaseIterable {
         case .neutral:
             LinearGradient(
                 colors: [
-                    Color(red: 1.0, green: 0.92, blue: 0.7),
-                    Color(red: 0.7, green: 0.8, blue: 1.0),
-                    Color(red: 0.5, green: 0.6, blue: 0.9)
+                    Color(red: 0.95, green: 0.97, blue: 1.0),   // crisp white highlight
+                    Color(red: 0.75, green: 0.82, blue: 0.9),   // cool silver-blue mid
+                    Color(red: 0.55, green: 0.6, blue: 0.7)     // steel depth
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
