@@ -5,37 +5,28 @@ struct HeatIndex: View {
 
     let recentResults: [Double]
 
-    private let pillCount = 6
+    private let pillCount = 7
 
     private var heatScore: Int {
-        guard !recentResults.isEmpty else { return 0 }
+        guard !recentResults.isEmpty else { return 3 }
 
-        let n = Double(recentResults.count)
-        let sum = recentResults.reduce(0, +)
-        let mean = sum / n
-        let sumSq = recentResults.reduce(0) { $0 + ($1 * $1) }
-        let variance = (sumSq / n) - (mean * mean)
-        let std = sqrt(max(variance, 0))
+        let avg = recentResults.reduce(0, +) / Double(recentResults.count)
 
-        guard std > 0 else {
-            // All results identical — sign determines direction
-            if mean > 0 { return 3 }
-            if mean < 0 { return -3 }
-            return 0
-        }
-
-        let z = sum / (std * sqrt(n))
-        let clamped = min(max(z, -3), 3)
-        return Int(clamped.rounded())
+        if avg < -0.6 { return 0 }
+        else if avg < -0.3 { return 1 }
+        else if avg < -0.1 { return 2 }
+        else if avg < 0.1 { return 3 }
+        else if avg < 0.4 { return 4 }
+        else if avg < 0.8 { return 5 }
+        else { return 6 }
     }
 
     private var heatLevel: HeatLevel {
         HeatLevel(rawValue: heatScore) ?? .neutral
     }
 
-    /// Maps heat score (-3…3) to number of filled pills (0…6)
     private var filledPills: Int {
-        heatScore + 3
+        heatScore+1
     }
 
     var body: some View {

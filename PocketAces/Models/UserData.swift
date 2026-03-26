@@ -49,8 +49,9 @@ struct UserData: Codable {
         }
 
 
-        // Rolling window of last 10 results for heat index
-        recentResults.append(profit)
+        // Rolling window of last 10 results (percentage profit)
+        let profitPct = buyIn == 0 ? 0 : profit / buyIn
+        recentResults.append(profitPct)
         if recentResults.count > 10 {
             recentResults.removeFirst(recentResults.count - 10)
         }

@@ -1,13 +1,13 @@
 import SwiftUI
 
 enum HeatLevel: Int, CaseIterable {
-    case freezing = -3
-    case cold = -2
-    case cool = -1
-    case neutral = 0
-    case warm = 1
-    case hot = 2
-    case onFire = 3
+    case freezing = 0
+    case cold = 1
+    case cool = 2
+    case neutral = 3
+    case warm = 4
+    case hot = 5
+    case onFire = 6
 
     var icon: String {
         switch self {
@@ -48,11 +48,13 @@ enum HeatLevel: Int, CaseIterable {
     
     var gradient: LinearGradient {
         switch self {
+
         case .freezing:
             LinearGradient(
                 colors: [
-                    Color(red: 0.0, green: 0.2, blue: 1.0),   // deep electric blue
-                    Color(red: 0.4, green: 0.85, blue: 1.0)  // icy cyan glow
+                    Color(red: 0.0, green: 0.05, blue: 0.5),   // deep navy
+                    Color(red: 0.0, green: 0.35, blue: 1.0),   // electric blue
+                    Color(red: 0.6, green: 0.95, blue: 1.0)    // icy glow
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -61,8 +63,9 @@ enum HeatLevel: Int, CaseIterable {
         case .cold:
             LinearGradient(
                 colors: [
-                    Color(red: 0.0, green: 0.45, blue: 1.0),  // strong blue
-                    Color(red: 0.5, green: 0.9, blue: 1.0)   // bright aqua
+                    Color(red: 0.0, green: 0.2, blue: 0.9),    // rich blue
+                    Color(red: 0.0, green: 0.6, blue: 1.0),    // bright aqua
+                    Color(red: 0.7, green: 1.0, blue: 1.0)     // cool glow
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -71,8 +74,9 @@ enum HeatLevel: Int, CaseIterable {
         case .cool:
             LinearGradient(
                 colors: [
-                    Color(red: 0.0, green: 0.7, blue: 1.0),   // cyan pop
-                    Color(red: 0.6, green: 1.0, blue: 0.95)  // mint highlight
+                    Color(red: 0.0, green: 0.5, blue: 0.9),    // cyan base
+                    Color(red: 0.2, green: 0.9, blue: 1.0),    // vibrant cyan
+                    Color(red: 0.7, green: 1.0, blue: 0.9)     // mint glow
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -81,8 +85,9 @@ enum HeatLevel: Int, CaseIterable {
         case .neutral:
             LinearGradient(
                 colors: [
-                    Color(red: 0.3, green: 0.3, blue: 0.35), // dark slate
-                    Color(red: 0.7, green: 0.7, blue: 0.75)  // light silver
+                    Color(red: 1.0, green: 0.92, blue: 0.7),
+                    Color(red: 0.7, green: 0.8, blue: 1.0),
+                    Color(red: 0.5, green: 0.6, blue: 0.9)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -91,8 +96,9 @@ enum HeatLevel: Int, CaseIterable {
         case .warm:
             LinearGradient(
                 colors: [
-                    Color(red: 1.0, green: 0.5, blue: 0.0),   // bright orange
-                    Color(red: 1.0, green: 0.9, blue: 0.3)   // golden glow
+                    Color(red: 1.0, green: 0.35, blue: 0.0),    // deep orange
+                    Color(red: 1.0, green: 0.65, blue: 0.0),    // vivid orange
+                    Color(red: 1.0, green: 0.95, blue: 0.4)     // golden glow
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -101,8 +107,9 @@ enum HeatLevel: Int, CaseIterable {
         case .hot:
             LinearGradient(
                 colors: [
-                    Color(red: 1.0, green: 0.2, blue: 0.0),   // intense red-orange
-                    Color(red: 1.0, green: 0.7, blue: 0.1)   // fiery amber
+                    Color(red: 0.8, green: 0.0, blue: 0.0),     // deep red
+                    Color(red: 1.0, green: 0.2, blue: 0.0),     // bright red-orange
+                    Color(red: 1.0, green: 0.8, blue: 0.2)      // fiery glow
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -111,8 +118,9 @@ enum HeatLevel: Int, CaseIterable {
         case .onFire:
             LinearGradient(
                 colors: [
-                    Color(red: 1.0, green: 0.0, blue: 0.2),   // neon red
-                    Color(red: 1.0, green: 0.85, blue: 0.0)  // blazing yellow
+                    Color(red: 0.6, green: 0.0, blue: 0.1),     // dark crimson
+                    Color(red: 1.0, green: 0.0, blue: 0.2),     // neon red
+                    Color(red: 1.0, green: 0.95, blue: 0.0)     // explosive yellow
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
