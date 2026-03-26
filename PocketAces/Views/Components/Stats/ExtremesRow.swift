@@ -17,7 +17,7 @@ struct ExtremesRow: View {
 
             StatsCard(
                 label: "Worst Loss",
-                value: "-\(biggestLoss.formattedCurrency(decimals: 0, showSign: false))",
+                value: "-\(abs(biggestLoss).formattedCurrency(decimals: 0, showSign: false))",
                 icon: "chart.line.downtrend.xyaxis",
                 iconColor: Theme.silver,
                 valueColor: Theme.accentRed
