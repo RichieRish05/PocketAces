@@ -38,7 +38,7 @@ enum HeatLevel: Int, CaseIterable {
         case .freezing: Color(red: 0.3, green: 0.55, blue: 1.0)
         case .cold: Color(red: 0.35, green: 0.7, blue: 1.0)
         case .cool: Color(red: 0.3, green: 0.85, blue: 1.0)
-        case .neutral: Color(white: 0.7)
+        case .neutral: Color(red: 0.75, green: 0.82, blue: 0.9)
         case .warm: Color(red: 1.0, green: 0.75, blue: 0.15)
         case .hot: Color(red: 1.0, green: 0.45, blue: 0.05)
         case .onFire: Color(red: 1.0, green: 0.2, blue: 0.15)

@@ -19,28 +19,28 @@ struct StreakSection: View {
                     label: "Current Win",
                     value: currentWinStreak,
                     icon: "flame.fill",
-                    color: Theme.accentGreen
+                    color: Theme.silver
                 )
 
                 streakCard(
                     label: "Current Loss",
                     value: currentLossStreak,
-                    icon: "snowflake",
-                    color: Theme.coldBlue
+                    icon: "wind.snow",
+                    color: Theme.silver
                 )
 
                 streakCard(
                     label: "Longest Win",
                     value: longestWinStreak,
                     icon: "crown.fill",
-                    color: Theme.gold
+                    color: Theme.silver
                 )
 
                 streakCard(
                     label: "Longest Loss",
                     value: longestLossStreak,
-                    icon: "exclamationmark.triangle.fill",
-                    color: Theme.streakOrange
+                    icon: "snowflake",
+                    color: Theme.silver
                 )
             }
         }

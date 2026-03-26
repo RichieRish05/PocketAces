@@ -14,6 +14,5 @@ enum Theme {
     static let accentRed   = Color(red: 0.95, green: 0.35, blue: 0.35)
 
     // Streak-specific
-    static let coldBlue = Color(red: 0.35, green: 0.7, blue: 1.0)
-    static let streakOrange = Color(red: 1.0, green: 0.55, blue: 0.0)
+    static let silver = Color(red: 0.75, green: 0.82, blue: 0.9)
 }

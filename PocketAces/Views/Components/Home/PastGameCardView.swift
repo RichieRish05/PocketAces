@@ -12,9 +12,6 @@ struct PastGameCardView: View {
         game.startedAt.formatted(date: .abbreviated, time: .omitted)
     }
 
-    private var formattedPot: String {
-        game.totalPot.formattedCurrency()
-    }
 
     private var playerNet: Double? {
         guard let userId = authService.currentUserId,
@@ -40,7 +37,7 @@ struct PastGameCardView: View {
                         .foregroundStyle(.primary)
                         .lineLimit(1)
 
-                    Text("\(formattedDate) · \(game.playerCount) players · \(formattedPot) pot")
+                    Text("\(formattedDate) · \(game.playerCount) players")
                         .font(.system(size: 12))
                         .foregroundStyle(.secondary)
                 }
