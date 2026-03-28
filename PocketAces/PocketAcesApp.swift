@@ -34,6 +34,10 @@ struct PocketAcesApp: App {
             .task {
                 if let userId = authService.currentUserId {
                     try? await userStore.fetchUser(userId: userId)
+                    if let themeName = userStore.userData?.themeName,
+                       let package = ThemePackage(rawValue: themeName) {
+                        Theme.shared.apply(package)
+                    }
                     gameService.listenToActiveGames(userId: userId)
                     try? await gameService.fetchPastGames(userId: userId)
                 }
@@ -42,6 +46,10 @@ struct PocketAcesApp: App {
                 if let userId = newId {
                     Task {
                         try? await userStore.fetchUser(userId: userId)
+                        if let themeName = userStore.userData?.themeName,
+                           let package = ThemePackage(rawValue: themeName) {
+                            Theme.shared.apply(package)
+                        }
                         gameService.listenToActiveGames(userId: userId)
                         try? await gameService.fetchPastGames(userId: userId)
                     }

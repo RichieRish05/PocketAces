@@ -54,6 +54,17 @@ final class UserStore {
             .updateData(["avatarName": newAvatar])
     }
 
+    /// Update theme locally and in Firestore.
+    func updateTheme(_ themeName: String) async throws {
+        guard var updated = userData else { return }
+        updated.themeName = themeName
+        save(updated)
+
+        try await Firestore.firestore()
+            .collection("users").document(updated.id)
+            .updateData(["themeName": themeName])
+    }
+
     ///Optimistic stats update on cash-out.
     ///Computes new stats locally (instant UI update via `save`)
     ///2. Writes to Firestore (best-effort — local update stands even if this fails)

@@ -58,7 +58,8 @@ final class AuthService {
             longestLossStreak: 0,
             recentResults: [],
             createdAt: Date(),
-            gems: 0
+            gems: 0,
+            themeName: "classic"
         )
 
         // Insert new user

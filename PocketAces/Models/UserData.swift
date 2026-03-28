@@ -20,6 +20,7 @@ struct UserData: Codable {
     var recentResults: [Double]
     var createdAt: Date
     var gems: Int
+    var themeName: String
 
     /// Updates all career stats from a single cash-out result.
     /// This is a pure computation with no side effects — safe to call optimistically

@@ -49,6 +49,22 @@ final class ProfileViewModel {
         navigationPath.append(ProfileDestination.avatarPicker)
     }
 
+    func beginPickingTheme() {
+        navigationPath.append(ProfileDestination.themePicker)
+    }
+
+    func saveTheme(_ package: ThemePackage) async {
+        Theme.shared.apply(package)
+        do {
+            try await userStore?.updateTheme(package.rawValue)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        if !navigationPath.isEmpty {
+            navigationPath.removeLast()
+        }
+    }
+
     func saveAvatar() async {
         guard let selected = selectedAvatar else { return }
         do {

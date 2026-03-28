@@ -26,6 +26,8 @@ struct ProfileView: View {
                 switch destination {
                 case .avatarPicker:
                     AvatarPickerView(viewModel: viewModel)
+                case .themePicker:
+                    ThemePickerView(viewModel: viewModel)
                 }
             }
             .sheet(isPresented: $viewModel.showNameEditor) {
@@ -53,6 +55,7 @@ struct ProfileView: View {
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(Color(white: 0.45))
             }
+            themeButton
         }
         .padding(.vertical, 32)
         .padding(.horizontal, 24)
@@ -111,6 +114,36 @@ struct ProfileView: View {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(Theme.shared.dimAccent)
             }
+        }
+    }
+
+    // MARK: - Theme Button
+
+    private var themeButton: some View {
+        Button {
+            viewModel.beginPickingTheme()
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "paintpalette")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Theme.shared.accent)
+                Text("Theme")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white)
+                Spacer()
+                Text(Theme.shared.currentPackage.displayName)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(Color(white: 0.45))
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color(white: 0.35))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(white: 0.1))
+            )
         }
     }
 

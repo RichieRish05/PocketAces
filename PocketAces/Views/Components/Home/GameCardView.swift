@@ -65,7 +65,7 @@ struct GameCardView: View {
                     colors: [
                         Theme.shared.primary.opacity(0.6),
                         Theme.shared.primaryDark.opacity(0.8),
-                        Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
+                        Theme.shared.primaryMid.opacity(0.7),
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
