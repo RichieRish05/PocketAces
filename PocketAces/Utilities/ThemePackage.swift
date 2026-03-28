@@ -2,15 +2,17 @@ import SwiftUI
 
 enum ThemePackage: String, Codable, CaseIterable, Identifiable {
     case classic
-    case ocean
-    case emerald
-    case sunset
-    case lavender
-    case fire
-    case aurora
     case rose
-    case coral
     case phantom
+    case sapphire
+    case merlot
+    case obsidian
+    case abyss
+    case ember
+    case jade
+    case velvet
+    case twilight
+    case bourbon
 
     var id: String { rawValue }
 
@@ -18,16 +20,18 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
 
     var accent: Color {
         switch self {
-        case .classic:    Color(red: 1.0, green: 0.84, blue: 0.30)     // gold on green
-        case .ocean:      Color(red: 0.40, green: 0.92, blue: 1.0)     // bright aqua
-        case .emerald:    Color(red: 0.50, green: 1.0, blue: 0.75)     // luminous mint
-        case .sunset:     Color(red: 1.0, green: 0.72, blue: 0.38)     // warm apricot
-        case .lavender:   Color(red: 0.82, green: 0.65, blue: 1.0)     // soft lilac
-        case .fire:       Color(red: 1.0, green: 0.85, blue: 0.25)     // blazing yellow
-        case .aurora:     Color(red: 0.30, green: 1.0, blue: 0.85)     // electric cyan-green
+        case .classic:    Color(red: 1.0, green: 0.84, blue: 0.30)     // gold
         case .rose:       Color(red: 1.0, green: 0.72, blue: 0.82)     // soft rose pink
-        case .coral:      Color(red: 1.0, green: 0.55, blue: 0.45)     // living coral
         case .phantom:    Color(red: 0.60, green: 0.85, blue: 0.95)    // spectral ice-blue
+        case .sapphire:   Color(red: 0.55, green: 0.78, blue: 1.0)     // bright sapphire
+        case .merlot:     Color(red: 1.0, green: 0.90, blue: 0.78)     // warm champagne
+        case .obsidian:   Color(red: 0.92, green: 0.68, blue: 0.42)    // burnished copper
+        case .abyss:      Color(red: 0.30, green: 0.95, blue: 0.80)    // bioluminescent cyan
+        case .ember:      Color(red: 1.0, green: 0.72, blue: 0.32)     // warm amber
+        case .jade:       Color(red: 0.62, green: 0.92, blue: 0.72)    // pale jade
+        case .velvet:     Color(red: 0.92, green: 0.78, blue: 0.45)    // antique gold
+        case .twilight:   Color(red: 1.0, green: 0.75, blue: 0.62)     // warm peach
+        case .bourbon:    Color(red: 1.0, green: 0.82, blue: 0.40)     // aged gold
         }
     }
 
@@ -36,15 +40,17 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
     var dimAccent: Color {
         switch self {
         case .classic:    Color(red: 0.82, green: 0.68, blue: 0.22)
-        case .ocean:      Color(red: 0.30, green: 0.70, blue: 0.80)
-        case .emerald:    Color(red: 0.38, green: 0.78, blue: 0.58)
-        case .sunset:     Color(red: 0.80, green: 0.55, blue: 0.28)
-        case .lavender:   Color(red: 0.62, green: 0.48, blue: 0.80)
-        case .fire:       Color(red: 0.82, green: 0.65, blue: 0.18)
-        case .aurora:     Color(red: 0.22, green: 0.75, blue: 0.65)
         case .rose:       Color(red: 0.78, green: 0.52, blue: 0.62)
-        case .coral:      Color(red: 0.78, green: 0.42, blue: 0.35)
         case .phantom:    Color(red: 0.45, green: 0.62, blue: 0.72)
+        case .sapphire:   Color(red: 0.40, green: 0.58, blue: 0.78)
+        case .merlot:     Color(red: 0.75, green: 0.65, blue: 0.55)
+        case .obsidian:   Color(red: 0.68, green: 0.50, blue: 0.32)
+        case .abyss:      Color(red: 0.22, green: 0.68, blue: 0.58)
+        case .ember:      Color(red: 0.78, green: 0.55, blue: 0.24)
+        case .jade:       Color(red: 0.45, green: 0.70, blue: 0.52)
+        case .velvet:     Color(red: 0.70, green: 0.58, blue: 0.35)
+        case .twilight:   Color(red: 0.75, green: 0.55, blue: 0.45)
+        case .bourbon:    Color(red: 0.78, green: 0.60, blue: 0.30)
         }
     }
 
@@ -53,15 +59,17 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
     var primary: Color {
         switch self {
         case .classic:    Color(red: 0.08, green: 0.42, blue: 0.22)     // forest green
-        case .ocean:      Color(red: 0.06, green: 0.25, blue: 0.52)     // deep ocean blue
-        case .emerald:    Color(red: 0.08, green: 0.42, blue: 0.32)     // deep emerald
-        case .sunset:     Color(red: 0.52, green: 0.22, blue: 0.12)     // burnt sienna
-        case .lavender:   Color(red: 0.28, green: 0.15, blue: 0.50)     // rich purple
-        case .fire:       Color(red: 0.55, green: 0.12, blue: 0.08)     // deep crimson
-        case .aurora:     Color(red: 0.05, green: 0.30, blue: 0.28)     // deep arctic teal
         case .rose:       Color(red: 0.48, green: 0.12, blue: 0.25)     // deep rose
-        case .coral:      Color(red: 0.45, green: 0.18, blue: 0.15)     // deep coral
         case .phantom:    Color(red: 0.12, green: 0.10, blue: 0.22)     // dark iridescent
+        case .sapphire:   Color(red: 0.08, green: 0.18, blue: 0.48)     // deep sapphire
+        case .merlot:     Color(red: 0.42, green: 0.08, blue: 0.18)     // deep wine
+        case .obsidian:   Color(red: 0.18, green: 0.14, blue: 0.12)     // warm obsidian
+        case .abyss:      Color(red: 0.04, green: 0.22, blue: 0.26)     // deep sea
+        case .ember:      Color(red: 0.40, green: 0.14, blue: 0.06)     // smoldering dark
+        case .jade:       Color(red: 0.06, green: 0.28, blue: 0.18)     // deep mineral green
+        case .velvet:     Color(red: 0.28, green: 0.10, blue: 0.38)     // deep royal purple
+        case .twilight:   Color(red: 0.14, green: 0.10, blue: 0.35)     // deep twilight navy
+        case .bourbon:    Color(red: 0.38, green: 0.22, blue: 0.08)     // deep whiskey
         }
     }
 
@@ -70,15 +78,17 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
     var primaryDark: Color {
         switch self {
         case .classic:    Color(red: 0.04, green: 0.24, blue: 0.12)
-        case .ocean:      Color(red: 0.03, green: 0.12, blue: 0.32)
-        case .emerald:    Color(red: 0.04, green: 0.24, blue: 0.18)
-        case .sunset:     Color(red: 0.30, green: 0.10, blue: 0.06)
-        case .lavender:   Color(red: 0.15, green: 0.08, blue: 0.30)
-        case .fire:       Color(red: 0.32, green: 0.06, blue: 0.04)
-        case .aurora:     Color(red: 0.02, green: 0.14, blue: 0.16)
         case .rose:       Color(red: 0.28, green: 0.06, blue: 0.14)
-        case .coral:      Color(red: 0.25, green: 0.08, blue: 0.08)
         case .phantom:    Color(red: 0.05, green: 0.04, blue: 0.12)
+        case .sapphire:   Color(red: 0.04, green: 0.08, blue: 0.28)
+        case .merlot:     Color(red: 0.24, green: 0.04, blue: 0.10)
+        case .obsidian:   Color(red: 0.08, green: 0.06, blue: 0.05)
+        case .abyss:      Color(red: 0.02, green: 0.10, blue: 0.14)
+        case .ember:      Color(red: 0.22, green: 0.06, blue: 0.02)
+        case .jade:       Color(red: 0.03, green: 0.15, blue: 0.10)
+        case .velvet:     Color(red: 0.14, green: 0.04, blue: 0.22)
+        case .twilight:   Color(red: 0.06, green: 0.04, blue: 0.18)
+        case .bourbon:    Color(red: 0.20, green: 0.10, blue: 0.03)
         }
     }
 
@@ -87,15 +97,17 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
     var primaryMid: Color {
         switch self {
         case .classic:    Color(red: 0.06, green: 0.32, blue: 0.16)
-        case .ocean:      Color(red: 0.04, green: 0.18, blue: 0.42)
-        case .emerald:    Color(red: 0.06, green: 0.32, blue: 0.25)
-        case .sunset:     Color(red: 0.40, green: 0.15, blue: 0.08)
-        case .lavender:   Color(red: 0.22, green: 0.12, blue: 0.40)
-        case .fire:       Color(red: 0.42, green: 0.08, blue: 0.06)
-        case .aurora:     Color(red: 0.04, green: 0.22, blue: 0.22)
         case .rose:       Color(red: 0.38, green: 0.08, blue: 0.20)
-        case .coral:      Color(red: 0.35, green: 0.12, blue: 0.12)
         case .phantom:    Color(red: 0.08, green: 0.07, blue: 0.18)
+        case .sapphire:   Color(red: 0.06, green: 0.12, blue: 0.38)
+        case .merlot:     Color(red: 0.32, green: 0.06, blue: 0.14)
+        case .obsidian:   Color(red: 0.12, green: 0.10, blue: 0.08)
+        case .abyss:      Color(red: 0.03, green: 0.16, blue: 0.20)
+        case .ember:      Color(red: 0.30, green: 0.10, blue: 0.04)
+        case .jade:       Color(red: 0.04, green: 0.22, blue: 0.14)
+        case .velvet:     Color(red: 0.22, green: 0.06, blue: 0.30)
+        case .twilight:   Color(red: 0.10, green: 0.07, blue: 0.28)
+        case .bourbon:    Color(red: 0.28, green: 0.16, blue: 0.05)
         }
     }
 
@@ -113,106 +125,15 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-        case .ocean:
-            // Cyan → cerulean → deep indigo
-            LinearGradient(
-                colors: [
-                    Color.cyan.opacity(0.8),
-                    Color(red: 0, green: 0.7, blue: 0.9).opacity(0.75),
-                    Color.blue.opacity(0.7),
-                    Color(red: 0.2, green: 0.2, blue: 0.85).opacity(0.65),
-                    Color.indigo.opacity(0.6),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case .emerald:
-            // Green → mint → deep teal
-            LinearGradient(
-                colors: [
-                    Color.green.opacity(0.8),
-                    Color(red: 0.2, green: 0.85, blue: 0.6).opacity(0.75),
-                    Color.mint.opacity(0.7),
-                    Color(red: 0.1, green: 0.75, blue: 0.7).opacity(0.65),
-                    Color.teal.opacity(0.6),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case .sunset:
-            // Warm orange → pink → deep red
-            LinearGradient(
-                colors: [
-                    Color.orange.opacity(0.8),
-                    Color(red: 1.0, green: 0.5, blue: 0.3).opacity(0.75),
-                    Color.pink.opacity(0.7),
-                    Color(red: 0.95, green: 0.3, blue: 0.35).opacity(0.65),
-                    Color.red.opacity(0.6),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case .lavender:
-            // Purple → indigo → deep blue
-            LinearGradient(
-                colors: [
-                    Color.purple.opacity(0.8),
-                    Color(red: 0.45, green: 0.2, blue: 0.8).opacity(0.75),
-                    Color.indigo.opacity(0.7),
-                    Color(red: 0.25, green: 0.2, blue: 0.75).opacity(0.65),
-                    Color.blue.opacity(0.6),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case .fire:
-            // Red → molten orange → yellow
-            LinearGradient(
-                colors: [
-                    Color.red.opacity(0.8),
-                    Color(red: 1.0, green: 0.35, blue: 0.1).opacity(0.75),
-                    Color.orange.opacity(0.7),
-                    Color(red: 1.0, green: 0.75, blue: 0.2).opacity(0.65),
-                    Color.yellow.opacity(0.6),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case .aurora:
-            // Electric green → teal → violet (northern lights)
-            LinearGradient(
-                colors: [
-                    Color(red: 0.15, green: 0.95, blue: 0.6).opacity(0.75),
-                    Color(red: 0.1, green: 0.8, blue: 0.7).opacity(0.72),
-                    Color.teal.opacity(0.68),
-                    Color(red: 0.3, green: 0.4, blue: 0.85).opacity(0.65),
-                    Color(red: 0.45, green: 0.2, blue: 0.75).opacity(0.6),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
         case .rose:
             // Hot pink → deep magenta → plum
             LinearGradient(
                 colors: [
-                    Color.pink.opacity(0.8),
-                    Color(red: 0.9, green: 0.3, blue: 0.5).opacity(0.75),
-                    Color(red: 0.7, green: 0.15, blue: 0.4).opacity(0.7),
-                    Color(red: 0.5, green: 0.1, blue: 0.3).opacity(0.65),
-                    Color(red: 0.35, green: 0.08, blue: 0.22).opacity(0.6),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case .coral:
-            // Living coral → warm turquoise → deep sea
-            LinearGradient(
-                colors: [
-                    Color(red: 1.0, green: 0.5, blue: 0.38).opacity(0.78),
-                    Color(red: 0.9, green: 0.38, blue: 0.32).opacity(0.72),
-                    Color(red: 0.55, green: 0.35, blue: 0.38).opacity(0.68),
-                    Color(red: 0.2, green: 0.42, blue: 0.52).opacity(0.65),
-                    Color(red: 0.1, green: 0.35, blue: 0.5).opacity(0.6),
+                    Color(red: 0.52, green: 0.14, blue: 0.28).opacity(0.78),
+                    Color(red: 0.40, green: 0.08, blue: 0.22).opacity(0.82),
+                    Color(red: 0.30, green: 0.05, blue: 0.16).opacity(0.85),
+                    Color(red: 0.22, green: 0.04, blue: 0.12).opacity(0.80),
+                    Color(red: 0.35, green: 0.06, blue: 0.20).opacity(0.72),
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -230,6 +151,123 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+        case .sapphire:
+            // Deep faceted blue → midnight navy
+            LinearGradient(
+                colors: [
+                    Color(red: 0.10, green: 0.22, blue: 0.55).opacity(0.78),
+                    Color(red: 0.06, green: 0.15, blue: 0.45).opacity(0.82),
+                    Color(red: 0.04, green: 0.10, blue: 0.35).opacity(0.85),
+                    Color(red: 0.03, green: 0.08, blue: 0.28).opacity(0.80),
+                    Color(red: 0.05, green: 0.12, blue: 0.38).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .merlot:
+            // Deep wine → black cherry → burgundy
+            LinearGradient(
+                colors: [
+                    Color(red: 0.48, green: 0.10, blue: 0.20).opacity(0.78),
+                    Color(red: 0.35, green: 0.06, blue: 0.15).opacity(0.82),
+                    Color(red: 0.25, green: 0.04, blue: 0.10).opacity(0.85),
+                    Color(red: 0.18, green: 0.03, blue: 0.08).opacity(0.80),
+                    Color(red: 0.32, green: 0.05, blue: 0.14).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .obsidian:
+            // Warm charcoal → ember-tinged black
+            LinearGradient(
+                colors: [
+                    Color(red: 0.22, green: 0.17, blue: 0.14).opacity(0.80),
+                    Color(red: 0.15, green: 0.11, blue: 0.09).opacity(0.85),
+                    Color(red: 0.10, green: 0.07, blue: 0.06).opacity(0.88),
+                    Color(red: 0.06, green: 0.05, blue: 0.04).opacity(0.82),
+                    Color(red: 0.14, green: 0.10, blue: 0.08).opacity(0.75),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .abyss:
+            // Dark teal → bioluminescent depth → void
+            LinearGradient(
+                colors: [
+                    Color(red: 0.05, green: 0.28, blue: 0.30).opacity(0.78),
+                    Color(red: 0.03, green: 0.20, blue: 0.24).opacity(0.82),
+                    Color(red: 0.02, green: 0.14, blue: 0.18).opacity(0.85),
+                    Color(red: 0.01, green: 0.08, blue: 0.12).opacity(0.80),
+                    Color(red: 0.03, green: 0.18, blue: 0.22).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .ember:
+            // Smoldering red-brown → deep char
+            LinearGradient(
+                colors: [
+                    Color(red: 0.45, green: 0.16, blue: 0.06).opacity(0.78),
+                    Color(red: 0.35, green: 0.10, blue: 0.04).opacity(0.82),
+                    Color(red: 0.25, green: 0.07, blue: 0.03).opacity(0.85),
+                    Color(red: 0.18, green: 0.05, blue: 0.02).opacity(0.80),
+                    Color(red: 0.32, green: 0.08, blue: 0.04).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .jade:
+            // Deep mineral green → dark stone
+            LinearGradient(
+                colors: [
+                    Color(red: 0.08, green: 0.32, blue: 0.22).opacity(0.78),
+                    Color(red: 0.05, green: 0.24, blue: 0.16).opacity(0.82),
+                    Color(red: 0.03, green: 0.18, blue: 0.12).opacity(0.85),
+                    Color(red: 0.02, green: 0.12, blue: 0.08).opacity(0.80),
+                    Color(red: 0.05, green: 0.22, blue: 0.15).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .velvet:
+            // Deep royal purple → dark amethyst
+            LinearGradient(
+                colors: [
+                    Color(red: 0.32, green: 0.12, blue: 0.42).opacity(0.78),
+                    Color(red: 0.24, green: 0.08, blue: 0.34).opacity(0.82),
+                    Color(red: 0.16, green: 0.05, blue: 0.26).opacity(0.85),
+                    Color(red: 0.10, green: 0.03, blue: 0.18).opacity(0.80),
+                    Color(red: 0.22, green: 0.06, blue: 0.32).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .twilight:
+            // Deep navy → purple → dark violet
+            LinearGradient(
+                colors: [
+                    Color(red: 0.16, green: 0.12, blue: 0.40).opacity(0.78),
+                    Color(red: 0.12, green: 0.08, blue: 0.35).opacity(0.82),
+                    Color(red: 0.18, green: 0.06, blue: 0.32).opacity(0.85),
+                    Color(red: 0.08, green: 0.04, blue: 0.20).opacity(0.80),
+                    Color(red: 0.14, green: 0.08, blue: 0.30).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case .bourbon:
+            // Aged amber → dark oak → deep char
+            LinearGradient(
+                colors: [
+                    Color(red: 0.42, green: 0.25, blue: 0.10).opacity(0.78),
+                    Color(red: 0.32, green: 0.18, blue: 0.06).opacity(0.82),
+                    Color(red: 0.22, green: 0.12, blue: 0.04).opacity(0.85),
+                    Color(red: 0.15, green: 0.08, blue: 0.03).opacity(0.80),
+                    Color(red: 0.28, green: 0.15, blue: 0.05).opacity(0.72),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         }
     }
 
@@ -242,49 +280,59 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
                 colors: [accent.opacity(0.35), Color.mint.opacity(0.15), accent.opacity(0.25)],
                 startPoint: .topLeading, endPoint: .bottomTrailing
             )
-        case .ocean:
-            LinearGradient(
-                colors: [Color.cyan.opacity(0.35), Color.blue.opacity(0.30), Color.indigo.opacity(0.25)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
-        case .emerald:
-            LinearGradient(
-                colors: [Color.green.opacity(0.35), Color.mint.opacity(0.30), Color.teal.opacity(0.25)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
-        case .sunset:
-            LinearGradient(
-                colors: [Color.orange.opacity(0.35), Color.pink.opacity(0.30), Color.red.opacity(0.25)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
-        case .lavender:
-            LinearGradient(
-                colors: [Color.purple.opacity(0.35), Color.indigo.opacity(0.30), Color.blue.opacity(0.25)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
-        case .fire:
-            LinearGradient(
-                colors: [Color.red.opacity(0.35), Color.orange.opacity(0.30), Color.yellow.opacity(0.25)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
-        case .aurora:
-            LinearGradient(
-                colors: [Color(red: 0.2, green: 0.95, blue: 0.65).opacity(0.35), Color.teal.opacity(0.28), Color(red: 0.4, green: 0.25, blue: 0.75).opacity(0.22)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
         case .rose:
             LinearGradient(
-                colors: [Color.pink.opacity(0.35), Color(red: 0.7, green: 0.2, blue: 0.4).opacity(0.30), Color(red: 0.4, green: 0.1, blue: 0.25).opacity(0.25)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
-        case .coral:
-            LinearGradient(
-                colors: [Color(red: 1.0, green: 0.5, blue: 0.35).opacity(0.35), Color(red: 0.5, green: 0.4, blue: 0.42).opacity(0.28), Color(red: 0.15, green: 0.38, blue: 0.48).opacity(0.22)],
+                colors: [Color(red: 1.0, green: 0.55, blue: 0.68).opacity(0.32), Color(red: 0.7, green: 0.2, blue: 0.4).opacity(0.22), Color(red: 0.45, green: 0.12, blue: 0.28).opacity(0.18)],
                 startPoint: .topLeading, endPoint: .bottomTrailing
             )
         case .phantom:
             LinearGradient(
-                colors: [Color(red: 0.4, green: 0.3, blue: 0.6).opacity(0.35), Color(red: 0.15, green: 0.3, blue: 0.45).opacity(0.28), Color(red: 0.08, green: 0.12, blue: 0.22).opacity(0.22)],
+                colors: [Color(red: 0.4, green: 0.3, blue: 0.6).opacity(0.32), Color(red: 0.15, green: 0.3, blue: 0.45).opacity(0.22), Color(red: 0.08, green: 0.12, blue: 0.22).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .sapphire:
+            LinearGradient(
+                colors: [Color(red: 0.4, green: 0.6, blue: 1.0).opacity(0.32), Color(red: 0.15, green: 0.3, blue: 0.7).opacity(0.22), Color(red: 0.08, green: 0.15, blue: 0.45).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .merlot:
+            LinearGradient(
+                colors: [Color(red: 0.8, green: 0.45, blue: 0.5).opacity(0.32), Color(red: 0.55, green: 0.18, blue: 0.25).opacity(0.22), Color(red: 0.35, green: 0.08, blue: 0.15).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .obsidian:
+            LinearGradient(
+                colors: [Color(red: 0.7, green: 0.52, blue: 0.35).opacity(0.32), Color(red: 0.4, green: 0.28, blue: 0.18).opacity(0.22), Color(red: 0.2, green: 0.15, blue: 0.1).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .abyss:
+            LinearGradient(
+                colors: [Color(red: 0.2, green: 0.75, blue: 0.65).opacity(0.32), Color(red: 0.08, green: 0.45, blue: 0.42).opacity(0.22), Color(red: 0.04, green: 0.22, blue: 0.25).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .ember:
+            LinearGradient(
+                colors: [Color(red: 0.95, green: 0.55, blue: 0.22).opacity(0.32), Color(red: 0.65, green: 0.28, blue: 0.1).opacity(0.22), Color(red: 0.38, green: 0.12, blue: 0.05).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .jade:
+            LinearGradient(
+                colors: [Color(red: 0.45, green: 0.78, blue: 0.55).opacity(0.32), Color(red: 0.2, green: 0.52, blue: 0.32).opacity(0.22), Color(red: 0.08, green: 0.3, blue: 0.18).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .velvet:
+            LinearGradient(
+                colors: [Color(red: 0.7, green: 0.45, blue: 0.85).opacity(0.32), Color(red: 0.42, green: 0.2, blue: 0.58).opacity(0.22), Color(red: 0.22, green: 0.08, blue: 0.35).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .twilight:
+            LinearGradient(
+                colors: [Color(red: 0.8, green: 0.55, blue: 0.45).opacity(0.32), Color(red: 0.4, green: 0.2, blue: 0.5).opacity(0.22), Color(red: 0.15, green: 0.08, blue: 0.3).opacity(0.18)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+        case .bourbon:
+            LinearGradient(
+                colors: [Color(red: 0.85, green: 0.62, blue: 0.28).opacity(0.32), Color(red: 0.55, green: 0.35, blue: 0.12).opacity(0.22), Color(red: 0.30, green: 0.18, blue: 0.06).opacity(0.18)],
                 startPoint: .topLeading, endPoint: .bottomTrailing
             )
         }
@@ -293,15 +341,17 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .classic:    "Classic"
-        case .ocean:      "Ocean"
-        case .emerald:    "Emerald"
-        case .sunset:     "Sunset"
-        case .lavender:   "Lavender"
-        case .fire:       "Fire"
-        case .aurora:     "Aurora"
         case .rose:       "Rose"
-        case .coral:      "Coral"
         case .phantom:    "Phantom"
+        case .sapphire:   "Sapphire"
+        case .merlot:     "Merlot"
+        case .obsidian:   "Obsidian"
+        case .abyss:      "Abyss"
+        case .ember:      "Ember"
+        case .jade:       "Jade"
+        case .velvet:     "Velvet"
+        case .twilight:   "Twilight"
+        case .bourbon:    "Bourbon"
         }
     }
 }
