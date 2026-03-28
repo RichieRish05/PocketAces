@@ -196,13 +196,7 @@ struct HomeView: View {
                 // Suit icon with felt-green dot
                 ZStack {
                     Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [Theme.shared.primary, Theme.shared.primaryDark],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                        .fill(Theme.shared.gradient)
                         .frame(width: 36, height: 36)
 
                     Image(systemName: suit.rawValue)

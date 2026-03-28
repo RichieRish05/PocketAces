@@ -125,7 +125,7 @@ struct GameDetailView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 28)
-        .background(feltGreenBackground(cornerRadius: 20))
+        .background(primaryBackground(cornerRadius: 20))
         .padding(.horizontal, 16)
     }
 
@@ -384,17 +384,9 @@ struct GameDetailView: View {
         .padding(.horizontal, 16)
     }
 
-    private func feltGreenBackground(cornerRadius: CGFloat) -> some View {
+    private func primaryBackground(cornerRadius: CGFloat) -> some View {
         ZStack {
-            LinearGradient(
-                colors: [
-                    Theme.shared.primary.opacity(0.6),
-                    Theme.shared.primaryDark.opacity(0.8),
-                    Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            Theme.shared.gradient
 
             RadialGradient(
                 colors: [Color.mint.opacity(0.08), Color.clear],
@@ -412,15 +404,7 @@ struct GameDetailView: View {
 
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                 .strokeBorder(
-                    LinearGradient(
-                        colors: [
-                            Theme.shared.accent.opacity(0.35),
-                            Color.mint.opacity(0.15),
-                            Theme.shared.accent.opacity(0.25),
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
+                    Theme.shared.borderGradient,
                     lineWidth: 1
                 )
         }

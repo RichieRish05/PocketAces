@@ -50,27 +50,11 @@ struct PastGameCardView: View {
         .padding(16)
         .background(
             ZStack {
-                LinearGradient(
-                    colors: [
-                        Theme.shared.primary.opacity(0.4),
-                        Theme.shared.primaryDark.opacity(0.5),
-                        Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.45),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                Theme.shared.gradient
 
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                Theme.shared.accent.opacity(0.2),
-                                Color.mint.opacity(0.1),
-                                Theme.shared.accent.opacity(0.15),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
+                        Theme.shared.borderGradient,
                         lineWidth: 1
                     )
             }

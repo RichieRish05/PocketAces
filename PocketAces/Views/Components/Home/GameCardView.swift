@@ -61,15 +61,7 @@ struct GameCardView: View {
         }
         .background(
             ZStack {
-                LinearGradient(
-                    colors: [
-                        Theme.shared.primary.opacity(0.6),
-                        Theme.shared.primaryDark.opacity(0.8),
-                        Theme.shared.primaryMid.opacity(0.7),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                Theme.shared.gradient
 
                 RadialGradient(
                     colors: [
@@ -93,15 +85,7 @@ struct GameCardView: View {
 
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                Theme.shared.accent.opacity(0.35),
-                                Color.mint.opacity(0.15),
-                                Theme.shared.accent.opacity(0.25),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
+                        Theme.shared.borderGradient,
                         lineWidth: 1
                     )
             }

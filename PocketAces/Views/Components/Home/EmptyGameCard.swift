@@ -40,16 +40,7 @@ struct EmptyTableCard: View {
         .frame(maxWidth: .infinity, minHeight: 200)
         .background(
             ZStack {
-                // Rich felt-green gradient
-                LinearGradient(
-                    colors: [
-                        Theme.shared.primary.opacity(0.6),
-                        Theme.shared.primaryDark.opacity(0.8),
-                        Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                Theme.shared.gradient
 
                 // Subtle noise texture feel via layered radials
                 RadialGradient(
@@ -75,15 +66,7 @@ struct EmptyTableCard: View {
                 // Gold-tinted border
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                Theme.shared.accent.opacity(0.35),
-                                Color.mint.opacity(0.15),
-                                Theme.shared.accent.opacity(0.25),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
+                        Theme.shared.borderGradient,
                         lineWidth: 1
                     )
             }

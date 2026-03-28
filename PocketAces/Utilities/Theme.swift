@@ -10,6 +10,8 @@ final class Theme {
     private(set) var primary: Color
     private(set) var primaryDark: Color
     private(set) var primaryMid: Color
+    private(set) var gradient: LinearGradient
+    private(set) var borderGradient: LinearGradient
 
     // Fixed — never change
     static let win = Color(red: 0.3, green: 0.85, blue: 0.45)
@@ -24,6 +26,8 @@ final class Theme {
         primary = initial.primary
         primaryDark = initial.primaryDark
         primaryMid = initial.primaryMid
+        gradient = initial.gradient
+        borderGradient = initial.borderGradient
     }
 
     func apply(_ package: ThemePackage) {
@@ -33,5 +37,7 @@ final class Theme {
         primary = package.primary
         primaryDark = package.primaryDark
         primaryMid = package.primaryMid
+        gradient = package.gradient
+        borderGradient = package.borderGradient
     }
 }
