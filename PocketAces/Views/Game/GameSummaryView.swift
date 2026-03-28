@@ -58,21 +58,21 @@ struct GameSummaryView: View {
                 VStack(spacing: 4) {
                     Text("Your Result")
                         .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Theme.dimGold)
+                        .foregroundStyle(Theme.shared.dimAccent)
 
                     Text(net.formattedCurrency(showSign: true))
                         .font(.system(size: 36, weight: .bold, design: .rounded))
-                        .foregroundStyle(net >= 0 ? Theme.accentGreen : Theme.accentRed)
+                        .foregroundStyle(net >= 0 ? Theme.win : Theme.loss)
                 }
             } else {
                 VStack(spacing: 4) {
                     Text("Game Complete")
                         .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Theme.dimGold)
+                        .foregroundStyle(Theme.shared.dimAccent)
 
                     Image(systemName: suit.rawValue)
                         .font(.system(size: 36, weight: .bold))
-                        .foregroundStyle(Theme.gold)
+                        .foregroundStyle(Theme.shared.accent)
                 }
             }
 
@@ -180,7 +180,7 @@ struct GameSummaryView: View {
                 if rank == 1 {
                     Image(systemName: "crown.fill")
                         .font(.system(size: 11))
-                        .foregroundStyle(Theme.gold)
+                        .foregroundStyle(Theme.shared.accent)
                 } else {
                     Text("\(rank)")
                         .font(.caption2.weight(.bold).monospacedDigit())
@@ -198,10 +198,10 @@ struct GameSummaryView: View {
                 if isCurrentUser {
                     Text("You")
                         .font(.caption2.weight(.bold))
-                        .foregroundStyle(Theme.feltDark)
+                        .foregroundStyle(Theme.shared.primaryDark)
                         .padding(.horizontal, 5)
                         .padding(.vertical, 1)
-                        .background(Theme.gold.opacity(0.85))
+                        .background(Theme.shared.accent.opacity(0.85))
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                 }
             }
@@ -211,7 +211,7 @@ struct GameSummaryView: View {
             // Net result only
             Text(net.formattedCurrency(showSign: true))
                 .font(.subheadline.weight(.bold).monospacedDigit())
-                .foregroundStyle(isWinner ? Theme.accentGreen : isLoser ? Theme.accentRed : .white.opacity(0.5))
+                .foregroundStyle(isWinner ? Theme.win : isLoser ? Theme.loss : .white.opacity(0.5))
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -223,7 +223,7 @@ struct GameSummaryView: View {
         ShareLink(item: settlementText) {
             Image(systemName: "square.and.arrow.up")
                 .font(.body.weight(.medium))
-                .foregroundStyle(Theme.dimGold)
+                .foregroundStyle(Theme.shared.dimAccent)
         }
     }
 
@@ -251,7 +251,7 @@ struct GameSummaryView: View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 12))
-                .foregroundStyle(Theme.dimGold)
+                .foregroundStyle(Theme.shared.dimAccent)
 
             Text(title)
                 .font(.subheadline.weight(.semibold))
@@ -266,8 +266,8 @@ struct GameSummaryView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Theme.feltGreen.opacity(0.6),
-                    Theme.feltDark.opacity(0.8),
+                    Theme.shared.primary.opacity(0.6),
+                    Theme.shared.primaryDark.opacity(0.8),
                     Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
                 ],
                 startPoint: .topLeading,
@@ -292,9 +292,9 @@ struct GameSummaryView: View {
                 .strokeBorder(
                     LinearGradient(
                         colors: [
-                            Theme.gold.opacity(0.35),
+                            Theme.shared.accent.opacity(0.35),
                             Color.mint.opacity(0.15),
-                            Theme.gold.opacity(0.25),
+                            Theme.shared.accent.opacity(0.25),
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -306,8 +306,8 @@ struct GameSummaryView: View {
     }
 
     private func rankColor(rank: Int, net: Double) -> Color {
-        if rank == 1 { return Theme.gold }
-        if net >= 0 { return Theme.accentGreen }
-        return Theme.accentRed
+        if rank == 1 { return Theme.shared.accent }
+        if net >= 0 { return Theme.win }
+        return Theme.loss
     }
 }

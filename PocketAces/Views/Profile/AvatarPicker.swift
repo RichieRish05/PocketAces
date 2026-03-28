@@ -20,7 +20,7 @@ struct AvatarPickerView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 14))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 14)
-                                    .stroke(isSelected ? Theme.gold : Theme.dimGold.opacity(0.3), lineWidth: isSelected ? 3 : 1)
+                                    .stroke(isSelected ? Theme.shared.accent : Theme.shared.dimAccent.opacity(0.3), lineWidth: isSelected ? 3 : 1)
                             )
                             .animation(.easeInOut(duration: 0.2), value: isSelected)
                     }
@@ -37,7 +37,7 @@ struct AvatarPickerView: View {
                     Task { await viewModel.saveAvatar() }
                 }
                 .fontWeight(.semibold)
-                .foregroundStyle(Theme.gold)
+                .foregroundStyle(Theme.shared.accent)
             }
         }
     }

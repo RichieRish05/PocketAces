@@ -12,7 +12,7 @@ struct ExtremesRow: View {
                 value: "+\(biggestWin.formattedCurrency(decimals: 0, showSign: false))",
                 icon: "rosette",
                 iconColor: Theme.silver,
-                valueColor: Theme.accentGreen
+                valueColor: Theme.win
             )
 
             StatsCard(
@@ -20,7 +20,7 @@ struct ExtremesRow: View {
                 value: "-\(abs(biggestLoss).formattedCurrency(decimals: 0, showSign: false))",
                 icon: "chart.line.downtrend.xyaxis",
                 iconColor: Theme.silver,
-                valueColor: Theme.accentRed
+                valueColor: Theme.loss
             )
         }
     }

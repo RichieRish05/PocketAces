@@ -108,7 +108,7 @@ struct GameDetailView: View {
         VStack(spacing: 8) {
             Text("Total Pot")
                 .font(.subheadline.weight(.medium))
-                .foregroundStyle(Theme.dimGold)
+                .foregroundStyle(Theme.shared.dimAccent)
 
             Text(totalPot.formattedCurrency())
                 .font(.system(size: 40, weight: .bold, design: .rounded))
@@ -167,7 +167,7 @@ struct GameDetailView: View {
 
                 if player.isActive {
                     Circle()
-                        .fill(Theme.accentGreen)
+                        .fill(Theme.win)
                         .frame(width: 10, height: 10)
                         .overlay(
                             Circle().stroke(Color.black, lineWidth: 1.5)
@@ -185,10 +185,10 @@ struct GameDetailView: View {
                     if isCurrentUser {
                         Text("You")
                             .font(.caption2.weight(.bold))
-                            .foregroundStyle(Theme.feltDark)
+                            .foregroundStyle(Theme.shared.primaryDark)
                             .padding(.horizontal, 5)
                             .padding(.vertical, 1)
-                            .background(Theme.gold.opacity(0.85))
+                            .background(Theme.shared.accent.opacity(0.85))
                             .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                     }
                 }
@@ -209,12 +209,12 @@ struct GameDetailView: View {
 
                     Text(profit.formattedCurrency(decimals: 2, showSign: true))
                         .font(.caption.weight(.bold).monospacedDigit())
-                        .foregroundStyle(profit >= 0 ? Theme.accentGreen : Theme.accentRed)
+                        .foregroundStyle(profit >= 0 ? Theme.win : Theme.loss)
                 }
             } else {
                 Text("Playing")
                     .font(.caption.weight(.medium))
-                    .foregroundStyle(Theme.accentGreen.opacity(0.8))
+                    .foregroundStyle(Theme.win.opacity(0.8))
             }
         }
         .padding(.horizontal, 16)
@@ -231,13 +231,13 @@ struct GameDetailView: View {
             } label: {
                 Text("Re-buy")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.gold)
+                    .foregroundStyle(Theme.shared.accent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(Color.white.opacity(0.06))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
+                            .strokeBorder(Theme.shared.accent.opacity(0.3), lineWidth: 1)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
@@ -252,7 +252,7 @@ struct GameDetailView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Theme.gold)
+                    .background(Theme.shared.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(.plain)
@@ -289,7 +289,7 @@ struct GameDetailView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(isCashingOut || cashOutAmount > totalPot ? Theme.gold.opacity(0.4) : Theme.gold)
+                    .background(isCashingOut || cashOutAmount > totalPot ? Theme.shared.accent.opacity(0.4) : Theme.shared.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
@@ -309,7 +309,7 @@ struct GameDetailView: View {
                     Button("Cancel") {
                         showCashOutSheet = false
                     }
-                    .foregroundStyle(Theme.dimGold)
+                    .foregroundStyle(Theme.shared.dimAccent)
                 }
             }
         }
@@ -344,7 +344,7 @@ struct GameDetailView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(isRebuying || rebuyAmount <= 0 ? Theme.gold.opacity(0.4) : Theme.gold)
+                    .background(isRebuying || rebuyAmount <= 0 ? Theme.shared.accent.opacity(0.4) : Theme.shared.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
@@ -360,7 +360,7 @@ struct GameDetailView: View {
                     Button("Cancel") {
                         showRebuySheet = false
                     }
-                    .foregroundStyle(Theme.dimGold)
+                    .foregroundStyle(Theme.shared.dimAccent)
                 }
             }
         }
@@ -373,7 +373,7 @@ struct GameDetailView: View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 12))
-                .foregroundStyle(Theme.dimGold)
+                .foregroundStyle(Theme.shared.dimAccent)
 
             Text(title)
                 .font(.subheadline.weight(.semibold))
@@ -388,8 +388,8 @@ struct GameDetailView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Theme.feltGreen.opacity(0.6),
-                    Theme.feltDark.opacity(0.8),
+                    Theme.shared.primary.opacity(0.6),
+                    Theme.shared.primaryDark.opacity(0.8),
                     Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.7),
                 ],
                 startPoint: .topLeading,
@@ -414,9 +414,9 @@ struct GameDetailView: View {
                 .strokeBorder(
                     LinearGradient(
                         colors: [
-                            Theme.gold.opacity(0.35),
+                            Theme.shared.accent.opacity(0.35),
                             Color.mint.opacity(0.15),
-                            Theme.gold.opacity(0.25),
+                            Theme.shared.accent.opacity(0.25),
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing

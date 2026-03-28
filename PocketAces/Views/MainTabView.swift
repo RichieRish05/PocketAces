@@ -30,10 +30,10 @@ struct MainTabView: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            Theme.gold.opacity(0.0),
-                            Theme.gold.opacity(0.25),
-                            Theme.gold.opacity(0.25),
-                            Theme.gold.opacity(0.0)
+                            Theme.shared.accent.opacity(0.0),
+                            Theme.shared.accent.opacity(0.25),
+                            Theme.shared.accent.opacity(0.25),
+                            Theme.shared.accent.opacity(0.0)
                         ],
                         startPoint: .leading,
                         endPoint: .trailing
@@ -65,13 +65,13 @@ struct MainTabView: View {
                 ZStack {
                     Image(systemName: isSelected ? tab.selectedIcon : tab.icon)
                         .font(.system(size: 18, weight: isSelected ? .semibold : .regular))
-                        .foregroundStyle(isSelected ? Theme.gold : Color.white.opacity(0.75))
+                        .foregroundStyle(isSelected ? Theme.shared.accent : Color.white.opacity(0.75))
                 }
                 .frame(height: 24)
 
                 Text(tab.title)
                     .font(.system(size: 10, weight: isSelected ? .semibold : .regular))
-                    .foregroundStyle(isSelected ? Theme.gold : Color.white.opacity(0.3))
+                    .foregroundStyle(isSelected ? Theme.shared.accent : Color.white.opacity(0.3))
                     .tracking(isSelected ? 0.4 : 0)
             }
             .frame(maxWidth: .infinity)

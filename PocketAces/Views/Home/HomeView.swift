@@ -57,7 +57,7 @@ struct HomeView: View {
         return VStack(alignment: .leading, spacing: 6) {
             Text("Net Profit")
                 .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(Theme.dimGold)
+                .foregroundStyle(Theme.shared.dimAccent)
 
             Text(netProfit.formattedCurrency(decimals: 2))
                 .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -66,11 +66,11 @@ struct HomeView: View {
             HStack(spacing: 6) {
                 Image(systemName: isPositive ? "arrow.up.right" : "arrow.down.right")
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(isPositive ? Theme.accentGreen : Theme.accentRed)
+                    .foregroundStyle(isPositive ? Theme.win : Theme.loss)
 
                 Text("\(gamesPlayed) games · \(Int(winRate))% win rate")
                     .font(.system(size: 12))
-                    .foregroundStyle(isPositive ? Theme.accentGreen : Theme.accentRed)
+                    .foregroundStyle(isPositive ? Theme.win : Theme.loss)
             }
         }
     }
@@ -118,7 +118,7 @@ struct HomeView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Theme.gold)
+                    .background(Theme.shared.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
             .buttonStyle(.plain)
@@ -126,7 +126,7 @@ struct HomeView: View {
             Button { showJoinGame = true } label: {
                 Text("Join Game")
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(Theme.gold)
+                    .foregroundStyle(Theme.shared.accent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(.ultraThinMaterial)
@@ -145,7 +145,7 @@ struct HomeView: View {
 
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: Theme.dimGold)
+                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: Theme.shared.dimAccent)
 
                 Spacer()
 
@@ -153,7 +153,7 @@ struct HomeView: View {
                     NavigationLink(value: Route.pastGames) {
                         Text("View All")
                             .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(Theme.dimGold)
+                            .foregroundStyle(Theme.shared.dimAccent)
                     }
                     .padding(.trailing, 20)
                 }
@@ -198,7 +198,7 @@ struct HomeView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Theme.feltGreen, Theme.feltDark],
+                                colors: [Theme.shared.primary, Theme.shared.primaryDark],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -207,7 +207,7 @@ struct HomeView: View {
 
                     Image(systemName: suit.rawValue)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Theme.gold)
+                        .foregroundStyle(Theme.shared.accent)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -226,7 +226,7 @@ struct HomeView: View {
                 if let net {
                     Text(net.formattedCurrency(showSign: true))
                         .font(.system(size: 15, weight: .bold).monospacedDigit())
-                        .foregroundStyle(net >= 0 ? Theme.accentGreen : Theme.accentRed)
+                        .foregroundStyle(net >= 0 ? Theme.win : Theme.loss)
                 }
 
                 Image(systemName: "chevron.right")

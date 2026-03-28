@@ -1,18 +1,32 @@
 import SwiftUI
 
-enum Theme {
-    // Primary accent
-    static let gold      = Color(red: 0.85, green: 0.75, blue: 0.45)
-    static let dimGold   = Color(red: 0.72, green: 0.65, blue: 0.42)
+@Observable
+final class Theme {
+    static let shared = Theme()
 
-    // Table felt gradient
-    static let feltGreen = Color(red: 0.12, green: 0.42, blue: 0.28)
-    static let feltDark  = Color(red: 0.06, green: 0.22, blue: 0.14)
+    // Dynamic — change with ThemePackage
+    private(set) var accent: Color
+    private(set) var dimAccent: Color
+    private(set) var primary: Color
+    private(set) var primaryDark: Color
 
-    // Semantic win/loss
-    static let accentGreen = Color(red: 0.3, green: 0.85, blue: 0.45)
-    static let accentRed   = Color(red: 0.95, green: 0.35, blue: 0.35)
-
-    // Streak-specific
+    // Fixed — never change
+    static let win = Color(red: 0.3, green: 0.85, blue: 0.45)
+    static let loss = Color(red: 0.95, green: 0.35, blue: 0.35)
     static let silver = Color(red: 0.75, green: 0.82, blue: 0.9)
+
+    private init() {
+        let initial = ThemePackage.classic
+        accent = initial.accent
+        dimAccent = initial.dimAccent
+        primary = initial.primary
+        primaryDark = initial.primaryDark
+    }
+
+    func apply(_ package: ThemePackage) {
+        accent = package.accent
+        dimAccent = package.dimAccent
+        primary = package.primary
+        primaryDark = package.primaryDark
+    }
 }

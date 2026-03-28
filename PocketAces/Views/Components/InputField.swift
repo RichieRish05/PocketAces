@@ -22,7 +22,7 @@ struct InputField: View {
         .padding(.vertical, 16)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
+                .strokeBorder(Theme.shared.accent.opacity(0.3), lineWidth: 1)
         )
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
@@ -106,7 +106,7 @@ struct CurrencyInputField: View {
         .padding(.vertical, 16)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
+                .strokeBorder(Theme.shared.accent.opacity(0.3), lineWidth: 1)
         )
         .contentShape(Rectangle())
         .onTapGesture {

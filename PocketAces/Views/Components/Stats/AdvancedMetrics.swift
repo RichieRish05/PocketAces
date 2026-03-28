@@ -13,13 +13,13 @@ struct AdvancedMetrics: View {
                 metricRow(
                     label: "Avg Profit / Session",
                     value: averageProfit.formattedCurrency(decimals: 2, showSign: true),
-                    valueColor: averageProfit >= 0 ? Theme.accentGreen : Theme.accentRed
+                    valueColor: averageProfit >= 0 ? Theme.win : Theme.loss
                 )
 
                 metricRow(
                     label: "ROI",
                     value: String(format: "%+.1f%%", roi),
-                    valueColor: roi >= 0 ? Theme.accentGreen : Theme.accentRed
+                    valueColor: roi >= 0 ? Theme.win : Theme.loss
                 )
             }
         }

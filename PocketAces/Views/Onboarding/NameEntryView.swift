@@ -39,7 +39,7 @@ struct NameEntryView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(viewModel.canFinish && !viewModel.isLoading ? Theme.gold : Theme.dimGold.opacity(0.4))
+                    .fill(viewModel.canFinish && !viewModel.isLoading ? Theme.shared.accent : Theme.shared.dimAccent.opacity(0.4))
             )
             .disabled(!viewModel.canFinish || viewModel.isLoading)
             .padding(.horizontal, 24)

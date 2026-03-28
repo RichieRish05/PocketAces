@@ -74,7 +74,7 @@ struct ProfileView: View {
                     Circle()
                         .stroke(
                             LinearGradient(
-                                colors: [Theme.gold, Theme.dimGold],
+                                colors: [Theme.shared.accent, Theme.shared.dimAccent],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -87,11 +87,11 @@ struct ProfileView: View {
                             .fill(Color(white: 0.1))
                             .frame(width: 28, height: 28)
                         Circle()
-                            .stroke(Theme.dimGold, lineWidth: 1)
+                            .stroke(Theme.shared.dimAccent, lineWidth: 1)
                             .frame(width: 28, height: 28)
                         Image(systemName: "pencil")
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(Theme.dimGold)
+                            .foregroundStyle(Theme.shared.dimAccent)
                     }
                 }
         }
@@ -109,7 +109,7 @@ struct ProfileView: View {
                     .foregroundStyle(.white)
                 Image(systemName: "pencil")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.dimGold)
+                    .foregroundStyle(Theme.shared.dimAccent)
             }
         }
     }
@@ -133,14 +133,14 @@ struct ProfileView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { viewModel.showNameEditor = false }
-                        .foregroundStyle(Theme.gold)
+                        .foregroundStyle(Theme.shared.accent)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         Task { await viewModel.saveName() }
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(Theme.gold)
+                    .foregroundStyle(Theme.shared.accent)
                     .disabled(viewModel.draftName.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }

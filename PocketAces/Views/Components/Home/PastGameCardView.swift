@@ -29,7 +29,7 @@ struct PastGameCardView: View {
             HStack {
                 Image(systemName: suit.rawValue)
                     .font(.system(size: 22))
-                    .foregroundStyle(Theme.gold.opacity(0.85))
+                    .foregroundStyle(Theme.shared.accent.opacity(0.85))
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(game.name)
@@ -52,8 +52,8 @@ struct PastGameCardView: View {
             ZStack {
                 LinearGradient(
                     colors: [
-                        Theme.feltGreen.opacity(0.4),
-                        Theme.feltDark.opacity(0.5),
+                        Theme.shared.primary.opacity(0.4),
+                        Theme.shared.primaryDark.opacity(0.5),
                         Color(red: 0.08, green: 0.30, blue: 0.22).opacity(0.45),
                     ],
                     startPoint: .topLeading,
@@ -64,9 +64,9 @@ struct PastGameCardView: View {
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                Theme.gold.opacity(0.2),
+                                Theme.shared.accent.opacity(0.2),
                                 Color.mint.opacity(0.1),
-                                Theme.gold.opacity(0.15),
+                                Theme.shared.accent.opacity(0.15),
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

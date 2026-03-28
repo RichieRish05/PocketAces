@@ -29,7 +29,7 @@ struct JoinGameView: View {
                     .padding(.vertical, 16)
                     .overlay(
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .strokeBorder(Theme.gold.opacity(0.3), lineWidth: 1)
+                            .strokeBorder(Theme.shared.accent.opacity(0.3), lineWidth: 1)
                     )
                     .padding(.horizontal, 16)
                     .onChange(of: joinCode) { _, newValue in
@@ -67,7 +67,7 @@ struct JoinGameView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(joinCode.count < 6 || buyIn <= 0 || isJoining ? Theme.gold.opacity(0.4) : Theme.gold)
+                    .background(joinCode.count < 6 || buyIn <= 0 || isJoining ? Theme.shared.accent.opacity(0.4) : Theme.shared.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
@@ -81,7 +81,7 @@ struct JoinGameView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .foregroundStyle(Theme.dimGold)
+                        .foregroundStyle(Theme.shared.dimAccent)
                 }
             }
         }

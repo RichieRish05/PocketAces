@@ -38,7 +38,7 @@ struct AvatarSelectionView: View {
                     .padding(.vertical, 16)
                     .background(
                         RoundedRectangle(cornerRadius: 14)
-                            .fill(viewModel.canProceedToName ? Theme.gold : Theme.dimGold.opacity(0.4))
+                            .fill(viewModel.canProceedToName ? Theme.shared.accent : Theme.shared.dimAccent.opacity(0.4))
                     )
             }
             .disabled(!viewModel.canProceedToName)
@@ -62,7 +62,7 @@ struct AvatarSelectionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 14))
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
-                        .stroke(isSelected ? Theme.gold : Theme.dimGold.opacity(0.3), lineWidth: isSelected ? 3 : 1)
+                        .stroke(isSelected ? Theme.shared.accent : Theme.shared.dimAccent.opacity(0.3), lineWidth: isSelected ? 3 : 1)
                 )
                 .animation(.easeInOut(duration: 0.2), value: isSelected)
         }
