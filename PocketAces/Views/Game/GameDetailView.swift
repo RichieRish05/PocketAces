@@ -3,6 +3,7 @@ import SwiftUI
 struct GameDetailView: View {
     let gameId: String
 
+    @Environment(Theme.self) private var theme
     @Environment(GameService.self) private var gameService
     @Environment(UserStore.self) private var userStore
     @Environment(\.dismiss) private var dismiss
@@ -108,7 +109,7 @@ struct GameDetailView: View {
         VStack(spacing: 8) {
             Text("Total Pot")
                 .font(.subheadline.weight(.medium))
-                .foregroundStyle(Theme.shared.dimAccent)
+                .foregroundStyle(theme.dimAccent)
 
             Text(totalPot.formattedCurrency())
                 .font(.system(size: 40, weight: .bold, design: .rounded))
@@ -185,10 +186,10 @@ struct GameDetailView: View {
                     if isCurrentUser {
                         Text("You")
                             .font(.caption2.weight(.bold))
-                            .foregroundStyle(Theme.shared.primaryDark)
+                            .foregroundStyle(theme.primaryDark)
                             .padding(.horizontal, 5)
                             .padding(.vertical, 1)
-                            .background(Theme.shared.accent.opacity(0.85))
+                            .background(theme.accent.opacity(0.85))
                             .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                     }
                 }
@@ -231,13 +232,13 @@ struct GameDetailView: View {
             } label: {
                 Text("Re-buy")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.shared.accent)
+                    .foregroundStyle(theme.accent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(Color.white.opacity(0.06))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .strokeBorder(Theme.shared.accent.opacity(0.3), lineWidth: 1)
+                            .strokeBorder(theme.accent.opacity(0.3), lineWidth: 1)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
@@ -252,7 +253,7 @@ struct GameDetailView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Theme.shared.accent)
+                    .background(theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(.plain)
@@ -289,7 +290,7 @@ struct GameDetailView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(isCashingOut || cashOutAmount > totalPot ? Theme.shared.accent.opacity(0.4) : Theme.shared.accent)
+                    .background(isCashingOut || cashOutAmount > totalPot ? theme.accent.opacity(0.4) : theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
@@ -309,7 +310,7 @@ struct GameDetailView: View {
                     Button("Cancel") {
                         showCashOutSheet = false
                     }
-                    .foregroundStyle(Theme.shared.dimAccent)
+                    .foregroundStyle(theme.dimAccent)
                 }
             }
         }
@@ -344,7 +345,7 @@ struct GameDetailView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(isRebuying || rebuyAmount <= 0 ? Theme.shared.accent.opacity(0.4) : Theme.shared.accent)
+                    .background(isRebuying || rebuyAmount <= 0 ? theme.accent.opacity(0.4) : theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
@@ -360,7 +361,7 @@ struct GameDetailView: View {
                     Button("Cancel") {
                         showRebuySheet = false
                     }
-                    .foregroundStyle(Theme.shared.dimAccent)
+                    .foregroundStyle(theme.dimAccent)
                 }
             }
         }
@@ -373,7 +374,7 @@ struct GameDetailView: View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 12))
-                .foregroundStyle(Theme.shared.dimAccent)
+                .foregroundStyle(theme.dimAccent)
 
             Text(title)
                 .font(.subheadline.weight(.semibold))
@@ -386,7 +387,7 @@ struct GameDetailView: View {
 
     private func primaryBackground(cornerRadius: CGFloat) -> some View {
         ZStack {
-            Theme.shared.gradient
+            theme.gradient
 
             RadialGradient(
                 colors: [Color.mint.opacity(0.08), Color.clear],
@@ -404,7 +405,7 @@ struct GameDetailView: View {
 
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                 .strokeBorder(
-                    Theme.shared.borderGradient,
+                    theme.borderGradient,
                     lineWidth: 1
                 )
         }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct EmptyTableCard: View {
+    @Environment(Theme.self) private var theme
     @State private var animate = false
 
     private let suits: [(icon: String, color: Color, x: CGFloat, y: CGFloat, size: CGFloat, rotation: Double, delay: Double)] = [
@@ -22,7 +23,7 @@ struct EmptyTableCard: View {
                 // Ace of spades
                 Image(systemName: "suit.spade.fill")
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(Theme.shared.accent)
+                    .foregroundStyle(theme.accent)
 
 
                 VStack(spacing: 5) {
@@ -40,7 +41,7 @@ struct EmptyTableCard: View {
         .frame(maxWidth: .infinity, minHeight: 200)
         .background(
             ZStack {
-                Theme.shared.gradient
+                theme.gradient
 
                 // Subtle noise texture feel via layered radials
                 RadialGradient(
@@ -66,7 +67,7 @@ struct EmptyTableCard: View {
                 // Gold-tinted border
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .strokeBorder(
-                        Theme.shared.borderGradient,
+                        theme.borderGradient,
                         lineWidth: 1
                     )
             }

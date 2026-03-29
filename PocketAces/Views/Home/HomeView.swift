@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(Theme.self) private var theme
     @Environment(UserStore.self) private var userStore
     @Environment(GameService.self) private var gameService
     @Environment(AuthService.self) private var authService
@@ -48,22 +49,6 @@ struct HomeView: View {
             .padding(.top, 12)
     }
 
-    private var gemBadge: some View {
-        let gems = userStore.userData?.gems ?? 0
-        return HStack(spacing: 6) {
-            Image("gem")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 22, height: 22)
-
-            Text("\(gems)")
-                .font(.system(size: 17, weight: .heavy, design: .rounded))
-                .foregroundStyle(Theme.shared.accent)
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-    }
-
     private var netProfitCard: some View {
         let netProfit = userStore.userData?.netProfit ?? 0
         let gamesPlayed = userStore.userData?.gamesPlayed ?? 0
@@ -73,17 +58,18 @@ struct HomeView: View {
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text("Net Profit")
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(Theme.shared.dimAccent)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundStyle(theme.dimAccent)
 
                 Spacer()
 
-                gemBadge
+                GemBadge()
             }
 
             Text(netProfit.formattedCurrency(decimals: 2))
                 .font(.system(size: 36, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
+                .padding(.top, -8)
 
             HStack(spacing: 6) {
                 Image(systemName: isPositive ? "arrow.up.right" : "arrow.down.right")
@@ -140,7 +126,7 @@ struct HomeView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Theme.shared.accent)
+                    .background(theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
             .buttonStyle(.plain)
@@ -148,7 +134,7 @@ struct HomeView: View {
             Button { showJoinGame = true } label: {
                 Text("Join Game")
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(Theme.shared.accent)
+                    .foregroundStyle(theme.accent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(.ultraThinMaterial)
@@ -167,7 +153,7 @@ struct HomeView: View {
 
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: Theme.shared.dimAccent)
+                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: theme.dimAccent)
 
                 Spacer()
 
@@ -175,7 +161,7 @@ struct HomeView: View {
                     NavigationLink(value: Route.pastGames) {
                         Text("View All")
                             .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(Theme.shared.dimAccent)
+                            .foregroundStyle(theme.dimAccent)
                     }
                     .padding(.trailing, 20)
                 }
@@ -218,12 +204,12 @@ struct HomeView: View {
                 // Suit icon with felt-green dot
                 ZStack {
                     Circle()
-                        .fill(Theme.shared.gradient)
+                        .fill(theme.gradient)
                         .frame(width: 36, height: 36)
 
                     Image(systemName: suit.rawValue)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Theme.shared.accent)
+                        .foregroundStyle(theme.accent)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {

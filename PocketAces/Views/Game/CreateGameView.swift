@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CreateGameView: View {
+    @Environment(Theme.self) private var theme
     @Environment(\.dismiss) private var dismiss
     @Environment(GameService.self) private var gameService
     @Environment(UserStore.self) private var userStore
@@ -33,7 +34,7 @@ struct CreateGameView: View {
                         .padding(.vertical, 16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .strokeBorder(Theme.shared.accent.opacity(0.3), lineWidth: 1)
+                                .strokeBorder(theme.accent.opacity(0.3), lineWidth: 1)
                         )
                         .padding(.horizontal, 16)
                 }
@@ -69,7 +70,7 @@ struct CreateGameView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(gameName.isEmpty || buyIn <= 0 || isCreating ? Theme.shared.accent.opacity(0.4) : Theme.shared.accent)
+                    .background(gameName.isEmpty || buyIn <= 0 || isCreating ? theme.accent.opacity(0.4) : theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
@@ -85,7 +86,7 @@ struct CreateGameView: View {
                     Button("Cancel") {
                         dismiss()
                     }
-                    .foregroundStyle(Theme.shared.dimAccent)
+                    .foregroundStyle(theme.dimAccent)
                 }
             }
         }

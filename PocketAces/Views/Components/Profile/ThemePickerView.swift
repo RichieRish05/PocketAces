@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ThemePickerView: View {
+    @Environment(Theme.self) private var theme
     @Bindable var viewModel: ProfileViewModel
 
     @State private var selected: ThemePackage = Theme.shared.currentPackage
@@ -30,7 +31,7 @@ struct ThemePickerView: View {
                     Task { await viewModel.saveTheme(selected) }
                 }
                 .fontWeight(.semibold)
-                .foregroundStyle(Theme.shared.accent)
+                .foregroundStyle(theme.accent)
             }
         }
     }

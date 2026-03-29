@@ -14,6 +14,7 @@ enum SuitIcon: String, CaseIterable {
 }
 
 struct GameCardView: View {
+    @Environment(Theme.self) private var theme
     let game: Game
     var peekNext: Bool = false
 
@@ -30,7 +31,7 @@ struct GameCardView: View {
             HStack(alignment: .top) {
                 Image(systemName: suit.rawValue)
                     .font(.system(size: 48, weight: .bold))
-                    .foregroundStyle(Theme.shared.accent.opacity(0.7))
+                    .foregroundStyle(theme.accent.opacity(0.7))
 
                 Spacer()
 
@@ -61,7 +62,7 @@ struct GameCardView: View {
         }
         .background(
             ZStack {
-                Theme.shared.gradient
+                theme.gradient
 
                 RadialGradient(
                     colors: [
@@ -85,7 +86,7 @@ struct GameCardView: View {
 
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .strokeBorder(
-                        Theme.shared.borderGradient,
+                        theme.borderGradient,
                         lineWidth: 1
                     )
             }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Environment(Theme.self) private var theme
     @Environment(UserStore.self) private var userStore
     @State private var viewModel = ProfileViewModel()
     @State private var appeared = false
@@ -9,10 +10,14 @@ struct ProfileView: View {
         NavigationStack(path: $viewModel.navigationPath) {
             ScrollView {
                 VStack(spacing: 20) {
+                    HStack {
+                        Spacer()
+                        GemBadge()
+                    }
                     profileCard
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 40)
+                .padding(.top, 12)
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
@@ -77,7 +82,7 @@ struct ProfileView: View {
                     Circle()
                         .stroke(
                             LinearGradient(
-                                colors: [Theme.shared.accent, Theme.shared.dimAccent],
+                                colors: [theme.accent, theme.dimAccent],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -90,11 +95,11 @@ struct ProfileView: View {
                             .fill(Color(white: 0.1))
                             .frame(width: 28, height: 28)
                         Circle()
-                            .stroke(Theme.shared.dimAccent, lineWidth: 1)
+                            .stroke(theme.dimAccent, lineWidth: 1)
                             .frame(width: 28, height: 28)
                         Image(systemName: "pencil")
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(Theme.shared.dimAccent)
+                            .foregroundStyle(theme.dimAccent)
                     }
                 }
         }
@@ -112,7 +117,7 @@ struct ProfileView: View {
                     .foregroundStyle(.white)
                 Image(systemName: "pencil")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.shared.dimAccent)
+                    .foregroundStyle(theme.dimAccent)
             }
         }
     }
@@ -126,12 +131,12 @@ struct ProfileView: View {
             HStack(spacing: 8) {
                 Image(systemName: "paintpalette")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Theme.shared.accent)
+                    .foregroundStyle(theme.accent)
                 Text("Theme")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(.white)
                 Spacer()
-                Text(Theme.shared.currentPackage.displayName)
+                Text(theme.currentPackage.displayName)
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(Color(white: 0.45))
                 Image(systemName: "chevron.right")
@@ -166,14 +171,14 @@ struct ProfileView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { viewModel.showNameEditor = false }
-                        .foregroundStyle(Theme.shared.accent)
+                        .foregroundStyle(theme.accent)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         Task { await viewModel.saveName() }
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(Theme.shared.accent)
+                    .foregroundStyle(theme.accent)
                     .disabled(viewModel.draftName.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }

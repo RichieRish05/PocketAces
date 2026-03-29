@@ -3,6 +3,7 @@ import SwiftUI
 struct GameSummaryView: View {
     let game: Game
 
+    @Environment(Theme.self) private var theme
     @Environment(AuthService.self) private var authService
 
     // MARK: - Computed
@@ -58,7 +59,7 @@ struct GameSummaryView: View {
                 VStack(spacing: 4) {
                     Text("Your Result")
                         .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Theme.shared.dimAccent)
+                        .foregroundStyle(theme.dimAccent)
 
                     Text(net.formattedCurrency(showSign: true))
                         .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -68,11 +69,11 @@ struct GameSummaryView: View {
                 VStack(spacing: 4) {
                     Text("Game Complete")
                         .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Theme.shared.dimAccent)
+                        .foregroundStyle(theme.dimAccent)
 
                     Image(systemName: suit.rawValue)
                         .font(.system(size: 36, weight: .bold))
-                        .foregroundStyle(Theme.shared.accent)
+                        .foregroundStyle(theme.accent)
                 }
             }
 
@@ -180,7 +181,7 @@ struct GameSummaryView: View {
                 if rank == 1 {
                     Image(systemName: "crown.fill")
                         .font(.system(size: 11))
-                        .foregroundStyle(Theme.shared.accent)
+                        .foregroundStyle(theme.accent)
                 } else {
                     Text("\(rank)")
                         .font(.caption2.weight(.bold).monospacedDigit())
@@ -198,10 +199,10 @@ struct GameSummaryView: View {
                 if isCurrentUser {
                     Text("You")
                         .font(.caption2.weight(.bold))
-                        .foregroundStyle(Theme.shared.primaryDark)
+                        .foregroundStyle(theme.primaryDark)
                         .padding(.horizontal, 5)
                         .padding(.vertical, 1)
-                        .background(Theme.shared.accent.opacity(0.85))
+                        .background(theme.accent.opacity(0.85))
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                 }
             }
@@ -223,7 +224,7 @@ struct GameSummaryView: View {
         ShareLink(item: settlementText) {
             Image(systemName: "square.and.arrow.up")
                 .font(.body.weight(.medium))
-                .foregroundStyle(Theme.shared.dimAccent)
+                .foregroundStyle(theme.dimAccent)
         }
     }
 
@@ -251,7 +252,7 @@ struct GameSummaryView: View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 12))
-                .foregroundStyle(Theme.shared.dimAccent)
+                .foregroundStyle(theme.dimAccent)
 
             Text(title)
                 .font(.subheadline.weight(.semibold))
@@ -264,7 +265,7 @@ struct GameSummaryView: View {
 
     private func feltGreenBackground(cornerRadius: CGFloat) -> some View {
         ZStack {
-            Theme.shared.gradient
+            theme.gradient
 
             RadialGradient(
                 colors: [Color.mint.opacity(0.08), Color.clear],
@@ -282,7 +283,7 @@ struct GameSummaryView: View {
 
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                 .strokeBorder(
-                    Theme.shared.borderGradient,
+                    theme.borderGradient,
                     lineWidth: 1
                 )
         }
@@ -290,7 +291,7 @@ struct GameSummaryView: View {
     }
 
     private func rankColor(rank: Int, net: Double) -> Color {
-        if rank == 1 { return Theme.shared.accent }
+        if rank == 1 { return theme.accent }
         if net >= 0 { return Theme.win }
         return Theme.loss
     }

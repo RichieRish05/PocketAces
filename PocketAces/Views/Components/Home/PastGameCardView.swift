@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PastGameCardView: View {
+    @Environment(Theme.self) private var theme
     let game: Game
     @Environment(AuthService.self) private var authService
 
@@ -29,7 +30,7 @@ struct PastGameCardView: View {
             HStack {
                 Image(systemName: suit.rawValue)
                     .font(.system(size: 22))
-                    .foregroundStyle(Theme.shared.accent.opacity(0.85))
+                    .foregroundStyle(theme.accent.opacity(0.85))
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(game.name)
@@ -50,11 +51,11 @@ struct PastGameCardView: View {
         .padding(16)
         .background(
             ZStack {
-                Theme.shared.gradient
+                theme.gradient
 
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .strokeBorder(
-                        Theme.shared.borderGradient,
+                        theme.borderGradient,
                         lineWidth: 1
                     )
             }

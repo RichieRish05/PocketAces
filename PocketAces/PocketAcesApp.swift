@@ -31,6 +31,7 @@ struct PocketAcesApp: App {
             .environment(authService)
             .environment(userStore)
             .environment(gameService)
+            .environment(Theme.shared)
             .task {
                 if let userId = authService.currentUserId {
                     try? await userStore.fetchUser(userId: userId)
