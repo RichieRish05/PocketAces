@@ -48,6 +48,22 @@ struct HomeView: View {
             .padding(.top, 12)
     }
 
+    private var gemBadge: some View {
+        let gems = userStore.userData?.gems ?? 0
+        return HStack(spacing: 6) {
+            Image("gem")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 22, height: 22)
+
+            Text("\(gems)")
+                .font(.system(size: 17, weight: .heavy, design: .rounded))
+                .foregroundStyle(Theme.shared.accent)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+    }
+
     private var netProfitCard: some View {
         let netProfit = userStore.userData?.netProfit ?? 0
         let gamesPlayed = userStore.userData?.gamesPlayed ?? 0
@@ -55,9 +71,15 @@ struct HomeView: View {
         let winRate = gamesPlayed > 0 ? Double(wins) / Double(gamesPlayed) * 100 : 0
         let isPositive = netProfit >= 0
         return VStack(alignment: .leading, spacing: 6) {
-            Text("Net Profit")
-                .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(Theme.shared.dimAccent)
+            HStack {
+                Text("Net Profit")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(Theme.shared.dimAccent)
+
+                Spacer()
+
+                gemBadge
+            }
 
             Text(netProfit.formattedCurrency(decimals: 2))
                 .font(.system(size: 36, weight: .bold, design: .rounded))

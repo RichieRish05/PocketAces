@@ -20,7 +20,7 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
 
     var accent: Color {
         switch self {
-        case .classic:    Color(red: 1.0, green: 0.84, blue: 0.30)     // gold
+        case .classic:    Color(red: 0.85, green: 0.75, blue: 0.45)    // gold
         case .rose:       Color(red: 1.0, green: 0.72, blue: 0.82)     // soft rose pink
         case .phantom:    Color(red: 0.60, green: 0.85, blue: 0.95)    // spectral ice-blue
         case .sapphire:   Color(red: 0.55, green: 0.78, blue: 1.0)     // bright sapphire
@@ -34,12 +34,12 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
         case .bourbon:    Color(red: 1.0, green: 0.82, blue: 0.40)     // aged gold
         }
     }
-
+    
     // MARK: – Dim Accent (muted secondary, section headers)
 
     var dimAccent: Color {
         switch self {
-        case .classic:    Color(red: 0.82, green: 0.68, blue: 0.22)
+        case .classic:    Color(red: 0.72, green: 0.65, blue: 0.42)
         case .rose:       Color(red: 0.78, green: 0.52, blue: 0.62)
         case .phantom:    Color(red: 0.45, green: 0.62, blue: 0.72)
         case .sapphire:   Color(red: 0.40, green: 0.58, blue: 0.78)
@@ -58,7 +58,7 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
 
     var primary: Color {
         switch self {
-        case .classic:    Color(red: 0.08, green: 0.42, blue: 0.22)     // forest green
+        case .classic:    Color(red: 0.12, green: 0.42, blue: 0.28)     // forest green
         case .rose:       Color(red: 0.48, green: 0.12, blue: 0.25)     // deep rose
         case .phantom:    Color(red: 0.12, green: 0.10, blue: 0.22)     // dark iridescent
         case .sapphire:   Color(red: 0.08, green: 0.18, blue: 0.48)     // deep sapphire
@@ -77,7 +77,7 @@ enum ThemePackage: String, Codable, CaseIterable, Identifiable {
 
     var primaryDark: Color {
         switch self {
-        case .classic:    Color(red: 0.04, green: 0.24, blue: 0.12)
+        case .classic:    Color(red: 0.06, green: 0.22, blue: 0.14)
         case .rose:       Color(red: 0.28, green: 0.06, blue: 0.14)
         case .phantom:    Color(red: 0.05, green: 0.04, blue: 0.12)
         case .sapphire:   Color(red: 0.04, green: 0.08, blue: 0.28)

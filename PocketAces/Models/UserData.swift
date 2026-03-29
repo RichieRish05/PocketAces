@@ -33,6 +33,11 @@ struct UserData: Codable {
         totalCashOut += cashOut
         netProfit += profit
         sumProfitSquared += profit * profit
+        
+        // Earn gems for positive profit
+        if profit > 0 {
+            gems += 3
+        }
 
         if profit >= 0 {
             wins += 1
