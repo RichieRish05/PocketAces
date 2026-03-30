@@ -8,10 +8,8 @@ A real-time iOS app for managing poker home games. Host a room, invite your crew
 
 ## App Previews
 
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/fa8143ad-3d44-4305-b5b8-6dbdf410c742" width="250" />
-  <img src="https://github.com/user-attachments/assets/067b5062-7834-46df-a99d-fb57ee5dab94" width="250" />
-</p>
+![IMG_5961](https://github.com/user-attachments/assets/b6a8371d-82ee-4582-8672-65358cbe6790)
+![IMG_5960](https://github.com/user-attachments/assets/d7a5c323-560b-4a59-a869-76e83c108902)
 
 ---
 
