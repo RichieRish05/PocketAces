@@ -1,4 +1,4 @@
-# ♠ PokerPal — Home Game Manager
+# ♠ PocketAces Home Game Manager
 
 > **Status:** Pending Apple Developer Account approval for App Store release.
 
