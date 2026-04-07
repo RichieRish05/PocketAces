@@ -344,7 +344,7 @@ final class GameService {
     /// Generates a unique 6-character alphanumeric join code, retrying up to 10 times to avoid collisions.
     private func generateJoinCode() async throws -> String {
         for _ in 0..<10 {
-            let code = String((0..<Self.joinCodeLength).map { _ in Self.joinCodeCharset.randomElement()! })
+            let code = JoinCode.generate()
 
             let snapshot = try await db.collection("games")
                 .whereField("joinCode", isEqualTo: code)
