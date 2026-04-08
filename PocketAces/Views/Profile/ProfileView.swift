@@ -33,6 +33,8 @@ struct ProfileView: View {
                     AvatarPickerView(viewModel: viewModel)
                 case .themePicker:
                     ThemePickerView(viewModel: viewModel)
+                case .groups:
+                    GroupsView()
                 }
             }
             .sheet(isPresented: $viewModel.showNameEditor) {
@@ -60,7 +62,10 @@ struct ProfileView: View {
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(Color(white: 0.45))
             }
-            themeButton
+            HStack(spacing: 10) {
+                groupsButton
+                themeButton
+            }
         }
         .padding(.vertical, 32)
         .padding(.horizontal, 24)
@@ -122,16 +127,57 @@ struct ProfileView: View {
         }
     }
 
+    // MARK: - Groups Button
+
+    private var groupsButton: some View {
+        Button {
+            viewModel.openGroups()
+        } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color(white: 0.14))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: "person.3")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+                Text("Groups")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color(white: 0.35))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(white: 0.08))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color(white: 0.18), lineWidth: 1)
+                    )
+            )
+        }
+    }
+
     // MARK: - Theme Button
 
     private var themeButton: some View {
         Button {
             viewModel.beginPickingTheme()
         } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "paintpalette")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(theme.accent)
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color(white: 0.14))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: "paintpalette")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(theme.accent)
+                }
                 Text("Theme")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(.white)
@@ -146,8 +192,12 @@ struct ProfileView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(white: 0.1))
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(white: 0.08))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color(white: 0.18), lineWidth: 1)
+                    )
             )
         }
     }

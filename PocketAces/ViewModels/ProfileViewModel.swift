@@ -53,6 +53,10 @@ final class ProfileViewModel {
         navigationPath.append(ProfileDestination.themePicker)
     }
 
+    func openGroups() {
+        navigationPath.append(ProfileDestination.groups)
+    }
+
     func saveTheme(_ package: ThemePackage) async {
         Theme.shared.apply(package)
         do {
