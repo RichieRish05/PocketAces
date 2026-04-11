@@ -65,7 +65,7 @@ struct GameDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                joinCodeBadge
+                JoinCodeButton(joinCode: listenedGame?.joinCode ?? "")
             }
         }
         .sheet(isPresented: $showCashOutSheet) {
@@ -90,16 +90,6 @@ struct GameDetailView: View {
         .onChange(of: listenedGame == nil) { _, isNil in
             if isNil { dismiss() }
         }
-    }
-
-    // MARK: - Join Code Badge (toolbar)
-
-    private var joinCodeBadge: some View {
-        Text(listenedGame?.joinCode ?? "")
-            .font(.caption.weight(.semibold).monospaced())
-            .foregroundStyle(.white.opacity(0.5))
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
     }
 
     // MARK: - Pot Card

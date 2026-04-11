@@ -32,6 +32,8 @@ struct ProfileView: View {
                     AvatarPickerView(viewModel: viewModel)
                 case .groups:
                     GroupsView()
+                case .groupDetail(let group):
+                    GroupDetailView(group: group)
                 }
             }
             .sheet(isPresented: $viewModel.showNameEditor) {
@@ -130,14 +132,10 @@ struct ProfileView: View {
             viewModel.openGroups()
         } label: {
             HStack(spacing: 12) {
-                ZStack {
-                    Circle()
-                        .fill(Color(white: 0.14))
-                        .frame(width: 36, height: 36)
-                    Image(systemName: "person.3")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
+                Image(systemName: "person.3")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white)
+
                 Text("Groups")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(.white)
@@ -147,14 +145,10 @@ struct ProfileView: View {
                     .foregroundStyle(Color(white: 0.35))
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.vertical, 20)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(white: 0.08))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(white: 0.18), lineWidth: 1)
-                    )
+                    .stroke(Color(white: 0.22), lineWidth: 1)
             )
         }
     }

@@ -4,7 +4,6 @@ struct GroupsView: View {
     @Environment(UserStore.self) private var userStore
     @Environment(PokerGroupService.self) private var groupService
     @State private var viewModel = GroupViewModel()
-
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
@@ -37,85 +36,34 @@ struct GroupsView: View {
     @ViewBuilder
     private var groupsListSection: some View {
         if viewModel.isLoading {
-            VStack(spacing: 8) {
+            VStack(spacing: 12) {
                 ForEach(0..<3, id: \.self) { _ in
                     groupSkeleton
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
         } else {
-            VStack(spacing: 2) {
+            VStack(spacing: 12) {
                 ForEach(viewModel.groups) { group in
-                    groupRow(group: group)
+                    NavigationLink(value: ProfileDestination.groupDetail(group)) {
+                        GroupCardView(group: group)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.white.opacity(0.03))
-            )
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private var groupSkeleton: some View {
+        RoundedRectangle(cornerRadius: 16, style: .continuous)
+            .fill(Color.white.opacity(0.04))
+            .frame(height: 60)
             .overlay(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
             )
-            .padding(.horizontal, 20)
-        }
-    }
-
-    private func groupRow(group: PokerGroup) -> some View {
-        HStack(spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(Theme.gradient)
-                    .frame(width: 36, height: 36)
-
-                Image(systemName: "person.3")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.accent)
-            }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(group.name)
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-
-                Text("\(group.members.count) members \u{00B7} \(group.gameIds.count) games")
-                    .font(.system(size: 12))
-                    .foregroundStyle(.white.opacity(0.4))
-            }
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.2))
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .contentShape(Rectangle())
-    }
-
-    private var groupSkeleton: some View {
-        HStack(spacing: 14) {
-            Circle()
-                .fill(Color.white.opacity(0.06))
-                .frame(width: 36, height: 36)
-
-            VStack(alignment: .leading, spacing: 4) {
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.white.opacity(0.06))
-                    .frame(width: 120, height: 12)
-
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.white.opacity(0.04))
-                    .frame(width: 80, height: 10)
-            }
-
-            Spacer()
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .redacted(reason: .placeholder)
+            .redacted(reason: .placeholder)
     }
 
 

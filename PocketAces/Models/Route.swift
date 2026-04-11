@@ -10,4 +10,5 @@ enum Route: Hashable {
 enum ProfileDestination: Hashable {
     case avatarPicker
     case groups
+    case groupDetail(PokerGroup)
 }

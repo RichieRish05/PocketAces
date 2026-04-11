@@ -215,6 +215,11 @@ final class PokerGroupService {
             .getDocuments()
 
         groups = snapshot.documents.compactMap { try? $0.data(as: PokerGroup.self) }
+            .map { group in
+                var g = group
+                g.members.sort { $0.totalProfit > $1.totalProfit }
+                return g
+            }
     }
 
     // MARK: - Private

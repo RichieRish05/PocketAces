@@ -49,6 +49,7 @@ final class GroupViewModel {
         defer { isLoading = false }
         do {
             try await groupService?.fetchGroups(ids: ids)
+            
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -125,12 +126,6 @@ final class GroupViewModel {
         } catch {
             errorMessage = error.localizedDescription
         }
-    }
-
-    // MARK: - Leaderboard
-
-    func leaderboard(for group: PokerGroup) -> [PokerGroupMember] {
-        group.members.sorted { $0.totalProfit > $1.totalProfit }
     }
 
     // MARK: - Private
