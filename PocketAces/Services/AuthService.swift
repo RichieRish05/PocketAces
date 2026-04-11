@@ -59,7 +59,7 @@ final class AuthService {
             recentResults: [],
             createdAt: Date(),
             gems: 0,
-            themeName: "classic"
+            activeGroups: []
         )
 
         // Insert new user

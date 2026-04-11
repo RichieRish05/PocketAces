@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct GemBadge: View {
-    @Environment(Theme.self) private var theme
     @Environment(UserStore.self) private var userStore
 
     var body: some View {
@@ -14,7 +13,7 @@ struct GemBadge: View {
 
             Text("\(gems)")
                 .font(.system(size: 17, weight: .heavy, design: .rounded))
-                .foregroundStyle(theme.accent)
+                .foregroundStyle(Theme.accent)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)

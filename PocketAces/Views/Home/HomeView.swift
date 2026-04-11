@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct HomeView: View {
-    @Environment(Theme.self) private var theme
     @Environment(UserStore.self) private var userStore
     @Environment(GameService.self) private var gameService
     @Environment(AuthService.self) private var authService
@@ -59,7 +58,7 @@ struct HomeView: View {
             HStack {
                 Text("Net Profit")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(theme.dimAccent)
+                    .foregroundStyle(Theme.dimAccent)
 
                 Spacer()
 
@@ -126,7 +125,7 @@ struct HomeView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(theme.accent)
+                    .background(Theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
             .buttonStyle(.plain)
@@ -134,7 +133,7 @@ struct HomeView: View {
             Button { showJoinGame = true } label: {
                 Text("Join Game")
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(theme.accent)
+                    .foregroundStyle(Theme.accent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(.ultraThinMaterial)
@@ -153,7 +152,7 @@ struct HomeView: View {
 
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: theme.dimAccent)
+                sectionHeader(title: "Recent Games", icon: "clock.fill", iconColor: Theme.dimAccent)
 
                 Spacer()
 
@@ -161,7 +160,7 @@ struct HomeView: View {
                     NavigationLink(value: Route.pastGames) {
                         Text("View All")
                             .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(theme.dimAccent)
+                            .foregroundStyle(Theme.dimAccent)
                     }
                     .padding(.trailing, 20)
                 }
@@ -204,12 +203,12 @@ struct HomeView: View {
                 // Suit icon with felt-green dot
                 ZStack {
                     Circle()
-                        .fill(theme.gradient)
+                        .fill(Theme.gradient)
                         .frame(width: 36, height: 36)
 
                     Image(systemName: suit.rawValue)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(theme.accent)
+                        .foregroundStyle(Theme.accent)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {

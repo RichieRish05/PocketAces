@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct AvatarSelectionView: View {
-    @Environment(Theme.self) private var theme
     @Bindable var viewModel: OnboardingViewModel
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: 2)
@@ -39,7 +38,7 @@ struct AvatarSelectionView: View {
                     .padding(.vertical, 16)
                     .background(
                         RoundedRectangle(cornerRadius: 14)
-                            .fill(viewModel.canProceedToName ? theme.accent : theme.dimAccent.opacity(0.4))
+                            .fill(viewModel.canProceedToName ? Theme.accent : Theme.dimAccent.opacity(0.4))
                     )
             }
             .disabled(!viewModel.canProceedToName)
@@ -63,7 +62,7 @@ struct AvatarSelectionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 14))
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
-                        .stroke(isSelected ? theme.accent : theme.dimAccent.opacity(0.3), lineWidth: isSelected ? 3 : 1)
+                        .stroke(isSelected ? Theme.accent : Theme.dimAccent.opacity(0.3), lineWidth: isSelected ? 3 : 1)
                 )
                 .animation(.easeInOut(duration: 0.2), value: isSelected)
         }

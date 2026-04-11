@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 
 struct InputField: View {
-    @Environment(Theme.self) private var theme
     @Binding var text: String
     var placeholder: String
 
@@ -23,7 +22,7 @@ struct InputField: View {
         .padding(.vertical, 16)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(theme.accent.opacity(0.3), lineWidth: 1)
+                .strokeBorder(Theme.accent.opacity(0.3), lineWidth: 1)
         )
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
@@ -33,7 +32,6 @@ struct InputField: View {
 
 
 struct CurrencyInputField: View {
-    @Environment(Theme.self) private var theme
     @Binding var value: Double
 
     @State private var centString: String = ""
@@ -108,7 +106,7 @@ struct CurrencyInputField: View {
         .padding(.vertical, 16)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(theme.accent.opacity(0.3), lineWidth: 1)
+                .strokeBorder(Theme.accent.opacity(0.3), lineWidth: 1)
         )
         .contentShape(Rectangle())
         .onTapGesture {

@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct NameEntryView: View {
-    @Environment(Theme.self) private var theme
     @Bindable var viewModel: OnboardingViewModel
 
     var body: some View {
@@ -40,7 +39,7 @@ struct NameEntryView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(viewModel.canFinish && !viewModel.isLoading ? theme.accent : theme.dimAccent.opacity(0.4))
+                    .fill(viewModel.canFinish && !viewModel.isLoading ? Theme.accent : Theme.dimAccent.opacity(0.4))
             )
             .disabled(!viewModel.canFinish || viewModel.isLoading)
             .padding(.horizontal, 24)

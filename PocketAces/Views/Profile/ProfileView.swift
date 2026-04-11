@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @Environment(Theme.self) private var theme
     @Environment(UserStore.self) private var userStore
     @State private var viewModel = ProfileViewModel()
     @State private var appeared = false
@@ -31,8 +30,6 @@ struct ProfileView: View {
                 switch destination {
                 case .avatarPicker:
                     AvatarPickerView(viewModel: viewModel)
-                case .themePicker:
-                    ThemePickerView(viewModel: viewModel)
                 case .groups:
                     GroupsView()
                 }
@@ -64,7 +61,6 @@ struct ProfileView: View {
             }
             HStack(spacing: 10) {
                 groupsButton
-                themeButton
             }
         }
         .padding(.vertical, 32)
@@ -87,7 +83,7 @@ struct ProfileView: View {
                     Circle()
                         .stroke(
                             LinearGradient(
-                                colors: [theme.accent, theme.dimAccent],
+                                colors: [Theme.accent, Theme.dimAccent],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -100,11 +96,11 @@ struct ProfileView: View {
                             .fill(Color(white: 0.1))
                             .frame(width: 28, height: 28)
                         Circle()
-                            .stroke(theme.dimAccent, lineWidth: 1)
+                            .stroke(Theme.dimAccent, lineWidth: 1)
                             .frame(width: 28, height: 28)
                         Image(systemName: "pencil")
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(theme.dimAccent)
+                            .foregroundStyle(Theme.dimAccent)
                     }
                 }
         }
@@ -122,7 +118,7 @@ struct ProfileView: View {
                     .foregroundStyle(.white)
                 Image(systemName: "pencil")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(theme.dimAccent)
+                    .foregroundStyle(Theme.dimAccent)
             }
         }
     }
@@ -163,44 +159,6 @@ struct ProfileView: View {
         }
     }
 
-    // MARK: - Theme Button
-
-    private var themeButton: some View {
-        Button {
-            viewModel.beginPickingTheme()
-        } label: {
-            HStack(spacing: 12) {
-                ZStack {
-                    Circle()
-                        .fill(Color(white: 0.14))
-                        .frame(width: 36, height: 36)
-                    Image(systemName: "paintpalette")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(theme.accent)
-                }
-                Text("Theme")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(.white)
-                Spacer()
-                Text(theme.currentPackage.displayName)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(Color(white: 0.45))
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Color(white: 0.35))
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(white: 0.08))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(white: 0.18), lineWidth: 1)
-                    )
-            )
-        }
-    }
 
     // MARK: - Name Editor Sheet
 
@@ -221,14 +179,14 @@ struct ProfileView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { viewModel.showNameEditor = false }
-                        .foregroundStyle(theme.accent)
+                        .foregroundStyle(Theme.accent)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         Task { await viewModel.saveName() }
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(theme.accent)
+                    .foregroundStyle(Theme.accent)
                     .disabled(viewModel.draftName.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }

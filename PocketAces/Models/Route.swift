@@ -9,6 +9,5 @@ enum Route: Hashable {
 
 enum ProfileDestination: Hashable {
     case avatarPicker
-    case themePicker
     case groups
 }

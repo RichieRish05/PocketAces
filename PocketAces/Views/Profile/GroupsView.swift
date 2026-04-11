@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct GroupsView: View {
-    @Environment(Theme.self) private var theme
-
     var body: some View {
         VStack(spacing: 24) {
             Spacer()

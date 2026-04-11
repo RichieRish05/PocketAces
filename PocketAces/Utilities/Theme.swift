@@ -1,43 +1,33 @@
 import SwiftUI
 
-@Observable
-final class Theme {
-    static let shared = Theme()
+enum Theme {
+    static let accent = Color(red: 0.85, green: 0.75, blue: 0.45)
+    static let dimAccent = Color(red: 0.72, green: 0.65, blue: 0.42)
+    static let primary = Color(red: 0.12, green: 0.42, blue: 0.28)
+    static let primaryDark = Color(red: 0.06, green: 0.22, blue: 0.14)
+    static let primaryMid = Color(red: 0.06, green: 0.32, blue: 0.16)
 
-    private(set) var currentPackage: ThemePackage
-    private(set) var accent: Color
-    private(set) var dimAccent: Color
-    private(set) var primary: Color
-    private(set) var primaryDark: Color
-    private(set) var primaryMid: Color
-    private(set) var gradient: LinearGradient
-    private(set) var borderGradient: LinearGradient
+    static let gradient = LinearGradient(
+        colors: [
+            Color(red: 0.10, green: 0.44, blue: 0.24).opacity(0.65),
+            Color(red: 0.04, green: 0.22, blue: 0.14).opacity(0.85),
+            Color(red: 0.07, green: 0.34, blue: 0.18).opacity(0.72),
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
 
-    // Fixed — never change
+    static let borderGradient = LinearGradient(
+        colors: [
+            accent.opacity(0.35),
+            Color.mint.opacity(0.15),
+            accent.opacity(0.25),
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
     static let win = Color(red: 0.3, green: 0.85, blue: 0.45)
     static let loss = Color(red: 0.95, green: 0.35, blue: 0.35)
     static let silver = Color(red: 0.75, green: 0.82, blue: 0.9)
-
-    private init() {
-        let initial = ThemePackage.classic
-        currentPackage = initial
-        accent = initial.accent
-        dimAccent = initial.dimAccent
-        primary = initial.primary
-        primaryDark = initial.primaryDark
-        primaryMid = initial.primaryMid
-        gradient = initial.gradient
-        borderGradient = initial.borderGradient
-    }
-
-    func apply(_ package: ThemePackage) {
-        currentPackage = package
-        accent = package.accent
-        dimAccent = package.dimAccent
-        primary = package.primary
-        primaryDark = package.primaryDark
-        primaryMid = package.primaryMid
-        gradient = package.gradient
-        borderGradient = package.borderGradient
-    }
 }

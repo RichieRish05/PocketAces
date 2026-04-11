@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct JoinGameView: View {
-    @Environment(Theme.self) private var theme
     @Environment(\.dismiss) private var dismiss
     @Environment(GameService.self) private var gameService
     @Environment(UserStore.self) private var userStore
@@ -30,7 +29,7 @@ struct JoinGameView: View {
                     .padding(.vertical, 16)
                     .overlay(
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .strokeBorder(theme.accent.opacity(0.3), lineWidth: 1)
+                            .strokeBorder(Theme.accent.opacity(0.3), lineWidth: 1)
                     )
                     .padding(.horizontal, 16)
                     .onChange(of: joinCode) { _, newValue in
@@ -68,7 +67,7 @@ struct JoinGameView: View {
                     .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(joinCode.count < 6 || buyIn <= 0 || isJoining ? theme.accent.opacity(0.4) : theme.accent)
+                    .background(joinCode.count < 6 || buyIn <= 0 || isJoining ? Theme.accent.opacity(0.4) : Theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
@@ -82,7 +81,7 @@ struct JoinGameView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .foregroundStyle(theme.dimAccent)
+                        .foregroundStyle(Theme.dimAccent)
                 }
             }
         }
