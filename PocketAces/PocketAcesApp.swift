@@ -39,6 +39,7 @@ struct PocketAcesApp: App {
                     try? await userStore.fetchUser(userId: userId)
                     gameService.listenToActiveGames(userId: userId)
                     try? await gameService.fetchPastGames(userId: userId)
+                    try? await pokerGroupService.fetchGroups(ids: userStore.userData?.activeGroups ?? [])
                 }
             }
             .onChange(of: authService.currentUserId) { _, newId in
@@ -47,6 +48,7 @@ struct PocketAcesApp: App {
                         try? await userStore.fetchUser(userId: userId)
                         gameService.listenToActiveGames(userId: userId)
                         try? await gameService.fetchPastGames(userId: userId)
+                        try? await pokerGroupService.fetchGroups(ids: userStore.userData?.activeGroups ?? [])
                     }
                 } else {
                     gameService.stopListeningToActiveGames()
