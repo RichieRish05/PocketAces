@@ -222,6 +222,51 @@ final class PokerGroupService {
             }
     }
 
+    // MARK: - Stats
+
+    func updateMemberStats(groupId: String, userId: String, buyIn: Double, cashOut: Double, gameId: String, gameEnded: Bool, avatarName: String) async throws {
+        let groupRef = db.collection("groups").document(groupId)
+
+        try await db.runTransaction { transaction, errorPointer in
+            let freshSnapshot: DocumentSnapshot
+            do { freshSnapshot = try transaction.getDocument(groupRef) }
+            catch let fetchError as NSError {
+                errorPointer?.pointee = fetchError
+                return nil
+            }
+
+            guard var group = try? freshSnapshot.data(as: PokerGroup.self) else {
+                return nil
+            }
+
+            guard let memberIndex = group.members.firstIndex(where: { $0.userId == userId }) else {
+                return nil
+            }
+
+            
+            group.members[memberIndex].avatarName = avatarName
+            group.members[memberIndex].totalBuyIn += buyIn
+            group.members[memberIndex].totalCashOut += cashOut
+            group.members[memberIndex].gamesPlayed += 1
+
+            if cashOut >= buyIn {
+                group.members[memberIndex].wins += 1
+            }
+
+            if gameEnded && !group.gameIds.contains(gameId) {
+                group.gameIds.append(gameId)
+            }
+
+            do { try transaction.setData(from: group, forDocument: groupRef) }
+            catch let encodeError as NSError {
+                errorPointer?.pointee = encodeError
+                return nil
+            }
+
+            return nil
+        }
+    }
+
     // MARK: - Private
 
     private func generateJoinCode() async throws -> String {

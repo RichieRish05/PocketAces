@@ -4,6 +4,7 @@ struct JoinGameView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(GameService.self) private var gameService
     @Environment(UserStore.self) private var userStore
+    @Environment(PokerGroupService.self) private var pokerGroupService
 
     @State private var joinCode = ""
     @State private var buyIn = 0.0
@@ -103,7 +104,8 @@ struct JoinGameView: View {
         )
 
         do {
-            _ = try await gameService.joinGame(joinCode: joinCode, player: player, buyIn: buyIn)
+            let userGroupIds = pokerGroupService.groups.compactMap(\.id)
+            _ = try await gameService.joinGame(joinCode: joinCode, player: player, buyIn: buyIn, userGroupIds: userGroupIds)
             dismiss()
         } catch {
             errorMessage = error.localizedDescription

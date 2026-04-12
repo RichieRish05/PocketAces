@@ -4,9 +4,11 @@ struct CreateGameView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(GameService.self) private var gameService
     @Environment(UserStore.self) private var userStore
+    @Environment(PokerGroupService.self) private var groupService
 
     @State private var gameName: String = ""
     @State private var buyIn = 0.0
+    @State private var selectedGroupId: String?
     @State private var isCreating = false
     @State private var errorMessage: String?
 
@@ -46,6 +48,43 @@ struct CreateGameView: View {
 
                     CurrencyInputField(value: $buyIn)
                         .padding(.horizontal, 16)
+                }
+
+                if !groupService.groups.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Group")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.35))
+                            .padding(.horizontal, 16)
+
+                        Menu {
+                            Button("None") {
+                                selectedGroupId = nil
+                            }
+                            ForEach(groupService.groups) { group in
+                                Button(group.name) {
+                                    selectedGroupId = group.id
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(selectedGroupName)
+                                    .foregroundStyle(.white)
+                                Spacer()
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.caption)
+                                    .foregroundStyle(.white.opacity(0.4))
+                            }
+                            .font(.title2)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 16)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                    .strokeBorder(Theme.accent.opacity(0.3), lineWidth: 1)
+                            )
+                        }
+                        .padding(.horizontal, 16)
+                    }
                 }
 
                 if let errorMessage {
@@ -91,6 +130,13 @@ struct CreateGameView: View {
         }
     }
 
+    private var selectedGroupName: String {
+        if let id = selectedGroupId, let group = groupService.groups.first(where: { $0.id == id }) {
+            return group.name
+        }
+        return "None"
+    }
+
     private func createGame() async {
         guard let userId = userStore.userData?.id else { return }
 
@@ -103,7 +149,8 @@ struct CreateGameView: View {
                 hostId: userId,
                 hostDisplayName: userStore.userData?.displayName ?? "Host",
                 buyIn: buyIn,
-                avatarName: userStore.userData?.avatarName ?? "avatar_01"
+                avatarName: userStore.userData?.avatarName ?? "avatar_01",
+                groupId: selectedGroupId
             )
             dismiss()
         } catch {

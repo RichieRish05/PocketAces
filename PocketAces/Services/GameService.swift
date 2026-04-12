@@ -10,6 +10,8 @@ enum GameServiceError: LocalizedError {
     case cashOutExceedsPot
     case gameNotActive
     case playerNotActive
+    case notGroupMember
+    case alreadyCashedOut
 
     var errorDescription: String? {
         switch self {
@@ -21,7 +23,8 @@ enum GameServiceError: LocalizedError {
         case .cashOutExceedsPot: "Cash-out amount exceeds the remaining pot."
         case .gameNotActive: "This game is no longer active."
         case .playerNotActive: "You have already cashed out."
-        
+        case .notGroupMember: "You must be a member of the group to join this game."
+        case .alreadyCashedOut: "You have already cashed out of this game."
         }
     }
 }
@@ -78,7 +81,7 @@ final class GameService {
 
     /// Creates a new game document in Firestore with the host as the first player.
     /// Returns the created `Game` with its Firestore document ID set.
-    func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double, avatarName: String = "avatar_01") async throws -> Game {
+    func createGame(name: String, hostId: String, hostDisplayName: String, buyIn: Double, avatarName: String = "avatar_01", groupId: String? = nil) async throws -> Game {
 
         let joinCode = try await generateJoinCode()
 
@@ -103,7 +106,8 @@ final class GameService {
             playerIds: [hostId],
             isActive: true,
             startedAt: Date(),
-            totalPot: buyIn
+            totalPot: buyIn,
+            groupId: groupId
         )
 
         let docRef = try db.collection("games").addDocument(from: game)
@@ -114,7 +118,7 @@ final class GameService {
 
     /// Looks up an active game by join code and adds the player via a Firestore transaction.
     /// Throws `gameNotFound` if no active game matches or `playerAlreadyInGame` on duplicates.
-    func joinGame(joinCode: String, player: Player, buyIn: Double) async throws -> Game {
+    func joinGame(joinCode: String, player: Player, buyIn: Double, userGroupIds: [String] = []) async throws -> Game {
         let snapshot: QuerySnapshot
         do {
             snapshot = try await db.collection("games")
@@ -150,9 +154,16 @@ final class GameService {
                 return nil
             }
 
+            // Reject non-members from group games
+            if let groupId = game.groupId, !userGroupIds.contains(groupId) {
+                let error = GameServiceError.notGroupMember
+                errorPointer?.pointee = error as NSError
+                return nil
+            }
+
             // Reject if player has already been in this game
             if game.players.contains(where: { $0.playerId == player.playerId }) {
-                let error = GameServiceError.playerAlreadyInGame
+                let error = GameServiceError.alreadyCashedOut
                 errorPointer?.pointee = error as NSError
                 return nil
             }
@@ -185,8 +196,8 @@ final class GameService {
     }
 
     /// Sets a player's cash-out amount and marks them inactive via a Firestore transaction.
-    /// Returns the player's total buy-in so the caller can compute profit for stats updates.
-    func cashOut(gameId: String, userId: String, cashOut: Double) async throws -> Double {
+    /// Returns the player's total buy-in and whether the game ended.
+    func cashOut(gameId: String, userId: String, cashOut: Double) async throws -> (buyIn: Double, gameEnded: Bool) {
         let gameRef = db.collection("games").document(gameId)
 
         let result = try await db.runTransaction { transaction, errorPointer in
@@ -247,8 +258,9 @@ final class GameService {
 
         let resultArray = result as! NSArray
         let playerBuyIn = resultArray[0] as! Double
+        let gameEnded = (resultArray[1] as! Double) == 1.0
 
-        return playerBuyIn
+        return (buyIn: playerBuyIn, gameEnded: gameEnded)
     }
 
     /// Adds a re-buy for the player, incrementing their buy-in and the game's total pot.

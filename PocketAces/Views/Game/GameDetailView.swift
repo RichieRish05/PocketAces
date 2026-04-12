@@ -5,6 +5,7 @@ struct GameDetailView: View {
 
     @Environment(GameService.self) private var gameService
     @Environment(UserStore.self) private var userStore
+    @Environment(PokerGroupService.self) private var groupService
     @Environment(\.dismiss) private var dismiss
 
     @State private var showCashOutSheet = false
@@ -413,10 +414,28 @@ struct GameDetailView: View {
 
     private func performCashOut() async {
         guard let userId = currentUserId, let gameId = listenedGame?.id else { return }
+        let groupId = listenedGame?.groupId
         isCashingOut = true
         do {
-            let playerBuyIn = try await gameService.cashOut(gameId: gameId, userId: userId, cashOut: cashOutAmount)
-            try await userStore.applyCashOut(buyIn: playerBuyIn, cashOut: cashOutAmount)
+            let result = try await gameService.cashOut(gameId: gameId, userId: userId, cashOut: cashOutAmount)
+            try await userStore.applyCashOut(buyIn: result.buyIn, cashOut: cashOutAmount)
+
+            if let groupId {
+                do {
+                    try await groupService.updateMemberStats(
+                        groupId: groupId,
+                        userId: userId,
+                        buyIn: result.buyIn,
+                        cashOut: cashOutAmount,
+                        gameId: gameId,
+                        gameEnded: result.gameEnded,
+                        avatarName: userStore.userData?.avatarName ?? "avatar_01"
+                    )
+                } catch {
+                    // Group stats failure should not block cash-out
+                }
+            }
+
             showCashOutSheet = false
             dismiss()
         } catch {

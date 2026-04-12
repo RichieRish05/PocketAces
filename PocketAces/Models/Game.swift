@@ -25,5 +25,6 @@ struct Game: Codable, Identifiable, Hashable {
     var startedAt: Date
     var endedAt: Date?
     var totalPot: Double
+    var groupId: String?
 
 }
