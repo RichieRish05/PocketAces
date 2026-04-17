@@ -6,17 +6,20 @@ struct GroupDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(UserStore.self) private var userStore
     @Environment(PokerGroupService.self) private var groupService
+    @State private var loadedGroup: PokerGroup?
+    @State private var isLoading = true
     @State private var showLeaveConfirmation = false
     @State private var isLeaving = false
 
+    private var displayGroup: PokerGroup { loadedGroup ?? group }
+
     private var sortedMembers: [PokerGroupMember] {
-        group.members.sorted { $0.totalProfit > $1.totalProfit }
+        displayGroup.members.sorted { $0.totalProfit > $1.totalProfit }
     }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-
                 leaderboard
                     .padding(.top, 20)
 
@@ -27,10 +30,22 @@ struct GroupDetailView: View {
         }
         .scrollIndicators(.hidden)
         .background(Color.black)
-        .navigationTitle(group.name)
+        .navigationTitle(displayGroup.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            JoinCodeButton(joinCode: group.joinCode)
+            JoinCodeButton(joinCode: displayGroup.joinCode)
+        }
+        .task {
+            guard let groupId = group.id else {
+                isLoading = false
+                return
+            }
+            do {
+                loadedGroup = try await groupService.fetchGroup(id: groupId)
+            } catch {
+                // Fall back to the initially passed group
+            }
+            isLoading = false
         }
         .alert("Leave Group", isPresented: $showLeaveConfirmation) {
             Button("Leave", role: .destructive) {
@@ -38,10 +53,10 @@ struct GroupDetailView: View {
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            if group.members.count <= 1 {
-                Text("You're the last member of \(group.name). Leaving will deactivate the group.")
+            if displayGroup.members.count <= 1 {
+                Text("You're the last member of \(displayGroup.name). Leaving will deactivate the group.")
             } else {
-                Text("Are you sure you want to leave \(group.name)? You'll lose access to shared stats and game history.")
+                Text("Are you sure you want to leave \(displayGroup.name)? You'll lose access to shared stats and game history.")
             }
         }
     }
@@ -57,61 +72,32 @@ struct GroupDetailView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 14)
 
-            let topTier = min(5, sortedMembers.count)
+            if isLoading {
+                VStack(spacing: 0) {
+                    ForEach(0..<5, id: \.self) { _ in
+                        LeaderboardRowSkeleton()
+                    }
+                }
+            } else {
+                let topTier = min(5, sortedMembers.count)
 
-            ForEach(Array(sortedMembers.prefix(topTier).enumerated()), id: \.element.userId) { index, member in
-                leaderboardRow(rank: index + 1, member: member)
-            }
+                ForEach(Array(sortedMembers.prefix(topTier).enumerated()), id: \.element.userId) { index, member in
+                    LeaderboardRowView(rank: index + 1, member: member)
+                }
 
-            if sortedMembers.count > topTier {
-                Rectangle()
-                    .fill(.white.opacity(0.08))
-                    .frame(height: 1)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 8)
+                if sortedMembers.count > topTier {
+                    Rectangle()
+                        .fill(.white.opacity(0.08))
+                        .frame(height: 1)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
 
-                ForEach(Array(sortedMembers.dropFirst(topTier).enumerated()), id: \.element.userId) { index, member in
-                    leaderboardRow(rank: topTier + index + 1, member: member)
+                    ForEach(Array(sortedMembers.dropFirst(topTier).enumerated()), id: \.element.userId) { index, member in
+                        LeaderboardRowView(rank: topTier + index + 1, member: member)
+                    }
                 }
             }
         }
-    }
-
-    private func leaderboardRow(rank: Int, member: PokerGroupMember) -> some View {
-        HStack(spacing: 14) {
-            Group {
-                if rank <= 3 {
-                    Text(rankMedal(rank))
-                        .font(.system(size: 28))
-                } else {
-                    Text("\(rank)")
-                        .font(.system(size: 17, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.4))
-                }
-            }
-            .frame(width: 40)
-
-            Image(member.avatarName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .clipShape(Circle())
-
-            VStack(alignment: .leading, spacing: 3) {
-                Text(member.displayName)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-
-                Text(profitString(member.totalProfit))
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(member.totalProfit >= 0 ? Theme.accent.opacity(0.7) : .red.opacity(0.6))
-            }
-
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 10)
     }
 
     // MARK: - Leave Button
@@ -156,21 +142,5 @@ struct GroupDetailView: View {
         } catch {
             isLeaving = false
         }
-    }
-
-    // MARK: - Helpers
-
-    private func rankMedal(_ rank: Int) -> String {
-        switch rank {
-        case 1: "🥇"
-        case 2: "🥈"
-        case 3: "🥉"
-        default: ""
-        }
-    }
-
-    private func profitString(_ value: Double) -> String {
-        let sign = value >= 0 ? "+" : "-"
-        return "\(sign)$\(String(format: "%.0f", abs(value)))"
     }
 }

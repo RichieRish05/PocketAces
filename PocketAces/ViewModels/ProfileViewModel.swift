@@ -49,9 +49,6 @@ final class ProfileViewModel {
         navigationPath.append(ProfileDestination.avatarPicker)
     }
 
-    func openGroups() {
-        navigationPath.append(ProfileDestination.groups)
-    }
 
     func saveAvatar() async {
         guard let selected = selectedAvatar else { return }

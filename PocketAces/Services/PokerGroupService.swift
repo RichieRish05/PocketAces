@@ -25,6 +25,7 @@ enum PokerGroupServiceError: LocalizedError {
 @Observable
 final class PokerGroupService {
     var groups: [PokerGroup] = []
+    var isLoadingGroups = false
 
     private let db = Firestore.firestore()
 
@@ -209,6 +210,9 @@ final class PokerGroupService {
             return
         }
 
+        isLoadingGroups = true
+        defer { isLoadingGroups = false }
+
         let snapshot = try await db.collection("groups")
             .whereField(FieldPath.documentID(), in: ids)
             .whereField("isActive", isEqualTo: true)
@@ -220,6 +224,15 @@ final class PokerGroupService {
                 g.members.sort { $0.totalProfit > $1.totalProfit }
                 return g
             }
+    }
+
+    func fetchGroup(id: String) async throws -> PokerGroup {
+        let snapshot = try await db.collection("groups").document(id).getDocument()
+        guard var group = try? snapshot.data(as: PokerGroup.self) else {
+            throw PokerGroupServiceError.groupNotFound
+        }
+        group.members.sort { $0.totalProfit > $1.totalProfit }
+        return group
     }
 
     // MARK: - Stats
