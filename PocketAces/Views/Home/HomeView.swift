@@ -62,7 +62,6 @@ struct HomeView: View {
 
                 Spacer()
 
-                GemBadge()
             }
 
             Text(netProfit.formattedCurrency(decimals: 2))

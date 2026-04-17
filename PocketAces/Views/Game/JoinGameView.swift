@@ -100,6 +100,7 @@ struct JoinGameView: View {
             avatarName: userStore.userData?.avatarName ?? "avatar_01",
             buyIn: buyIn,
             cashOut: 0,
+            rebuys: 0,
             isActive: true
         )
 

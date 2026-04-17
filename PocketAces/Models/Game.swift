@@ -7,6 +7,7 @@ struct Player: Codable, Hashable {
     var avatarName: String
     var buyIn: Double
     var cashOut: Double
+    var rebuys: Double
     var isActive: Bool
 }
 

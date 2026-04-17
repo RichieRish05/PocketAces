@@ -134,7 +134,7 @@ struct ProfileView: View {
         let groups = pokerGroupService.groups
 
         VStack(alignment: .leading, spacing: 14) {
-            sectionHeader(title: "Groups", icon: "person.3.fill", iconColor: Theme.dimAccent)
+            sectionHeader(title: "Groups", icon: "person.2.fill", iconColor: Theme.dimAccent)
                 .padding(.horizontal, 20)
 
             if pokerGroupService.isLoadingGroups && groups.isEmpty {

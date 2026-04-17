@@ -91,6 +91,7 @@ final class GameService {
             avatarName: avatarName,
             buyIn: buyIn,
             cashOut: 0,
+            rebuys: 0,
             isActive: true
         )
 
@@ -301,6 +302,7 @@ final class GameService {
             }
 
             game.players[playerIndex].buyIn += buyIn
+            game.players[playerIndex].rebuys += 1
             game.totalPot += buyIn
 
             do {
