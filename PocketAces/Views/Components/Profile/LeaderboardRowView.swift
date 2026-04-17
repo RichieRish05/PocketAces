@@ -4,6 +4,13 @@ struct LeaderboardRowView: View {
     let rank: Int
     let member: PokerGroupMember
 
+    @Environment(UserStore.self) private var userStore
+    @Environment(AuthService.self) private var authService
+
+    private var isCurrentUser: Bool {
+        member.userId == authService.currentUserId
+    }
+
     var body: some View {
         HStack(spacing: 14) {
             Group {
@@ -18,17 +25,29 @@ struct LeaderboardRowView: View {
             }
             .frame(width: 40)
 
-            Image(member.avatarName)
+            Image(isCurrentUser ? (userStore.userData?.avatarName ?? member.avatarName) : member.avatarName)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 50, height: 50)
                 .clipShape(Circle())
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(member.displayName)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
+                HStack(spacing: 6) {
+                    Text(member.displayName)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+
+                    if isCurrentUser {
+                        Text("You")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Theme.primaryDark)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 1)
+                            .background(Theme.accent.opacity(0.85))
+                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                    }
+                }
 
                 Text(profitString(member.totalProfit))
                     .font(.system(size: 13, weight: .medium))

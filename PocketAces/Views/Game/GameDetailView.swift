@@ -157,7 +157,7 @@ struct GameDetailView: View {
         return HStack(spacing: 12) {
             // Avatar with active indicator
             ZStack(alignment: .bottomTrailing) {
-                Image(player.avatarName)
+                Image(isCurrentUser ? (userStore.userData?.avatarName ?? player.avatarName) : player.avatarName)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 40, height: 40)
