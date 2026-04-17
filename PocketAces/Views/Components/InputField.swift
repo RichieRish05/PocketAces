@@ -33,10 +33,16 @@ struct InputField: View {
 
 struct CurrencyInputField: View {
     @Binding var value: Double
+    @Binding var hasInput: Bool
 
     @State private var centString: String = ""
     @FocusState private var isFocused: Bool
     private let maxDigits = 7
+
+    init(value: Binding<Double>, hasInput: Binding<Bool> = .constant(true)) {
+        self._value = value
+        self._hasInput = hasInput
+    }
 
     /// Formats cents integer into display parts: (dollars, cents)
     /// e.g. centString "12345" → ("123", "45") → "$123.45"
@@ -86,6 +92,7 @@ struct CurrencyInputField: View {
                     
                     
                     value = Double(filtered).map { $0 / 100.0 } ?? 0
+                    hasInput = !filtered.isEmpty
                 }
 
             // Visible currency display

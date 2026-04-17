@@ -10,6 +10,8 @@ struct GameDetailView: View {
 
     @State private var showCashOutSheet = false
     @State private var cashOutAmount = 0.0
+    @State private var cashOutHasInput = false
+    @State private var showCashOutConfirmation = false
     @State private var isCashingOut = false
     @State private var errorMessage: String?
     @State private var showError = false
@@ -26,6 +28,11 @@ struct GameDetailView: View {
     private var players: [Player] { listenedGame?.players ?? [] }
     private var totalPot: Double { listenedGame?.totalPot ?? 0 }
     private var currentUserId: String? { userStore.userData?.id }
+
+    private var currentPlayerBuyIn: Double {
+        guard let userId = currentUserId, let game = listenedGame else { return 0 }
+        return game.players.first(where: { $0.playerId == userId })?.buyIn ?? 0
+    }
 
     private var canCashOut: Bool {
         guard let userId = currentUserId, let game = listenedGame else { return false }
@@ -236,6 +243,7 @@ struct GameDetailView: View {
 
             Button {
                 cashOutAmount = 0
+                cashOutHasInput = false
                 showCashOutSheet = true
             } label: {
                 Text("Cash Out")
@@ -257,54 +265,139 @@ struct GameDetailView: View {
     private var cashOutSheet: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                Text("Enter your chip total")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.5))
-                    .padding(.top, 8)
-
-                CurrencyInputField(value: $cashOutAmount)
-                    .padding(.horizontal, 16)
-
-                Button {
-                    Task { await cashOut() }
-                } label: {
-                    Group {
-                        if isCashingOut {
-                            ProgressView()
-                                .tint(Color(red: 0.12, green: 0.10, blue: 0.06))
-                        } else {
-                            Text("Confirm Cash Out")
-                        }
-                    }
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(isCashingOut || cashOutAmount > totalPot ? Theme.accent.opacity(0.4) : Theme.accent)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                if showCashOutConfirmation {
+                    cashOutConfirmationContent
+                } else {
+                    cashOutInputContent
                 }
-                .buttonStyle(.plain)
-                .disabled(isCashingOut || cashOutAmount > totalPot)
-                .padding(.horizontal, 16)
-
-                Text("Remaining pot: \(totalPot.formattedCurrency())")
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.35))
-
-                Spacer()
             }
             .navigationTitle("Cash Out")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        showCashOutSheet = false
+                    Button(showCashOutConfirmation ? "Back" : "Cancel") {
+                        if showCashOutConfirmation {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                showCashOutConfirmation = false
+                            }
+                        } else {
+                            showCashOutSheet = false
+                        }
                     }
                     .foregroundStyle(Theme.dimAccent)
                 }
             }
         }
         .presentationDetents([.medium])
+        .onDisappear {
+            showCashOutConfirmation = false
+        }
+    }
+
+    private var cashOutInputContent: some View {
+        Group {
+            Text("Enter your chip total")
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.5))
+                .padding(.top, 8)
+
+            CurrencyInputField(value: $cashOutAmount, hasInput: $cashOutHasInput)
+                .padding(.horizontal, 16)
+
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    showCashOutConfirmation = true
+                }
+            } label: {
+                Text("Cash Out")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(!cashOutHasInput || cashOutAmount > totalPot ? Theme.accent.opacity(0.4) : Theme.accent)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .disabled(!cashOutHasInput || cashOutAmount > totalPot)
+            .padding(.horizontal, 16)
+
+            Text("Remaining pot: \(totalPot.formattedCurrency())")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.35))
+
+            Spacer()
+        }
+    }
+
+    private var cashOutConfirmationContent: some View {
+        let profit = cashOutAmount - currentPlayerBuyIn
+
+        return Group {
+            Text("Confirm your cash out")
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.5))
+                .padding(.top, 8)
+
+            VStack(spacing: 0) {
+                cashOutSummaryRow(label: "Buy In", value: currentPlayerBuyIn.formattedCurrency(), color: .white)
+                Divider().background(Color.white.opacity(0.08))
+                cashOutSummaryRow(label: "Cash Out", value: cashOutAmount.formattedCurrency(), color: .white)
+                Divider().background(Color.white.opacity(0.08))
+                cashOutSummaryRow(
+                    label: "Profit",
+                    value: profit.formattedCurrency(decimals: 2, showSign: true),
+                    color: profit >= 0 ? Theme.win : Theme.loss
+                )
+            }
+            .padding(.vertical, 4)
+            .background(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Color.white.opacity(0.03))
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
+                }
+            )
+            .padding(.horizontal, 16)
+
+            Button {
+                Task { await cashOut() }
+            } label: {
+                Group {
+                    if isCashingOut {
+                        ProgressView()
+                            .tint(Color(red: 0.12, green: 0.10, blue: 0.06))
+                    } else {
+                        Text("Confirm Cash Out")
+                    }
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.06))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(isCashingOut ? Theme.accent.opacity(0.4) : Theme.accent)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .disabled(isCashingOut)
+            .padding(.horizontal, 16)
+
+            Spacer()
+        }
+    }
+
+    private func cashOutSummaryRow(label: String, value: String, color: Color) -> some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.5))
+            Spacer()
+            Text(value)
+                .font(.subheadline.weight(.semibold).monospacedDigit())
+                .foregroundStyle(color)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
     }
 
     // MARK: - Re-buy Sheet
